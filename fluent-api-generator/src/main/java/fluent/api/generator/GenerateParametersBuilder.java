@@ -36,5 +36,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-@Generate("/fluent/api/generator/templates/builder.java")
-public @interface GenerateParametersBuilder { }
+@Generate("/fluent/api/generator/templates/parameter-builder.java")
+public @interface GenerateParametersBuilder {
+    String methodName() default "build";
+}

@@ -27,33 +27,36 @@
  *
  */
 
-package {{ method.declaringClass.packageName }};
-{% set className = concat(method.declaringClass.simpleName, (method.isConstructor) ? "" : capitalize(method.name), "Caller") %}
-import javax.annotation.Generated;
+package fluent.api.generator;
 
-@Generated("Generated code using {{ templatePath }}")
-public final class {{ className }} {
+import java.time.ZonedDateTime;
 
-{% for parameter in method.parameters %}
-    private {{ parameter.type }} {{ parameter.name }};
-{% endfor %}
-{% if method.isConstructor or method.isStatic %}{% else %}
-    private final {{ method.declaringClass }} factory;
+public class FixtureClass {
 
-    public {{ className }}({{ method.declaringClass }} factory) {
-        this.factory = factory;
+    public static FixtureInterface fixtureInterface;
+    public final String first;
+    public final String last;
+    public final int age;
+    public final ZonedDateTime birth;
+
+    @GenerateParametersBuilder
+    @GenerateMethodCaller
+    public FixtureClass(String first, String last, int age, ZonedDateTime birth) {
+        this.first = first;
+        this.last = last;
+        this.age = age;
+        this.birth = birth;
+        fixtureInterface.myMethod(first, last, age, birth);
     }
-{% endif %}
-{% for parameter in method.parameters %}
-    public {{ className }} {{ parameter.name }}({{ parameter.type }} value) {
-        this.{{ parameter.name }} = value;
-        return this;
+
+    @GenerateMethodCaller(methodName = "send")
+    public static void staticMethod(String first, String last, int age, ZonedDateTime birth) {
+        fixtureInterface.myMethod(first, last, age, birth);
     }
-{% endfor %}
-    public void {{ methodName }}() {
-{% if method.isConstructor %}
-        new {{ method.declaringClass }}{% elseif method.isStatic %}
-        {{ method.declaringClass }}.{{ method.name }}{% else %}
-        factory.{{ method.name }}{% endif %}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{parameter.name}}{% endfor %});
+
+    @GenerateParametersBuilder
+    public static ZonedDateTime stringMethod(String first, String last, int age, ZonedDateTime birth) {
+        return birth;
     }
+
 }

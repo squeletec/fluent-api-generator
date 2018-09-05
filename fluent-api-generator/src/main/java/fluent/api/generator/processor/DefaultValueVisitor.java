@@ -27,48 +27,62 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.generator.processor;
 
-import org.testng.annotations.Test;
+import javax.lang.model.element.*;
+import java.util.function.Consumer;
 
-import static org.testng.Assert.assertEquals;
+public class DefaultValueVisitor implements Consumer<Element>, ElementVisitor<Void, Void> {
 
-public class ParameterBuilderTest {
+    private final Consumer<ExecutableElement> methodConsumer;
 
-    public ParameterBuilderTest() {}
-
-    @GenerateParametersBuilder
-    @GenerateMethodCaller
-    public ParameterBuilderTest(String a, int b) {
-
+    public DefaultValueVisitor(Consumer<ExecutableElement> methodConsumer) {
+        this.methodConsumer = methodConsumer;
     }
 
-    @Test
-    public void test0() {
-        new ParameterBuilderTestBuilder().a("").build();
-        new ParameterBuilderTestCaller().a("").call();
+    @Override
+    public void accept(Element element) {
+        element.accept(this, null);
     }
 
-    @GenerateParametersBuilder
-    @GenerateMethodCaller
-    public static Object create1(String a) {
-        return a;
+    @Override
+    public Void visit(Element e, Void aVoid) {
+        return null;
     }
 
-    @Test
-    public void test() {
-        assertEquals(new create1Builder().a("").build(), "");
+    @Override
+    public Void visit(Element e) {
+        return null;
     }
 
-    @GenerateParametersBuilder
-    @GenerateMethodCaller
-    public Integer create2(String a, int b) {
-        return b;
+    @Override
+    public Void visitPackage(PackageElement e, Void aVoid) {
+        return null;
     }
 
-    @Test
-    public void test2() {
-        assertEquals(new create2Builder(new ParameterBuilderTest()).a("").b(1).build(), Integer.valueOf(1));
+    @Override
+    public Void visitType(TypeElement e, Void aVoid) {
+        return null;
     }
 
+    @Override
+    public Void visitVariable(VariableElement e, Void aVoid) {
+        return null;
+    }
+
+    @Override
+    public Void visitExecutable(ExecutableElement e, Void aVoid) {
+        methodConsumer.accept(e);
+        return null;
+    }
+
+    @Override
+    public Void visitTypeParameter(TypeParameterElement e, Void aVoid) {
+        return null;
+    }
+
+    @Override
+    public Void visitUnknown(Element e, Void aVoid) {
+        return null;
+    }
 }

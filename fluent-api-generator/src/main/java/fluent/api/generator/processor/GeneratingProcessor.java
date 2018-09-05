@@ -29,7 +29,6 @@
 
 package fluent.api.generator.processor;
 
-import com.sun.source.util.Trees;
 import fluent.api.generator.Generate;
 import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.ModelFactoryImpl;
@@ -66,11 +65,9 @@ public class GeneratingProcessor extends AbstractProcessor {
         for(TypeElement annotation : annotations) {
             Generate generateAnnotation = annotation.getAnnotation(Generate.class);
             if(nonNull(generateAnnotation)) {
-                roundEnv.getElementsAnnotatedWith(annotation).forEach(element -> element.accept(visitor, generateAnnotation.value()));
+                roundEnv.getElementsAnnotatedWith(annotation).forEach(element -> element.accept(visitor, annotation));
             }
         }
-
-        roundEnv.getElementsAnnotatedWith(Generate.class).forEach(element -> element.accept(visitor, element.getAnnotation(Generate.class).value()));
         return false;
     }
 

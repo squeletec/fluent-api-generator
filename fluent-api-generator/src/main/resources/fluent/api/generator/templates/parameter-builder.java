@@ -28,11 +28,12 @@
  */
 
 package {{ method.declaringClass.packageName }};
-{% set className = (method.isConstructor) ? (method.declaringClass.simpleName) : (method.name) %}
+{% set productType = (method.isConstructor) ? (method.declaringClass) : (method.type) %}
+{% set className = concat(productType.simpleName, "Builder") %}
 import javax.annotation.Generated;
 
 @Generated("Generated code using {{ templatePath }}")
-public final class {{ className }}Builder {
+public final class {{ className }} {
 
 {% for parameter in method.parameters %}
     private {{ parameter.type }} {{ parameter.name }};
@@ -40,26 +41,25 @@ public final class {{ className }}Builder {
 {% if method.isConstructor or method.isStatic %}{% else %}
     private final {{ method.declaringClass }} factory;
 
-    public {{ className }}Builder({{ method.declaringClass }} factory) {
+    public {{ className }}({{ method.declaringClass }} factory) {
         this.factory = factory;
     }
 {% endif %}
 {% for parameter in method.parameters %}
-    public {{ className }}Builder {{ parameter.name }}({{ parameter.type }} value) {
+    public {{ className }} {{ parameter.name }}({{ parameter.type }} value) {
         this.{{ parameter.name }} = value;
         return this;
     }
-{% endfor %}{% if method.isConstructor %}
-    public {{ method.declaringClass }} build() {
-        return new {{ method.declaringClass }}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{parameter.name}}{% endfor %});
+{% endfor %}
+    public {{ productType }} {{ methodName }}() {
+        return {%
+        if method.isConstructor
+            %}new {{ method.declaringClass }}{%
+        elseif method.isStatic
+            %}{{ method.declaringClass }}.{{ method.name }}{%
+        else
+            %}factory.{{ method.name }}{%
+        endif
+        %}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{parameter.name}}{% endfor %});
     }
-{% elseif method.isStatic %}
-    public {{ method.type }} build() {
-        return {{ method.declaringClass }}.{{ method.name }}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{parameter.name}}{% endfor %});
-    }
-{% else %}
-    public {{ method.type }} build() {
-        return factory.{{ method.name }}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{parameter.name}}{% endfor %});
-    }
-{% endif %}
 }

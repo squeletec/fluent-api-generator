@@ -37,4 +37,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @Generate("/fluent/api/generator/templates/caller.java")
-public @interface GenerateMethodCaller { }
+public @interface GenerateMethodCaller {
+    String methodName() default "call";
+}

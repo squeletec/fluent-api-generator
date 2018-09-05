@@ -29,6 +29,7 @@
 
 package fluent.api.generator.processor;
 
+import fluent.api.generator.Generate;
 import fluent.api.generator.model.ModelFactory;
 import org.jtwig.JtwigModel;
 
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,7 +51,7 @@ import static org.jtwig.JtwigTemplate.classpathTemplate;
  * Generator of java code, which creates different models for different visited elements.
  * The annotation can be applied on method, constructor, but also class or interface.
  */
-class GeneratingVisitor implements ElementVisitor<Void, String[]> {
+class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
 
     private static final Pattern PACKAGE = Pattern.compile("package\\s+([^;]+)\\s*;");
     private static final Pattern CLASS = Pattern.compile("(class|interface)\\s+(\\w+)");
@@ -64,7 +66,7 @@ class GeneratingVisitor implements ElementVisitor<Void, String[]> {
     }
 
     @Override
-    public Void visit(Element e, String[] templates) {
+    public Void visit(Element e, TypeElement annotation) {
         return null;
     }
 
@@ -74,37 +76,47 @@ class GeneratingVisitor implements ElementVisitor<Void, String[]> {
     }
 
     @Override
-    public Void visitPackage(PackageElement e, String[] templates) {
+    public Void visitPackage(PackageElement e, TypeElement annotation) {
         return null;
     }
 
     @Override
-    public Void visitType(TypeElement e, String[] templates) {
-        return render(newModel().with("type", factory.model(e.asType())), templates);
+    public Void visitType(TypeElement e, TypeElement annotation) {
+        return render(newModel().with("type", factory.model(e.asType())), e, annotation);
     }
 
     @Override
-    public Void visitVariable(VariableElement e, String[] templates) {
+    public Void visitVariable(VariableElement e, TypeElement annotation) {
         return null;
     }
 
     @Override
-    public Void visitExecutable(ExecutableElement e, String[] templates) {
-        return render(newModel().with("method", factory.model(e)), templates);
+    public Void visitExecutable(ExecutableElement e, TypeElement annotation) {
+        return render(newModel().with("method", factory.model(e)), e, annotation);
     }
 
     @Override
-    public Void visitTypeParameter(TypeParameterElement e, String[] templates) {
+    public Void visitTypeParameter(TypeParameterElement e, TypeElement annotation) {
         return null;
     }
 
     @Override
-    public Void visitUnknown(Element e, String[] templates) {
+    public Void visitUnknown(Element e, TypeElement annotation) {
         return null;
     }
 
-    private Void render(JtwigModel model, String[] templates) {
-        for(String path : templates) {
+    private Void render(JtwigModel model, Element annotatedElement, TypeElement annotation) {
+        annotation.getEnclosedElements().forEach(new DefaultValueVisitor(method -> {
+            model.with(method.getSimpleName().toString(), method.getDefaultValue().getValue());
+        }));
+        annotatedElement.getAnnotationMirrors().forEach(mirror -> {
+            if(mirror.getAnnotationType().asElement().equals(annotation)) {
+                mirror.getElementValues().forEach((name, value) -> {
+                    model.with(name.getSimpleName().toString(), value.getValue());
+                });
+            }
+        });
+        for(String path : annotation.getAnnotation(Generate.class).value()) {
             String source = classpathTemplate(path).render(model.with("templatePath", path));
             Matcher packageName = PACKAGE.matcher(source);
             Matcher className = CLASS.matcher(source);

@@ -27,33 +27,49 @@
  *
  */
 
-package {{ method.declaringClass.packageName }};
-{% set className = concat(method.declaringClass.simpleName, (method.isConstructor) ? "" : capitalize(method.name), "Caller") %}
-import javax.annotation.Generated;
+package fluent.api.generator;
 
-@Generated("Generated code using {{ templatePath }}")
-public final class {{ className }} {
+import org.mockito.Mock;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-{% for parameter in method.parameters %}
-    private {{ parameter.type }} {{ parameter.name }};
-{% endfor %}
-{% if method.isConstructor or method.isStatic %}{% else %}
-    private final {{ method.declaringClass }} factory;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
-    public {{ className }}({{ method.declaringClass }} factory) {
-        this.factory = factory;
+import static java.time.LocalDateTime.now;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
+
+public class MethodCallerTest {
+
+    @Mock
+    private FixtureInterface fixtureInterface;
+
+    private final ZonedDateTime birth = now().atZone(ZoneId.systemDefault());
+
+    @BeforeMethod
+    public void mocks() {
+        initMocks(this);
     }
-{% endif %}
-{% for parameter in method.parameters %}
-    public {{ className }} {{ parameter.name }}({{ parameter.type }} value) {
-        this.{{ parameter.name }} = value;
-        return this;
+
+    @Test
+    public void testInstanceMethodCaller() {
+        new FixtureInterfaceMyMethodCaller(fixtureInterface).first("a").last("b").age(5).birth(birth).call();
+        verify(fixtureInterface).myMethod("a", "b", 5, birth);
     }
-{% endfor %}
-    public void {{ methodName }}() {
-{% if method.isConstructor %}
-        new {{ method.declaringClass }}{% elseif method.isStatic %}
-        {{ method.declaringClass }}.{{ method.name }}{% else %}
-        factory.{{ method.name }}{% endif %}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{parameter.name}}{% endfor %});
+
+    @Test
+    public void testStaticMethodCaller() {
+        FixtureClass.fixtureInterface = fixtureInterface;
+        new FixtureClassStaticMethodCaller().first("a").last("b").age(5).birth(birth).send();
+        verify(fixtureInterface).myMethod("a", "b", 5, birth);
     }
+
+    @Test
+    public void testConstructorCaller() {
+        FixtureClass.fixtureInterface = fixtureInterface;
+        new FixtureClassCaller().first("a").last("b").age(5).birth(birth).call();
+        verify(fixtureInterface).myMethod("a", "b", 5, birth);
+    }
+
 }

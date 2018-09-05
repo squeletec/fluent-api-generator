@@ -27,33 +27,16 @@
  *
  */
 
-package {{ method.declaringClass.packageName }};
-{% set className = concat(method.declaringClass.simpleName, (method.isConstructor) ? "" : capitalize(method.name), "Caller") %}
-import javax.annotation.Generated;
+package fluent.api.generator;
 
-@Generated("Generated code using {{ templatePath }}")
-public final class {{ className }} {
+import java.time.ZonedDateTime;
 
-{% for parameter in method.parameters %}
-    private {{ parameter.type }} {{ parameter.name }};
-{% endfor %}
-{% if method.isConstructor or method.isStatic %}{% else %}
-    private final {{ method.declaringClass }} factory;
+public interface FixtureInterface {
 
-    public {{ className }}({{ method.declaringClass }} factory) {
-        this.factory = factory;
-    }
-{% endif %}
-{% for parameter in method.parameters %}
-    public {{ className }} {{ parameter.name }}({{ parameter.type }} value) {
-        this.{{ parameter.name }} = value;
-        return this;
-    }
-{% endfor %}
-    public void {{ methodName }}() {
-{% if method.isConstructor %}
-        new {{ method.declaringClass }}{% elseif method.isStatic %}
-        {{ method.declaringClass }}.{{ method.name }}{% else %}
-        factory.{{ method.name }}{% endif %}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{parameter.name}}{% endfor %});
-    }
+    @GenerateMethodCaller
+    void myMethod(String first, String last, int age, ZonedDateTime birth);
+
+    @GenerateParametersBuilder
+    Integer createName(String prefix, String suffix, int padding);
+
 }
