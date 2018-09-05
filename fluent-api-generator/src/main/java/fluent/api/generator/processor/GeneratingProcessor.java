@@ -29,7 +29,7 @@
 
 package fluent.api.generator.processor;
 
-import fluent.api.generator.Generate;
+import fluent.api.generator.Templates;
 import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.ModelFactoryImpl;
 
@@ -46,7 +46,7 @@ import static java.util.Objects.nonNull;
 /**
  * Template driven Java code generator, which generates code based on the annotated element.
  *
- * E.g. a method annotated with annotation @Generate(template) gets a model fully describing the method
+ * E.g. a method annotated with annotation @Templates(template) gets a model fully describing the method
  * with its return type, arguments and annotations, so they can be easily accessed and used in the JTwig
  * template language.
  *
@@ -63,8 +63,8 @@ public class GeneratingProcessor extends AbstractProcessor {
         GeneratingVisitor visitor = new GeneratingVisitor(processingEnv.getFiler(), factory);
 
         for(TypeElement annotation : annotations) {
-            Generate generateAnnotation = annotation.getAnnotation(Generate.class);
-            if(nonNull(generateAnnotation)) {
+            Templates templatesAnnotation = annotation.getAnnotation(Templates.class);
+            if(nonNull(templatesAnnotation)) {
                 roundEnv.getElementsAnnotatedWith(annotation).forEach(element -> element.accept(visitor, annotation));
             }
         }

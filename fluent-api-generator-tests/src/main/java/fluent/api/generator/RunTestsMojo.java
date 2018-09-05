@@ -29,14 +29,28 @@
 
 package fluent.api.generator;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.testng.TestNG;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-@Templates("/fluent/api/generator/templates/parameter-builder.java")
-public @interface GenerateParametersBuilder {
-    String methodName() default "build";
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+/**
+ * Goal which executes a test-NG suite.
+ */
+@Mojo(requiresProject = false, name = "run", requiresDirectInvocation = true)
+public class RunTestsMojo extends AbstractMojo {
+
+    public void execute() throws MojoExecutionException {
+        try {
+            Files.createDirectories(Paths.get("test-output"));
+            TestNG.main(new String[]{"-testjar", getClass().getProtectionDomain().getCodeSource().getLocation().getPath()});
+        } catch (IOException e) {
+            throw new MojoExecutionException("TestNG invocation failed", e);
+        }
+    }
+
 }

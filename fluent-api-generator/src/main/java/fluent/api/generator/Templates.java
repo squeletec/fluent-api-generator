@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.TYPE, ElementType.ANNOTATION_TYPE})
-public @interface Generate {
+public @interface Templates {
 
     /**
      * Templates used to generate the derived sources. By providing multiple templates you may create multiple

@@ -29,7 +29,7 @@
 
 package fluent.api.generator.processor;
 
-import fluent.api.generator.Generate;
+import fluent.api.generator.Templates;
 import fluent.api.generator.model.ModelFactory;
 import org.jtwig.JtwigModel;
 
@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -116,7 +115,7 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
                 });
             }
         });
-        for(String path : annotation.getAnnotation(Generate.class).value()) {
+        for(String path : annotation.getAnnotation(Templates.class).value()) {
             String source = classpathTemplate(path).render(model.with("templatePath", path));
             Matcher packageName = PACKAGE.matcher(source);
             Matcher className = CLASS.matcher(source);
