@@ -33,10 +33,13 @@ import java.time.ZonedDateTime;
 
 public interface FixtureInterface {
 
-    @GenerateParametersBuilder(methodName = "call")
+    @GenerateParameterBuilder(methodName = "call")
     void myMethod(String first, String last, int age, ZonedDateTime birth);
 
-    @GenerateParametersBuilder(methodName = "send")
+    @GenerateParameterBuilder(methodName = "send")
     Integer createName(String prefix, String suffix, int padding);
+
+    @GenerateFullParameterBuilder
+    String create(String first, String last, int age);
 
 }

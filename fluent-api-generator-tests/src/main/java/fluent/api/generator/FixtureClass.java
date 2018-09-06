@@ -39,7 +39,7 @@ public class FixtureClass {
     public final int age;
     public final ZonedDateTime birth;
 
-    @GenerateParametersBuilder
+    @GenerateParameterBuilder
     public FixtureClass(String first, String last, int age, ZonedDateTime birth) {
         this.first = first;
         this.last = last;
@@ -48,12 +48,12 @@ public class FixtureClass {
         fixtureInterface.myMethod(first, last, age, birth);
     }
 
-    @GenerateParametersBuilder(methodName = "send")
+    @GenerateParameterBuilder(methodName = "send")
     public static void staticMethod(String first, String last, int age, ZonedDateTime birth) {
         fixtureInterface.myMethod(first, last, age, birth);
     }
 
-    @GenerateParametersBuilder(className = "FixtureBuilder")
+    @GenerateParameterBuilder(className = "FixtureBuilder")
     public static ZonedDateTime stringMethod(String first, String last, int age, ZonedDateTime birth) {
         return birth;
     }

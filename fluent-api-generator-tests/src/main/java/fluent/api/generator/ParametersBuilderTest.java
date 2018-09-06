@@ -29,6 +29,7 @@
 
 package fluent.api.generator;
 
+import fluent.api.generator.impl.FixtureInterfaceCreateBuilderImpl;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -90,6 +91,13 @@ public class ParametersBuilderTest {
         FixtureClass.fixtureInterface = fixtureInterface;
         new FixtureClassStaticMethodSender().first("a").last("b").age(5).birth(birth).send();
         verify(fixtureInterface).myMethod("a", "b", 5, birth);
+    }
+
+    @Test void testFullParametersBuilder() {
+        when(fixtureInterface.create("a", "b", 5)).thenReturn("c");
+        FixtureInterfaceCreateBuilder builder = new FixtureInterfaceCreateBuilderImpl(fixtureInterface);
+        assertEquals(builder.age(5).first("a").last("b").build(), "c");
+        verify(fixtureInterface).create("a", "b", 5);
     }
 
 }

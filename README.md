@@ -58,9 +58,7 @@ Person person = new PersonBuilder()
 
 Targets: constructor, instance method, static method.
 
-#### 2.2 Fluent API for method invocation (caller / sender)
-
-#### 2.3 Fluent builder for beans with setters
+#### 2.2 Fluent builder for beans with setters
 
 
 ### 3. Custom fluent API generator development
