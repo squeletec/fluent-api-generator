@@ -57,14 +57,14 @@ public class ParametersBuilderTest {
     @Test
     public void testInstanceMethodBuilder() {
         when(fixtureInterface.createName("a", "b", 5)).thenReturn(1);
-        assertEquals(new IntegerBuilder(fixtureInterface).prefix("a").suffix("b").padding(5).build(), Integer.valueOf(1));
+        assertEquals(new IntegerSender(fixtureInterface).prefix("a").suffix("b").padding(5).send(), Integer.valueOf(1));
         verify(fixtureInterface).createName("a", "b", 5);
     }
 
     @Test
     public void testStaticMethodCaller() {
         FixtureClass.fixtureInterface = fixtureInterface;
-        assertEquals(new ZonedDateTimeBuilder().first("a").last("b").age(5).birth(birth).build(), birth);
+        assertEquals(new FixtureBuilder().first("a").last("b").age(5).birth(birth).build(), birth);
     }
 
     @Test

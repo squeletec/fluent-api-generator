@@ -54,14 +54,14 @@ public class MethodCallerTest {
 
     @Test
     public void testInstanceMethodCaller() {
-        new FixtureInterfaceMyMethodCaller(fixtureInterface).first("a").last("b").age(5).birth(birth).call();
+        new MyCaller(fixtureInterface).first("a").last("b").age(5).birth(birth).call();
         verify(fixtureInterface).myMethod("a", "b", 5, birth);
     }
 
     @Test
     public void testStaticMethodCaller() {
         FixtureClass.fixtureInterface = fixtureInterface;
-        new FixtureClassStaticMethodCaller().first("a").last("b").age(5).birth(birth).send();
+        new FixtureClassStaticMethodSender().first("a").last("b").age(5).birth(birth).send();
         verify(fixtureInterface).myMethod("a", "b", 5, birth);
     }
 

@@ -54,7 +54,7 @@ public class FixtureClass {
         fixtureInterface.myMethod(first, last, age, birth);
     }
 
-    @GenerateParametersBuilder
+    @GenerateParametersBuilder(className = "FixtureBuilder")
     public static ZonedDateTime stringMethod(String first, String last, int age, ZonedDateTime birth) {
         return birth;
     }

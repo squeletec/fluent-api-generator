@@ -27,9 +27,10 @@
  *
  */
 
-package {{ method.declaringClass.packageName }};
 {% set productType = (method.isConstructor) ? (method.declaringClass) : (method.type) %}
-{% set className = concat(productType.simpleName, "Builder") %}
+{% set packageName = (packageName == "") ? method.declaringClass.packageName : packageName %}
+{% set className = (className == "") ? concat(productType.simpleName, capitalize(methodName), "er") : className %}
+package {{ packageName }};
 import javax.annotation.Generated;
 
 @Generated("Generated code using {{ templatePath }}")

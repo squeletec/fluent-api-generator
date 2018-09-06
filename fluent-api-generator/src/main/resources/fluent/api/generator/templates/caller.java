@@ -26,9 +26,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
-package {{ method.declaringClass.packageName }};
-{% set className = concat(method.declaringClass.simpleName, (method.isConstructor) ? "" : capitalize(method.name), "Caller") %}
+{% set packageName = (packageName == "") ? method.declaringClass.packageName : packageName %}
+{% set className = (className == "") ? concat(method.declaringClass.simpleName, (method.isConstructor) ? "" : capitalize(method.name), capitalize(methodName), "er") : className %}
+package {{ packageName }};
 import javax.annotation.Generated;
 
 @Generated("Generated code using {{ templatePath }}")
