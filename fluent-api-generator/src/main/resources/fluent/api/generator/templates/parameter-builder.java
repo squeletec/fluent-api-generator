@@ -29,7 +29,7 @@
 
 {% set productType = (method.isConstructor) ? (method.declaringClass) : (method.type) %}
 {% set packageName = (packageName == "") ? method.declaringClass.packageName : packageName %}
-{% set className = (className == "") ? concat(productType.simpleName, capitalize(methodName), "er") : className %}
+{% set className = (className == "") ? concat(method.declaringClass.simpleName, (method.isConstructor) ? "" : capitalize(method.name), capitalize(methodName), "er") : className %}
 package {{ packageName }};
 import javax.annotation.Generated;
 
@@ -53,7 +53,7 @@ public final class {{ className }} {
     }
 {% endfor %}
     public {{ productType }} {{ methodName }}() {
-        return {%
+        {% if productType != "void" %}return {% endif %}{%
         if method.isConstructor
             %}new {{ method.declaringClass }}{%
         elseif method.isStatic

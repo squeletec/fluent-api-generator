@@ -57,12 +57,12 @@ public class ParametersBuilderTest {
     @Test
     public void testInstanceMethodBuilder() {
         when(fixtureInterface.createName("a", "b", 5)).thenReturn(1);
-        assertEquals(new IntegerSender(fixtureInterface).prefix("a").suffix("b").padding(5).send(), Integer.valueOf(1));
+        assertEquals(new FixtureInterfaceCreateNameSender(fixtureInterface).prefix("a").suffix("b").padding(5).send(), Integer.valueOf(1));
         verify(fixtureInterface).createName("a", "b", 5);
     }
 
     @Test
-    public void testStaticMethodCaller() {
+    public void testStaticMethodBuilder() {
         FixtureClass.fixtureInterface = fixtureInterface;
         assertEquals(new FixtureBuilder().first("a").last("b").age(5).birth(birth).build(), birth);
     }
@@ -76,6 +76,20 @@ public class ParametersBuilderTest {
         assertEquals(fixtureClass.last, "b");
         assertEquals(fixtureClass.age, 5);
         assertEquals(fixtureClass.birth, birth);
+    }
+
+
+    @Test
+    public void testInstanceMethodCaller() {
+        new FixtureInterfaceMyMethodCaller(fixtureInterface).first("a").last("b").age(5).birth(birth).call();
+        verify(fixtureInterface).myMethod("a", "b", 5, birth);
+    }
+
+    @Test
+    public void testStaticMethodCaller() {
+        FixtureClass.fixtureInterface = fixtureInterface;
+        new FixtureClassStaticMethodSender().first("a").last("b").age(5).birth(birth).send();
+        verify(fixtureInterface).myMethod("a", "b", 5, birth);
     }
 
 }
