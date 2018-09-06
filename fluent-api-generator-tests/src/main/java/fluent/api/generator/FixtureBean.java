@@ -27,41 +27,20 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.VariableElement;
+import java.util.List;
 
-public final class VarModel {
+public interface FixtureBean {
 
-    private final ModelFactory factory;
-    private final VariableElement var;
+    void setFirstName(String value);
 
-    VarModel(ModelFactory factory, VariableElement var) {
-        this.factory = factory;
-        this.var = var;
-    }
+    void setLastName(String value);
 
-    public String name() {
-        return var.getSimpleName().toString();
-    }
+    void setAge(int age);
 
-    public TypeModel type() {
-        return factory.model(var.asType());
-    }
+    void setChildren(List<FixtureBean> value);
 
-    @Override
-    public String toString() {
-        return var.toString();
-    }
+    void setArray(int[] value);
 
-    public String packageName() {
-        for(Element e = var.getEnclosingElement(); e.getKind() != null; e = e.getEnclosingElement()) {
-            if(e.getKind() == ElementKind.PACKAGE) {
-                return e.toString();
-            }
-        }
-        return "";
-    }
 }

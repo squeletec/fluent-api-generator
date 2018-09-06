@@ -86,7 +86,7 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
 
     @Override
     public Void visitVariable(VariableElement e, TypeElement annotation) {
-        return null;
+        return render(newModel().with("var", factory.model(e)), e, annotation);
     }
 
     @Override

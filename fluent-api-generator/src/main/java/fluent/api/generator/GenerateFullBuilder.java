@@ -35,8 +35,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation, that triggers code generator to create a fluent builder interface + implementation for an existing factory
- * method with many arguments.
+ * Annotation, that triggers code generator to create a fluent builder for an existing factory method with many arguments.
  *
  * E.g. for method:
  *
@@ -45,16 +44,16 @@ import java.lang.annotation.Target;
  * }
  *
  * it will generate fluent API, which can be used like following:
- * MyClassBuilder builder = new MyClassBuilderImpl();
- * MyClass myClass = builder.a("a").b("b").c(4).d(new Object()).build();
+ *
+ * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Templates({
-        "/fluent/api/generator/templates/parameters/interface.java",
-        "/fluent/api/generator/templates/parameters/implementation.java"
+        "/fluent/api/generator/templates/setters/interface.java",
+        "/fluent/api/generator/templates/setters/implementation.java"
 })
-public @interface GenerateFullParameterBuilder {
+public @interface GenerateFullBuilder {
 
     /**
      * Specify package name, where to create the generated class.

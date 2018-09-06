@@ -42,4 +42,6 @@ public interface FixtureInterface {
     @GenerateFullParameterBuilder
     String create(String first, String last, int age);
 
+    void accept(@GenerateBuilder FixtureBean bean);
+
 }
