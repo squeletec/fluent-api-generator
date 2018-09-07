@@ -82,4 +82,11 @@ public @interface GenerateFullSender {
      */
     String methodName() default "send";
 
+    /**
+     * Specify, which argument on the annotated method, is the model for the fluent API.
+     * By default it's 1st argument (index 0).
+     * @return Position of the model argument.
+     */
+    int modelArgument() default 0;
+
 }
