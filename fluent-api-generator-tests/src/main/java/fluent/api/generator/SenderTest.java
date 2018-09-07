@@ -29,25 +29,41 @@
 
 package fluent.api.generator;
 
-import java.time.ZonedDateTime;
+import fluent.api.generator.impl.FixtureBeanSenderImpl;
+import org.mockito.Mock;
+import org.testng.annotations.Test;
+
 import java.util.List;
 
-public interface FixtureInterface {
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-    @GenerateFullBuilder(className = "FixtureBeanFullBuilder")
-    FixtureBean BEAN = null;
+public class SenderTest extends TestBase {
 
-    @GenerateParameterBuilder(methodName = "call")
-    void myMethod(String first, String last, int age, ZonedDateTime birth, List<Double> list);
+    @Mock
+    private FixtureBean fixtureBean;
 
-    @GenerateParameterBuilder(methodName = "send")
-    Integer createName(String prefix, String suffix, int padding);
+    @Mock
+    private FixtureInterface fixtureInterface;
 
-    @GenerateFullParameterBuilder
-    String create(String first, String last, int age);
+    @Mock
+    private List<FixtureBean> list;
 
-    @GenerateSender
-    @GenerateFullSender(className = "FixtureBeanSender")
-    void accept(@GenerateBuilder FixtureBean bean);
+    @Test
+    public void testSimpleSender() {
+        new FixtureInterfaceAcceptSender(fixtureInterface, fixtureBean).firstName("a").send();
+        verify(fixtureInterface).accept(fixtureBean);
+        verify(fixtureBean).setFirstName("a");
+        verifyNoMoreInteractions(fixtureBean);
+    }
 
+    @Test
+    public void testFullSender() {
+        FixtureBeanSender sender = new FixtureBeanSenderImpl(fixtureInterface, fixtureBean);
+        sender.children(list).age(5).send();
+        verify(fixtureInterface).accept(fixtureBean);
+        verify(fixtureBean).setAge(5);
+        verify(fixtureBean).setChildren(list);
+        verifyNoMoreInteractions(fixtureBean);
+    }
 }
