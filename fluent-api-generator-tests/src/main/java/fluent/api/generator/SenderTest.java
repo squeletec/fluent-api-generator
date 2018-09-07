@@ -29,7 +29,8 @@
 
 package fluent.api.generator;
 
-import fluent.api.generator.impl.FixtureBeanSenderImpl;
+import fluent.api.dsl.impl.FixtureBeanSenderImpl;
+import fluent.api.generator.impl.FixtureSenderImpl;
 import org.mockito.Mock;
 import org.testng.annotations.Test;
 
@@ -37,6 +38,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.testng.Assert.assertEquals;
 
 public class SenderTest extends TestBase {
 
@@ -51,7 +53,7 @@ public class SenderTest extends TestBase {
 
     @Test
     public void testSimpleSender() {
-        new FixtureInterfaceAcceptSender(fixtureInterface, fixtureBean).firstName("a").send();
+        new FixtureBeanAccepter(fixtureInterface, fixtureBean).firstName("a").accept();
         verify(fixtureInterface).accept(fixtureBean);
         verify(fixtureBean).setFirstName("a");
         verifyNoMoreInteractions(fixtureBean);
@@ -59,11 +61,30 @@ public class SenderTest extends TestBase {
 
     @Test
     public void testFullSender() {
-        FixtureBeanSender sender = new FixtureBeanSenderImpl(fixtureInterface, fixtureBean);
+        FixtureSender sender = new FixtureSenderImpl(fixtureInterface, fixtureBean);
         sender.children(list).age(5).send();
         verify(fixtureInterface).accept(fixtureBean);
         verify(fixtureBean).setAge(5);
         verify(fixtureBean).setChildren(list);
+        verifyNoMoreInteractions(fixtureBean);
+    }
+
+    @Test
+    public void testConstructorSender() {
+        FixtureClass.fixtureInterface = fixtureInterface;
+        FixtureClass fixtureClass = new FixtureBeanSender(fixtureBean).lastName("a").send();
+        verify(fixtureBean).setLastName("a");
+        verify(fixtureBean).getFirstName();
+        verify(fixtureBean).getLastName();
+        verify(fixtureBean).getAge();
+        verifyNoMoreInteractions(fixtureBean);
+    }
+
+    @Test
+    public void testStaticMethodSender() {
+        fluent.api.dsl.FixtureBeanSender sender = new FixtureBeanSenderImpl("1", fixtureBean);
+        assertEquals(sender.age(5).send(), "1");
+        verify(fixtureBean).setAge(5);
         verifyNoMoreInteractions(fixtureBean);
     }
 }

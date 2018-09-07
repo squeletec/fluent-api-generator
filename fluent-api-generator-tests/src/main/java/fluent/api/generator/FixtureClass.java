@@ -49,6 +49,11 @@ public class FixtureClass {
         fixtureInterface.myMethod(first, last, age, birth, list);
     }
 
+    @GenerateSender
+    public FixtureClass(FixtureBean bean) {
+        this(bean.getFirstName(), bean.getLastName(), bean.getAge(), null, null);
+    }
+
     @GenerateParameterBuilder(methodName = "send")
     public static void staticMethod(String first, String last, int age, ZonedDateTime birth, List<Double> list) {
         fixtureInterface.myMethod(first, last, age, birth, list);
@@ -57,6 +62,11 @@ public class FixtureClass {
     @GenerateParameterBuilder(className = "FixtureBuilder")
     public static ZonedDateTime stringMethod(String first, String last, int age, ZonedDateTime birth) {
         return birth;
+    }
+
+    @GenerateFullSender(modelArgument = 1, packageName = "fluent.api.dsl")
+    public static String id(String id, FixtureBean bean) {
+        return id;
     }
 
 }

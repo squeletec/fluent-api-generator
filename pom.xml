@@ -11,13 +11,13 @@
     </modules>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Fluent API generator</name>
+    <name>Project Fluent API generator</name>
     <description>
         Module provides annotation based code generator, that generates fluent API for various situations.
         Such patterns contain:
         - Fluent builder for bean, which has setter methods returning void.
         - Fluent builder for a method / constructor with many arguments.
-        - Named parameters pattern - siomple to above, but for all mandatory parameters in defined order.
+        - Fluent sender for bean, which has setter methods returning void, and target (sender) method.
     </description>
 
     <url>https://github.com/c0stra/fluent-api-generator/wiki/fluent-api-generator</url>

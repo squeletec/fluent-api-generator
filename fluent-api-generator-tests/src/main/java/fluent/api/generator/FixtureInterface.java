@@ -46,8 +46,8 @@ public interface FixtureInterface {
     @GenerateFullParameterBuilder
     String create(String first, String last, int age);
 
-    @GenerateSender
-    @GenerateFullSender(className = "FixtureBeanSender")
+    @GenerateSender(methodName = "accept")
+    @GenerateFullSender(className = "FixtureSender")
     void accept(@GenerateBuilder FixtureBean bean);
 
 }

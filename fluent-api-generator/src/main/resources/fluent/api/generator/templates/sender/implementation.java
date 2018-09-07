@@ -1,7 +1,7 @@
 {% set productType = (method.isConstructor) ? (method.declaringClass) : (method.type) %}
 {% set packageName = (packageName == "") ? method.declaringClass.packageName : packageName %}
-{% set className = (className == "") ? concat(method.declaringClass.simpleName, (method.isConstructor) ? "" : capitalize(method.name), capitalize(methodName), "er") : className %}
 {% set modelVar = method.parameters[modelArgument] %}
+{% set className = (className == "") ? concat(modelVar.type.simpleName, capitalize(methodName), "er") : className %}
 package {{ packageName }}.impl;
 import javax.annotation.Generated;
 import {{ packageName }}.{{ className }};

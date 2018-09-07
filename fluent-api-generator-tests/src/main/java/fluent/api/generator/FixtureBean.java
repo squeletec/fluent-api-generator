@@ -43,4 +43,10 @@ public interface FixtureBean {
 
     void setArray(int[] value);
 
+    String getFirstName();
+
+    String getLastName();
+
+    int getAge();
+
 }
