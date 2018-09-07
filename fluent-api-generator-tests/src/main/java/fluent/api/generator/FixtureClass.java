@@ -30,6 +30,7 @@
 package fluent.api.generator;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 public class FixtureClass {
 
@@ -40,17 +41,17 @@ public class FixtureClass {
     public final ZonedDateTime birth;
 
     @GenerateParameterBuilder
-    public FixtureClass(String first, String last, int age, ZonedDateTime birth) {
+    public FixtureClass(String first, String last, int age, ZonedDateTime birth, List<Double> list) {
         this.first = first;
         this.last = last;
         this.age = age;
         this.birth = birth;
-        fixtureInterface.myMethod(first, last, age, birth);
+        fixtureInterface.myMethod(first, last, age, birth, list);
     }
 
     @GenerateParameterBuilder(methodName = "send")
-    public static void staticMethod(String first, String last, int age, ZonedDateTime birth) {
-        fixtureInterface.myMethod(first, last, age, birth);
+    public static void staticMethod(String first, String last, int age, ZonedDateTime birth, List<Double> list) {
+        fixtureInterface.myMethod(first, last, age, birth, list);
     }
 
     @GenerateParameterBuilder(className = "FixtureBuilder")

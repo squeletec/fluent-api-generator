@@ -30,11 +30,12 @@
 package fluent.api.generator;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 public interface FixtureInterface {
 
     @GenerateParameterBuilder(methodName = "call")
-    void myMethod(String first, String last, int age, ZonedDateTime birth);
+    void myMethod(String first, String last, int age, ZonedDateTime birth, List<Double> list);
 
     @GenerateParameterBuilder(methodName = "send")
     Integer createName(String prefix, String suffix, int padding);

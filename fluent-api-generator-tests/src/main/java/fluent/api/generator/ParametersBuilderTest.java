@@ -36,6 +36,7 @@ import org.testng.annotations.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
 import static org.mockito.Mockito.verify;
@@ -47,6 +48,9 @@ public class ParametersBuilderTest {
 
     @Mock
     private FixtureInterface fixtureInterface;
+
+    @Mock
+    private List<Double> list;
 
     private final ZonedDateTime birth = now().atZone(ZoneId.systemDefault());
 
@@ -71,8 +75,8 @@ public class ParametersBuilderTest {
     @Test
     public void testConstructorBuilder() {
         FixtureClass.fixtureInterface = fixtureInterface;
-        FixtureClass fixtureClass = new FixtureClassBuilder().first("a").last("b").age(5).birth(birth).build();
-        verify(fixtureInterface).myMethod("a", "b", 5, birth);
+        FixtureClass fixtureClass = new FixtureClassBuilder().first("a").last("b").age(5).birth(birth).list(list).build();
+        verify(fixtureInterface).myMethod("a", "b", 5, birth, list);
         assertEquals(fixtureClass.first, "a");
         assertEquals(fixtureClass.last, "b");
         assertEquals(fixtureClass.age, 5);
@@ -82,15 +86,15 @@ public class ParametersBuilderTest {
 
     @Test
     public void testInstanceMethodCaller() {
-        new FixtureInterfaceMyMethodCaller(fixtureInterface).first("a").last("b").age(5).birth(birth).call();
-        verify(fixtureInterface).myMethod("a", "b", 5, birth);
+        new FixtureInterfaceMyMethodCaller(fixtureInterface).first("a").last("b").age(5).list(list).birth(birth).call();
+        verify(fixtureInterface).myMethod("a", "b", 5, birth, list);
     }
 
     @Test
     public void testStaticMethodCaller() {
         FixtureClass.fixtureInterface = fixtureInterface;
-        new FixtureClassStaticMethodSender().first("a").last("b").age(5).birth(birth).send();
-        verify(fixtureInterface).myMethod("a", "b", 5, birth);
+        new FixtureClassStaticMethodSender().first("a").last("b").age(5).birth(birth).list(list).send();
+        verify(fixtureInterface).myMethod("a", "b", 5, birth, list);
     }
 
     @Test void testFullParametersBuilder() {
