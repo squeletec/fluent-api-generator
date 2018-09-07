@@ -60,7 +60,8 @@ public class ModelFactoryImpl implements ModelFactory {
     }
 
     private Element generalMemberOf(TypeElement declaring, Element member) {
-        return types.asElement(types.asMemberOf(types.getDeclaredType(declaring), member));
+        Element element = types.asElement(types.asMemberOf(types.getDeclaredType(declaring), member));
+        return element == null ? member : element;
     }
 
     @Override

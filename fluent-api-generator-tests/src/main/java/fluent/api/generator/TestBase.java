@@ -29,23 +29,15 @@
 
 package fluent.api.generator;
 
-import java.time.ZonedDateTime;
-import java.util.List;
+import org.testng.annotations.BeforeMethod;
 
-public interface FixtureInterface {
+import static org.mockito.MockitoAnnotations.initMocks;
 
-    @GenerateFullBuilder(className = "FixtureBeanFullBuilder")
-    FixtureBean BEAN = null;
+public class TestBase {
 
-    @GenerateParameterBuilder(methodName = "call")
-    void myMethod(String first, String last, int age, ZonedDateTime birth, List<Double> list);
-
-    @GenerateParameterBuilder(methodName = "send")
-    Integer createName(String prefix, String suffix, int padding);
-
-    @GenerateFullParameterBuilder
-    String create(String first, String last, int age);
-
-    void accept(@GenerateBuilder FixtureBean bean);
+    @BeforeMethod
+    public void init() {
+        initMocks(this);
+    }
 
 }

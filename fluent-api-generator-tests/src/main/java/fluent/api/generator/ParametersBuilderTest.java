@@ -41,10 +41,9 @@ import java.util.List;
 import static java.time.LocalDateTime.now;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertEquals;
 
-public class ParametersBuilderTest {
+public class ParametersBuilderTest extends TestBase {
 
     @Mock
     private FixtureInterface fixtureInterface;
@@ -53,11 +52,6 @@ public class ParametersBuilderTest {
     private List<Double> list;
 
     private final ZonedDateTime birth = now().atZone(ZoneId.systemDefault());
-
-    @BeforeMethod
-    public void mocks() {
-        initMocks(this);
-    }
 
     @Test
     public void testInstanceMethodBuilder() {

@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Character.toLowerCase;
 import static java.util.stream.Collectors.toList;
 
 
@@ -71,6 +72,12 @@ public final class MethodModel {
      */
     public TypeModel type() {
         return factory.model(methodSymbol.getReturnType());
+    }
+
+    public String propertyName() {
+        String name  = name();
+        return name.startsWith("get") || name.startsWith("set") ? toLowerCase(name.charAt(3)) + name.substring(4)
+                : name.startsWith("is") ? toLowerCase(name.charAt(2)) + name.substring(3) : name;
     }
 
     /**

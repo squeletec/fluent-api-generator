@@ -15,7 +15,7 @@ public final class {{ className }}Impl implements {{ className }} {
     }
 {% for setter in productType.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
     @Override
-    public {{ name }} {{ setter.name.substring(3) }}({{ setter.parameters[0].type }} value) {
+    public {{ className }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
         object.{{ setter.name }}(value);
         return this;
     }

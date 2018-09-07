@@ -9,7 +9,7 @@ import javax.annotation.Generated;
 public interface {{ className }} {
 
 {% for setter in productType.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
-    {{ className }} {{ setter.name.substring(3) }}({{ setter.parameters[0].type }} value);
+    {{ className }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value);
 {% endif %}{% endfor %}
     {{ productType }} {{ methodName }}();
 

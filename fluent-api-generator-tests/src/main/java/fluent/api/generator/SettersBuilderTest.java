@@ -29,23 +29,44 @@
 
 package fluent.api.generator;
 
-import java.time.ZonedDateTime;
+import fluent.api.generator.impl.FixtureBeanFullBuilderImpl;
+import org.mockito.Mock;
+import org.testng.annotations.Test;
+
 import java.util.List;
 
-public interface FixtureInterface {
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-    @GenerateFullBuilder(className = "FixtureBeanFullBuilder")
-    FixtureBean BEAN = null;
+public class SettersBuilderTest extends TestBase {
 
-    @GenerateParameterBuilder(methodName = "call")
-    void myMethod(String first, String last, int age, ZonedDateTime birth, List<Double> list);
+    @Mock
+    private FixtureBean fixtureBean;
 
-    @GenerateParameterBuilder(methodName = "send")
-    Integer createName(String prefix, String suffix, int padding);
+    @Mock
+    private List<FixtureBean> list;
 
-    @GenerateFullParameterBuilder
-    String create(String first, String last, int age);
+    @Test
+    public void testSimpleBuilder() {
+        FixtureBean fixtureBean = new FixtureBeanBuilder(this.fixtureBean)
+                .firstName("a")
+                .lastName("b")
+                .children(list)
+                .build();
+        verify(fixtureBean).setFirstName("a");
+        verify(fixtureBean).setLastName("b");
+        verify(fixtureBean).setChildren(list);
+        verifyNoMoreInteractions(fixtureBean);
+    }
 
-    void accept(@GenerateBuilder FixtureBean bean);
+    @Test
+    public void testFullBuilder() {
+        int[] array = new int[] {};
+        FixtureBeanFullBuilder builder = new FixtureBeanFullBuilderImpl(this.fixtureBean);
+        FixtureBean fixtureBean = builder.age(4).array(array).build();
+        verify(fixtureBean).setAge(4);
+        verify(fixtureBean).setArray(array);
+        verifyNoMoreInteractions(fixtureBean);
+    }
 
 }
