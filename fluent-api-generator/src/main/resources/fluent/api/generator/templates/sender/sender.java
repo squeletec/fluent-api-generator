@@ -23,7 +23,7 @@ public class {{ className }}{% if empty(modelVar.type.parameterVariables) %}{% e
     }
 {% for setter in modelVar.type.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
     public {{ className }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
-        {{ modelVar.name }}.{{ setter.name }}(value);
+        this.{{ modelVar.name }}.{{ setter.name }}(value);
         return this;
     }
 {% endif %}{% endfor %}
