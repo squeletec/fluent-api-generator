@@ -4,6 +4,7 @@
 {% set className = (className == "") ? concat(modelVar.type.simpleName, capitalize(methodName), "er") : className %}
 package {{ packageName }};
 import javax.annotation.Generated;
+import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
 public class {{ className }} {
@@ -28,6 +29,7 @@ public class {{ className }} {
         return this;
     }
 {% endif %}{% endfor %}
+    @End
     public {{ productType }} {{ methodName }}() {
         {% if productType != "void" %}return {% endif %}{%
         if method.isConstructor

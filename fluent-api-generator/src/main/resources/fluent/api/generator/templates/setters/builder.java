@@ -3,6 +3,7 @@
 {% set className = (className == "") ? concat(productType.simpleName, capitalize(methodName), "er") : className %}
 package {{ packageName }};
 import javax.annotation.Generated;
+import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
 public final class {{ className }} {
@@ -19,6 +20,7 @@ public final class {{ className }} {
         return this;
     }
 {% endif %}{% endfor %}
+    @End
     public {{ productType }} {{ methodName }}() {
         return {{ method.name }}(object);
     }
