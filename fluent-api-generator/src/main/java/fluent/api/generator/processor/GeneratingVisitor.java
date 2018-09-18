@@ -81,17 +81,17 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
 
     @Override
     public Void visitType(TypeElement e, TypeElement annotation) {
-        return render(newModel().with("type", factory.model(e.asType())), e, annotation);
+        return render(newModel().with("type", factory.type(e.asType())), e, annotation);
     }
 
     @Override
     public Void visitVariable(VariableElement e, TypeElement annotation) {
-        return render(newModel().with("var", factory.model(e)), e, annotation);
+        return render(newModel().with("var", factory.variable(e)), e, annotation);
     }
 
     @Override
     public Void visitExecutable(ExecutableElement e, TypeElement annotation) {
-        return render(newModel().with("method", factory.model(e)), e, annotation);
+        return render(newModel().with("method", factory.method(e)), e, annotation);
     }
 
     @Override
@@ -105,16 +105,14 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
     }
 
     private Void render(JtwigModel model, Element annotatedElement, TypeElement annotation) {
-        annotation.getEnclosedElements().forEach(new DefaultValueVisitor(method -> {
-            model.with(method.getSimpleName().toString(), method.getDefaultValue().getValue());
-        }));
-        annotatedElement.getAnnotationMirrors().forEach(mirror -> {
-            if(mirror.getAnnotationType().asElement().equals(annotation)) {
-                mirror.getElementValues().forEach((name, value) -> {
-                    model.with(name.getSimpleName().toString(), value.getValue());
-                });
-            }
-        });
+        annotation.getEnclosedElements().forEach(new DefaultValueVisitor(
+                method -> model.with(method.getSimpleName().toString(), method.getDefaultValue().getValue())
+        ));
+        annotatedElement.getAnnotationMirrors().stream().filter(
+                mirror -> mirror.getAnnotationType().asElement().equals(annotation)
+        ).forEach(mirror -> mirror.getElementValues().forEach(
+                (name, value) -> model.with(name.getSimpleName().toString(), value.getValue())
+        ));
         for(String path : annotation.getAnnotation(Templates.class).value()) {
             String source = classpathTemplate(path).render(model.with("templatePath", path));
             Matcher packageName = PACKAGE.matcher(source);

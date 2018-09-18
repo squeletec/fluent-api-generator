@@ -27,55 +27,69 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.model.impl;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
+import fluent.api.generator.model.MethodModel;
+import fluent.api.generator.model.TypeModel;
 
-public class ModelFactoryImpl implements ModelFactory {
+import java.util.List;
 
-    private final Types types;
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
-    public ModelFactoryImpl(Types types) {
-        this.types = types;
+public abstract class AbstractTypeModel implements TypeModel {
+
+    @Override
+    public abstract String toString();
+
+    @Override
+    public List<MethodModel> methods() {
+        return emptyList();
     }
 
     @Override
-    public MethodModel model(ExecutableElement methodElement) {
-        return new MethodModel(this, methodElement);
+    public List<TypeModel> interfaces() {
+        return emptyList();
     }
 
     @Override
-    public TypeModel model(TypeMirror typeMirror) {
-        return new TypeModel(this, typeMirror, (TypeElement) types.asElement(typeMirror));
+    public TypeModel superClass() {
+        return null;
     }
 
     @Override
-    public VarModel model(VariableElement variableElement) {
-        return new VarModel(this, variableElement);
-    }
-
-    private Element generalMemberOf(TypeElement declaring, Element member) {
-        Element element = types.asElement(types.asMemberOf(types.getDeclaredType(declaring), member));
-        return element == null ? member : element;
+    public List<TypeModel> parameters() {
+        return emptyList();
     }
 
     @Override
-    public TypeModel asMemberOf(TypeElement declaring, TypeElement member) {
-        return model(types.asMemberOf(types.getDeclaredType(declaring), member));
+    public List<TypeModel> parameterVariables() {
+        return parameters().stream().filter(TypeModel::isTypeVariable).collect(toList());
     }
 
     @Override
-    public VarModel asMemberOf(TypeElement declaring, VariableElement member) {
-        return model((VariableElement) generalMemberOf(declaring, member));
+    public boolean isMissing() {
+        return false;
     }
 
     @Override
-    public MethodModel asMemberOf(TypeElement declaring, ExecutableElement member) {
-        return model((ExecutableElement) generalMemberOf(declaring, member));
+    public boolean isPrimitive() {
+        return false;
     }
+
+    @Override
+    public boolean isSimple() {
+        return false;
+    }
+
+    @Override
+    public boolean isComplex() {
+        return !isSimple();
+    }
+
+    @Override
+    public boolean isTypeVariable() {
+        return false;
+    }
+
 }

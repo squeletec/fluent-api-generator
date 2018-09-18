@@ -1,12 +1,12 @@
-{% set productType = var.type %}
-{% set packageName = (packageName == "") ? var.packageName : packageName %}
+{% set productType = empty(var) ? type : var.type %}
+{% set packageName = (packageName == "") ? (empty(var) ? type.packageName : var.packageName) : packageName %}
 {% set className = (className == "") ? concat(productType.simpleName, capitalize(methodName), "er") : className %}
 package {{ packageName }};
 import javax.annotation.Generated;
 import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
-public final class {{ className }} {
+public final class {{ className }}{% if empty(productType.parameterVariables) %}{% else %}<{% for t in productType.parameterVariables %}{{ t }}{% endfor %}>{% endif %} {
 
     private final {{ productType }} object;
 

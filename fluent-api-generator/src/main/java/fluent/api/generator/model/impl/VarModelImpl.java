@@ -27,14 +27,44 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.model.impl;
 
-public interface VarModel {
+import fluent.api.generator.model.ModelFactory;
+import fluent.api.generator.model.TypeModel;
+import fluent.api.generator.model.VarModel;
 
-    String name();
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
-    TypeModel type();
+public class VarModelImpl implements VarModel {
 
-    String packageName();
+    private final VariableElement element;
+    private final TypeMirror type;
+    private final ModelFactory factory;
 
+    public VarModelImpl(VariableElement element, TypeMirror type, ModelFactory factory) {
+        this.element = element;
+        this.type = type;
+        this.factory = factory;
+    }
+
+    @Override
+    public String name() {
+        return element.getSimpleName().toString();
+    }
+
+    @Override
+    public TypeModel type() {
+        return factory.type(type);
+    }
+
+    @Override
+    public String packageName() {
+        return type().packageName();
+    }
+
+    @Override
+    public String toString() {
+        return name();
+    }
 }

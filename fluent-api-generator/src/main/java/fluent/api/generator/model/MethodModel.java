@@ -29,88 +29,40 @@
 
 package fluent.api.generator.model;
 
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import static java.lang.Character.toLowerCase;
-import static java.util.stream.Collectors.toList;
 
 
 /**
  * Model of a method, that will be passed to the template, and can be used to drive generation of
  * derived java classes.
  */
-public final class MethodModel {
-
-    private static final Set<String> packages = new HashSet<String>() {{
-        add("java.lang");
-    }};
-
-    private final ModelFactory factory;
-    private final ExecutableElement methodSymbol;
-
-    public MethodModel(ModelFactory factory, ExecutableElement methodSymbol) {
-        this.factory = factory;
-        this.methodSymbol = methodSymbol;
-    }
+public interface MethodModel {
 
     /**
      * Get name of the method (simple string).
      * @return Name of the method.
      */
-    public String name() {
-        return methodSymbol.getSimpleName().toString();
-    }
+    String name();
 
     /**
      * Get type model representing the return type.
      * @return TypeModel
      */
-    public TypeModel type() {
-        return factory.model(methodSymbol.getReturnType());
-    }
+    TypeModel type();
 
-    public String propertyName() {
-        String name  = name();
-        return name.startsWith("get") || name.startsWith("set") ? toLowerCase(name.charAt(3)) + name.substring(4)
-                : name.startsWith("is") ? toLowerCase(name.charAt(2)) + name.substring(3) : name;
-    }
+    String propertyName() ;
 
     /**
      * Get list of parameter (variable) models.
      * @return List of parameter (variable) models.
      */
-    public List<VarModel> parameters() {
-        return methodSymbol.getParameters().stream().map(var -> new VarModel(factory, var)).collect(toList());
-    }
+    List<VarModel> parameters();
 
-    public TypeModel declaringClass() {
-        return factory.model(methodSymbol.getEnclosingElement().asType());
-    }
+    TypeModel declaringClass();
 
-    public boolean isConstructor() {
-        return methodSymbol.getKind() == ElementKind.CONSTRUCTOR;
-    }
+    boolean isConstructor();
 
-    public boolean isStatic() {
-        return methodSymbol.getModifiers().contains(Modifier.STATIC);
-    }
+    boolean isStatic();
 
-    @Override
-    public String toString() {
-        return name();
-    }
-
-    public boolean isSimple(TypeModel model) {
-        return true;
-    }
-
-    public boolean isComplex(TypeModel typeModel) {
-        return !isSimple(typeModel);
-    }
-
+    boolean isPublic();
 }

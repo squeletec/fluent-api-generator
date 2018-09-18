@@ -27,14 +27,60 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.model.impl;
 
-public interface VarModel {
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
+import java.util.HashMap;
+import java.util.Map;
 
-    String name();
+public class PrimitiveTypeModel extends AbstractTypeModel {
 
-    TypeModel type();
+    private static final Map<TypeKind,String> PRIMITIVES = new HashMap<TypeKind, String>() {{
+        put(TypeKind.BOOLEAN, "Boolean");
+        put(TypeKind.BYTE, "Byte");
+        put(TypeKind.SHORT, "Short");
+        put(TypeKind.INT, "Integer");
+        put(TypeKind.LONG, "Long");
+        put(TypeKind.DOUBLE, "Double");
+        put(TypeKind.FLOAT, "Float");
+    }};
 
-    String packageName();
+
+    private final PrimitiveType type;
+
+    public PrimitiveTypeModel(PrimitiveType type) {
+        this.type = type;
+    }
+
+    @Override
+    public String wrapper() {
+        return PRIMITIVES.get(type.getKind());
+    }
+
+    @Override
+    public String simpleName() {
+        return toString();
+    }
+
+    @Override
+    public String packageName() {
+        return "";
+    }
+
+    @Override
+    public boolean isPrimitive() {
+        return true;
+    }
+
+    @Override
+    public boolean isSimple() {
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return type.toString();
+    }
 
 }

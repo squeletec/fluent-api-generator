@@ -27,14 +27,40 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.model.impl;
 
-public interface VarModel {
+import javax.lang.model.type.NoType;
 
-    String name();
+public class NoTypeModel extends AbstractTypeModel {
 
-    TypeModel type();
+    private final NoType type;
 
-    String packageName();
+    public NoTypeModel(NoType type) {
+        this.type = type;
+    }
 
+    @Override
+    public String wrapper() {
+        return "Void";
+    }
+
+    @Override
+    public String simpleName() {
+        return toString();
+    }
+
+    @Override
+    public String toString() {
+        return type.toString();
+    }
+
+    @Override
+    public String packageName() {
+        return "";
+    }
+
+    @Override
+    public boolean isComplex() {
+        return false;
+    }
 }

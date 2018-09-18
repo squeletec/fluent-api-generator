@@ -27,14 +27,15 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.model.impl;
 
-public interface VarModel {
+import static java.lang.Character.toLowerCase;
 
-    String name();
+public class TypeUtils {
 
-    TypeModel type();
-
-    String packageName();
+    public static String propertyName(String name) {
+        return name.startsWith("get") || name.startsWith("set") ? toLowerCase(name.charAt(3)) + name.substring(4)
+                : name.startsWith("is") ? toLowerCase(name.charAt(2)) + name.substring(3) : name;
+    }
 
 }

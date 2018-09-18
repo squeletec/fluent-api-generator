@@ -27,14 +27,44 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.model.impl;
 
-public interface VarModel {
+import fluent.api.generator.model.ModelFactory;
 
-    String name();
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.TypeKind;
 
-    TypeModel type();
+public class ArrayTypeModel extends AbstractTypeModel {
 
-    String packageName();
+    private final ArrayType type;
+
+    public ArrayTypeModel(ArrayType type, ModelFactory factory) {
+        this.type = type;
+    }
+
+    @Override
+    public String wrapper() {
+        return toString();
+    }
+
+    @Override
+    public String toString() {
+        return type.toString();
+    }
+
+    @Override
+    public String simpleName() {
+        return toString();
+    }
+
+    @Override
+    public String packageName() {
+        return null;
+    }
+
+    @Override
+    public boolean isMissing() {
+        return type.getComponentType().getKind() == TypeKind.ERROR;
+    }
 
 }

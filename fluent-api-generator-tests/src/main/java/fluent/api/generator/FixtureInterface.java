@@ -50,4 +50,5 @@ public interface FixtureInterface {
     @GenerateFullSender(className = "FixtureSender")
     void accept(@GenerateBuilder FixtureBean bean);
 
+    void generic(@GenerateBuilder(methodName = "pass") GenericFixture<String> value);
 }

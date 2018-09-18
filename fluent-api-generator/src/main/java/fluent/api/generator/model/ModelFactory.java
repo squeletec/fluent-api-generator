@@ -32,6 +32,8 @@ package fluent.api.generator.model;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
 
 public interface ModelFactory {
@@ -44,8 +46,22 @@ public interface ModelFactory {
 
     TypeModel asMemberOf(TypeElement declaring, TypeElement member);
 
-    VarModel asMemberOf(TypeElement declaring, VariableElement member);
+    VarModel asMemberOf(DeclaredType declaring, VariableElement member);
 
-    MethodModel asMemberOf(TypeElement declaring, ExecutableElement member);
+    MethodModel asMemberOf(DeclaredType declaring, ExecutableElement member);
+
+    MethodModel method(ExecutableElement executableElement, ExecutableType type);
+
+    default MethodModel method(ExecutableElement executableElement) {
+        return method(executableElement, (ExecutableType) executableElement.asType());
+    }
+
+    VarModel variable(VariableElement variableElement, TypeMirror type);
+
+    default VarModel variable(VariableElement variableElement) {
+        return variable(variableElement, variableElement.asType());
+    }
+
+    TypeModel type(TypeMirror typeMirror);
 
 }

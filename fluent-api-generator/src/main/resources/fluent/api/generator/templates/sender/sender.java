@@ -8,7 +8,6 @@ import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
 public class {{ className }} {
-
 {% for parameter in method.parameters %}
     private final {{ parameter.type }} {{ parameter.name }};
 {% endfor %}
@@ -19,8 +18,7 @@ public class {{ className }} {
 
     public {{ className }}({{ method.declaringClass }} factory{% for parameter in method.parameters %}, {{parameter.type}} {{parameter.name}}{% endfor %}) {
         this.factory = factory;
-{% endif %}
-{% for parameter in method.parameters %}
+{% endif %}{% for parameter in method.parameters %}
         this.{{parameter.name}} = {{parameter.name}};{% endfor %}
     }
 {% for setter in modelVar.type.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}

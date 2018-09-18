@@ -27,14 +27,11 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator;
 
-public interface VarModel {
+@GenerateFullBuilder
+public interface GenericFixture<T> {
 
-    String name();
-
-    TypeModel type();
-
-    String packageName();
+    void setValue(T genericObject);
 
 }

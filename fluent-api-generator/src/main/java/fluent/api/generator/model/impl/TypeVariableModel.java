@@ -27,14 +27,40 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.model.impl;
 
-public interface VarModel {
+import javax.lang.model.type.TypeVariable;
 
-    String name();
+public class TypeVariableModel extends AbstractTypeModel {
 
-    TypeModel type();
+    private final TypeVariable type;
 
-    String packageName();
+    public TypeVariableModel(TypeVariable type) {
+        this.type = type;
+    }
 
+    @Override
+    public String wrapper() {
+        return null;
+    }
+
+    @Override
+    public String simpleName() {
+        return toString();
+    }
+
+    @Override
+    public String toString() {
+        return type.toString();
+    }
+
+    @Override
+    public String packageName() {
+        return "";
+    }
+
+    @Override
+    public boolean isTypeVariable() {
+        return true;
+    }
 }

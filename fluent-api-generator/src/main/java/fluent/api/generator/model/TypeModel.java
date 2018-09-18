@@ -29,92 +29,39 @@
 
 package fluent.api.generator.model;
 
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
-public final class TypeModel {
+public interface TypeModel {
 
-    private static final Map<String,String> PRIMITIVES = new HashMap<String, String>() {{
-        put("boolean", "Boolean");
-        put("byte", "Byte");
-        put("short", "Short");
-        put("int", "Integer");
-        put("long", "Long");
-        put("double", "Double");
-    }};
+    String wrapper();
 
-    private final ModelFactory factory;
-    private final TypeMirror typeMirror;
-    private final TypeElement type;
+    String simpleName();
 
-    public TypeModel(ModelFactory factory, TypeMirror typeMirror, TypeElement type) {
-        this.factory = factory;
-        this.typeMirror = typeMirror;
-        this.type = type;
-    }
+    String packageName();
 
-    public String wrapper() {
-        return PRIMITIVES.getOrDefault(type.toString(), type.toString());
-    }
+    List<MethodModel> methods();
 
-    public String simpleName() {
-        return type.getSimpleName().toString();
-    }
+    List<TypeModel> interfaces();
 
-    public String packageName() {
-        return type == null ? "" : type.getEnclosingElement().toString();
-    }
+    TypeModel superClass();
 
-    public List<MethodModel> methods() {
-        return type.getEnclosedElements().stream()
-                .filter(ExecutableElement.class::isInstance)
-                .map(ExecutableElement.class::cast)
-                .filter(method -> method.getModifiers().contains(Modifier.PUBLIC))
-                .filter(method -> !method.getModifiers().contains(Modifier.STATIC))
-                .map(method -> factory.asMemberOf(type, method))
-                .collect(toList());
-    }
+    List<TypeModel> parameters();
 
-    public List<TypeModel> interfaces() {
-        return type.getInterfaces().stream().map(factory::model).collect(toList());
-    }
+    List<TypeModel> parameterVariables();
 
-    public TypeModel superClass() {
-        return factory.model(type.getSuperclass());
-    }
+    boolean isMissing();
 
-    public List<TypeModel> parameters() {
-        return type.getTypeParameters().stream().map(type1 -> factory.model(type1.asType())).collect(toList());
-    }
+    boolean isPrimitive();
 
-    public boolean isMissing() {
-        return typeMirror.getKind() == TypeKind.ERROR;
-    }
+    boolean isSimple();
 
-    @Override
-    public String toString() {
-        return typeMirror.toString();
-    }
+    boolean isComplex();
 
-    public boolean isPrimitive() {
-        return typeMirror.getKind().isPrimitive() || type.getKind() == ElementKind.ENUM;
-    }
-
-    public boolean isSimple() {
-        return isPrimitive() || "java.lang".equals(packageName());
-    }
-
-    public boolean isComplex() {
-        return !isSimple();
+    default boolean isTypeVariable() {
+        return false;
     }
 
 }

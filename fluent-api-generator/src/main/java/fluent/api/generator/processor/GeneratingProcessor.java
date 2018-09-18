@@ -31,7 +31,7 @@ package fluent.api.generator.processor;
 
 import fluent.api.generator.Templates;
 import fluent.api.generator.model.ModelFactory;
-import fluent.api.generator.model.ModelFactoryImpl;
+import fluent.api.generator.model.impl.ModelTypeFactory;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -59,7 +59,7 @@ public class GeneratingProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        ModelFactory factory = new ModelFactoryImpl(processingEnv.getTypeUtils());
+        ModelFactory factory = new ModelTypeFactory(processingEnv.getTypeUtils());
         GeneratingVisitor visitor = new GeneratingVisitor(processingEnv.getFiler(), factory);
 
         for(TypeElement annotation : annotations) {
