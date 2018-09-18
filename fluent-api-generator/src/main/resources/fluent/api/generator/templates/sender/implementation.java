@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 import {{ packageName }}.{{ className }};
 
 @Generated("Generated code using {{ templatePath }}")
-public class {{ className }}Impl implements {{ className }} {
+public class {{ className }}Impl{% if empty(modelVar.type.parameterVariables) %}{% else %}<{% for t in modelVar.type.parameterVariables %}{{ t }}{% endfor %}>{% endif %} implements {{ className }}{% if empty(modelVar.type.parameterVariables) %}{% else %}<{% for t in modelVar.type.parameterVariables %}{{ t }}{% endfor %}>{% endif %} {
 
 {% for parameter in method.parameters %}
     private final {{ parameter.type }} {{ parameter.name }};

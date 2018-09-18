@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
-public class {{ className }} {
+public class {{ className }}{% if empty(modelVar.type.parameterVariables) %}{% else %}<{% for t in modelVar.type.parameterVariables %}{{ t }}{% endfor %}>{% endif %} {
 {% for parameter in method.parameters %}
     private final {{ parameter.type }} {{ parameter.name }};
 {% endfor %}
