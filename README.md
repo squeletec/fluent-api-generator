@@ -1,5 +1,5 @@
 # Fluent API generator
-[![Build Status](https://travis-ci.org/c0stra/fluent-api-generator.svg?branch=master)](https://travis-ci.org/c0stra/fluent-api-generator.svg?branch=master)
+![Released version](https://img.shields.io/maven-central/v/foundation.fluent.api/fluent-api-generator.svg) [![Build Status](https://travis-ci.org/c0stra/fluent-api-generator.svg?branch=master)](https://travis-ci.org/c0stra/fluent-api-generator.svg?branch=master)
 
 Annotation processing based code generator used to generate fluent API for various situations or define 
 custom templates to generate totally custom derived code.
@@ -8,7 +8,109 @@ custom templates to generate totally custom derived code.
 
 ### 1. Maven dependencies
 
-TBD. Not yet deployed to maven central.
+To use the annotations which are driving the code generation, include following
+maven dependency:
+
+```xml
+<dependency>
+    <groupId>foundation.fluent.api</groupId>
+    <artifactId>fluent-api-generator-annotations</artifactId>
+    <version>1.3</version>
+</dependency>
+```
+
+### 1.1 Trigger code generator from standard class-path (not recommended)
+
+Simplest way to trigger the code generation, is to simply include the generator in your
+dependencies, so the `javac` will automatically detect the annotation processor, and use it.
+
+Keep in mind, that using this approach you introduce the processor and it's transitive dependencies
+to your project's run-time dependencies, which may not be desired.
+Therefore it's not the recommended approach.
+
+To include the dependency use following:
+```xml
+<dependency>
+    <groupId>foundation.fluent.api</groupId>
+    <artifactId>fluent-api-generator</artifactId>
+    <version>1.3</version>
+</dependency>
+```
+
+### 1.2 Trigger code generator from annotationProcessor path
+
+Correct way to use the annotation processor is to specify it only for the `javac`, but not as runtime dependency.
+For that you can pass it to annotation processor path.
+
+Using maven you can achieve it this way:
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <annotationProcessorPaths>
+                    <annotationProcessorPath>
+                        <groupId>foundation.fluent.api</groupId>
+                        <artifactId>fluent-api-generator</artifactId>
+                        <version>1.3</version>
+                    </annotationProcessorPath>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+This is configuration of the standard compilation. That means, that the code generation is
+always part of your compilation phase.
+
+### 1.3 Trigger annotation processing on-demand
+
+Normally, if the source for the code generation is static java code, it's fine to run it
+all the time, during every compilation.
+
+But sometimes it can be desired to fully controll the code generation yourself, meaning
+to trigger it on-demand, and maybe include the result in your project.
+
+This can be achieved e.g. using the `processor` maven plugin, if not bound to any
+phase of maven lifecycle.
+
+Then you can use following configuration:
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.bsc.maven</groupId>
+            <artifactId>maven-processor-plugin</artifactId>
+            <version>3.3.3</version>
+            <dependencies>
+                <dependency>
+                    <groupId>foundation.fluent.api</groupId>
+                    <artifactId>fluent-api-generator</artifactId>
+                    <version>1.3</version>
+                </dependency>
+            </dependencies>
+            <configuration>
+                <outputDirectory>src/main/generated</outputDirectory>
+                <processors>
+                    <processor>fluent.api.generator.processor.GeneratingProcessor</processor>
+                </processors>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+Once you have this in your `pom.xml`, then you can trigger the code generation
+explicitely using:
+```text
+mvn processor:process
+```
+Or using integration with your IDE.
+
+For more details about the plugin see: [https://github.com/bsorrentino/maven-annotation-plugin](https://github.com/bsorrentino/maven-annotation-plugin)
+
 
 ### 2. Predefined use cases
 
