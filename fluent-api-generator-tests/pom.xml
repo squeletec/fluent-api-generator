@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>foundation.fluent.api</groupId>
-            <artifactId>fluent-api-generator</artifactId>
+            <artifactId>fluent-api-generator-annotations</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -52,6 +52,18 @@
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <annotationProcessorPath>
+                            <groupId>foundation.fluent.api</groupId>
+                            <artifactId>fluent-api-generator</artifactId>
+                            <version>${project.version}</version>
+                        </annotationProcessorPath>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

@@ -26,8 +26,8 @@
         </dependency>
         <dependency>
             <groupId>foundation.fluent.api</groupId>
-            <artifactId>fluent-api-end-check</artifactId>
-            <version>1.9</version>
+            <artifactId>fluent-api-generator-annotations</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
