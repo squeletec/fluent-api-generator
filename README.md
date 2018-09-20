@@ -1,4 +1,6 @@
 # Fluent API generator
+[![Build Status](https://travis-ci.org/c0stra/fluent-api-generator.svg?branch=master)](https://travis-ci.org/c0stra/fluent-api-generator.svg?branch=master)
+
 Annotation processing based code generator used to generate fluent API for various situations or define 
 custom templates to generate totally custom derived code.
 
