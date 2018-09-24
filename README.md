@@ -204,3 +204,11 @@ public @interface GenerateParametersBuilder {
 #### 3.2 Java model usable in JTWIG templates
 
 TBD
+
+## Release notes
+
+### Version 1.4 (released on 24th September 2018)
+
+- Delivered [#1 Add proper support for sender and parameters builder for cases, when the method or containint class / interface is generic](https://github.com/c0stra/fluent-api-generator/issues/1)
+- Delivered [#2 Support proper generic boundaries in generated code](https://github.com/c0stra/fluent-api-generator/issues/2)
+
