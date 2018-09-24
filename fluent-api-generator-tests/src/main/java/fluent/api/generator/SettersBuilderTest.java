@@ -46,6 +46,12 @@ public class SettersBuilderTest extends TestBase {
     @Mock
     private List<FixtureBean> list;
 
+    @Mock
+    private FixtureInterface fixtureInterface;
+
+    @Mock
+    private GenericFixture<String> genericFixture;
+
     @Test
     public void testSimpleBuilder() {
         FixtureBean fixtureBean = new FixtureBeanBuilder(this.fixtureBean)
@@ -69,4 +75,10 @@ public class SettersBuilderTest extends TestBase {
         verifyNoMoreInteractions(fixtureBean);
     }
 
+    @Test
+    public void testGenericSender() {
+        new GenericFixtureGenericSender<>(fixtureInterface, genericFixture).value("").genericSend();
+        verify(genericFixture).setValue("");
+        verify(fixtureInterface).otherGeneric(genericFixture);
+    }
 }
