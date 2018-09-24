@@ -2,13 +2,13 @@
 {% set packageName = (packageName == "") ? method.declaringClass.packageName : packageName %}
 {% set modelVar = method.parameters[modelArgument] %}
 {% set className = (className == "") ? concat(modelVar.type.simpleName, capitalize(methodName), "er") : className %}
+{% set classParameters = empty(modelVar.type.parameterVariables) ? "" : concat("<", join(modelVar.type.parameterVariables, ", "), ">") %}
 package {{ packageName }}.impl;
 import javax.annotation.Generated;
 import {{ packageName }}.{{ className }};
 
 @Generated("Generated code using {{ templatePath }}")
-public class {{ className }}Impl{% if not empty(modelVar.type.parameterVariables) %}<{{ join(modelVar.type.parameterVariables, ", ") }}>{% endif %}
-    implements {{ className }}{% if not empty(modelVar.type.parameterVariables) %}<{{ join(modelVar.type.parameterVariables, ", ") }}>{% endif %} {
+public class {{ className }}Impl{{ classParameters }} implements {{ className }}{{ classParameters }} {
 
 {% for parameter in method.parameters %}
     private final {{ parameter.type }} {{ parameter.name }};
@@ -26,7 +26,7 @@ public class {{ className }}Impl{% if not empty(modelVar.type.parameterVariables
     }
 {% for setter in modelVar.type.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
     @Override
-    public {{ className }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
+    public {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
         this.{{ modelVar.name }}.{{ setter.name }}(value);
         return this;
     }
