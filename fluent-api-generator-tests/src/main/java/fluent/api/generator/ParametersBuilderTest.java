@@ -30,12 +30,14 @@
 package fluent.api.generator;
 
 import fluent.api.generator.impl.FixtureInterfaceCreateBuilderImpl;
+import fluent.api.generator.impl.GenericFixtureInterfaceStaticGenericMethodBuilderImpl;
+import fluent.api.generator.impl.GenericImmutableFixtureBuilderImpl;
 import org.mockito.Mock;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
@@ -50,6 +52,9 @@ public class ParametersBuilderTest extends TestBase {
 
     @Mock
     private List<Double> list;
+
+    @Mock
+    private GenericFixtureInterface<String> genericFixtureInterface;
 
     private final ZonedDateTime birth = now().atZone(ZoneId.systemDefault());
 
@@ -96,6 +101,23 @@ public class ParametersBuilderTest extends TestBase {
         FixtureInterfaceCreateBuilder builder = new FixtureInterfaceCreateBuilderImpl(fixtureInterface);
         assertEquals(builder.age(5).first("a").last("b").build(), "c");
         verify(fixtureInterface).create("a", "b", 5);
+    }
+
+    @Test void testGenericParameterBuilder() {
+        new GenericFixtureInterfaceMyGenericMethodInvokeer<>(genericFixtureInterface).input("Aha").invoke();
+        verify(genericFixtureInterface).myGenericMethod("Aha", null, 0, null, null);
+    }
+
+    @Test void testGenericStaticParameterBuilder() {
+        GenericFixtureInterfaceStaticGenericMethodBuilder<String> builder = new GenericFixtureInterfaceStaticGenericMethodBuilderImpl<>();
+        assertEquals(builder.input("Aha").age(5).build(), "Aha");
+    }
+
+    @Test void testGenericConstructorParmateresBuilder() {
+        GenericImmutableFixtureBuilder<Integer, String> builder = new GenericImmutableFixtureBuilderImpl<>();
+        GenericImmutableFixture<Integer, String> result = builder.t(5).u(Collections.singletonList("Ua")).build();
+        assertEquals(result.t, (Integer) 5);
+        assertEquals(result.u, Collections.singletonList("Ua"));
     }
 
 }

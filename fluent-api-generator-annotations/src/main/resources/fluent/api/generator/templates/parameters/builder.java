@@ -1,15 +1,14 @@
 {% set productType = (method.isConstructor) ? (method.declaringClass) : (method.type) %}
 {% set packageName = (packageName == "") ? method.declaringClass.packageName : packageName %}
 {% set className = (className == "") ? concat(method.declaringClass.simpleName, (method.isConstructor) ? "" : capitalize(method.name), capitalize(methodName), "er") : className %}
+{% set typeParameterList = (method.isConstructor) ? productType.parameters : ((method.isStatic) ? method.typeVariables : merge(method.declaringClass.parameters, method.typeVariables)) %}
+{% set classParameters = (empty(typeParameterList)) ? "" : concat("<", join(typeParameterList, ", "), ">") %}
 package {{ packageName }};
 import javax.annotation.Generated;
 import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
-public class {{ className }}{% if method.isConstructor
-        %}{% if empty(productType.parameters) %}{% else %}<{{ join(productType.parameters, ", ") }}>{% endif %}{% elseif method.isStatic
-        %}{% if empty(method.typeVariables) %}{% else %}<{{ join(method.typeVariables, ", ") }}>{% endif %}{% else
-        %}{% set parameters = merge(method.declaringClass.parameters, method.typeVariables) %}{% if not empty(parameters) %}<{{ join(parameters, ", ") }}>{% endif %}{% endif %} {
+public class {{ className }}{{ classParameters }} {
 
 {% for parameter in method.parameters %}
     private {{ parameter.type }} {{ parameter.name }};
@@ -22,7 +21,7 @@ public class {{ className }}{% if method.isConstructor
     }
 {% endif %}
 {% for parameter in method.parameters %}
-    public {{ className }} {{ parameter.name }}({{ parameter.type }} value) {
+    public {{ className }}{{ classParameters }} {{ parameter.name }}({{ parameter.type }} value) {
         this.{{ parameter.name }} = value;
         return this;
     }

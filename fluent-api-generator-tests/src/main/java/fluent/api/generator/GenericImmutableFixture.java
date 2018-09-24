@@ -29,20 +29,17 @@
 
 package fluent.api.generator;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
-public interface GenericFixtureInterface<T> {
+public class GenericImmutableFixture<T, U> {
 
-    @GenerateParameterBuilder(methodName = "invoke")
-    void myGenericMethod(T input, String last, int age, ZonedDateTime birth, List<Double> list);
+    public final T t;
+    public final List<U> u;
 
-    @GenerateParameterBuilder(methodName = "make")
-    <U> void m(T t, U u);
-
-    @GenerateFullParameterBuilder()
-    static <T> T staticGenericMethod(T input, String first, String last, int age, ZonedDateTime birth, List<Double> list) {
-        return input;
+    @GenerateFullParameterBuilder
+    public GenericImmutableFixture(T t, List<U> u) {
+        this.t = t;
+        this.u = u;
     }
 
 }
