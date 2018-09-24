@@ -7,7 +7,8 @@ import javax.annotation.Generated;
 import {{ packageName }}.{{ className }};
 
 @Generated("Generated code using {{ templatePath }}")
-public final class {{ className }}Impl{{ classParameters }} implements {{ className }}{{ classParameters }} {
+public final class {{ className }}Impl{% if not empty(productType.parameterVariables) %}<{% for t in productType.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %}
+    implements {{ className }}{{ classParameters }} {
 
     private final {{ productType }} object;
 

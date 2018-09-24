@@ -66,6 +66,8 @@ public interface TypeModel {
 
     boolean isComplex();
 
+    String declaration();
+
     boolean isTypeVariable();
 
 }

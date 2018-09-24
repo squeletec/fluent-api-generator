@@ -27,45 +27,14 @@
  *
  */
 
-package fluent.api.generator.model.impl;
+package fluent.api.generator;
 
-import javax.lang.model.type.TypeVariable;
+@GenerateFullBuilder
+public class BoundedGenericFixture<T extends Number> {
 
-public class TypeVariableModel extends AbstractTypeModel {
 
-    private final TypeVariable type;
+    public void setValue(T genericObject) {
 
-    public TypeVariableModel(TypeVariable type) {
-        this.type = type;
     }
 
-    @Override
-    public String wrapper() {
-        return null;
-    }
-
-    @Override
-    public String simpleName() {
-        return toString();
-    }
-
-    @Override
-    public String toString() {
-        return type.toString();
-    }
-
-    @Override
-    public String packageName() {
-        return "";
-    }
-
-    @Override
-    public String declaration() {
-        return (toString() + " extends " + type.getUpperBound()).replace(" extends java.lang.Object", "");
-    }
-
-    @Override
-    public boolean isTypeVariable() {
-        return true;
-    }
 }

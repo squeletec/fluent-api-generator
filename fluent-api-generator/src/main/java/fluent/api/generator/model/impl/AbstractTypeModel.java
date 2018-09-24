@@ -93,6 +93,11 @@ public abstract class AbstractTypeModel implements TypeModel {
     }
 
     @Override
+    public String declaration() {
+        return toString();
+    }
+
+    @Override
     public boolean isTypeVariable() {
         return false;
     }
