@@ -37,6 +37,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.ExecutableType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExecutableModel implements MethodModel {
 
@@ -72,6 +73,11 @@ public class ExecutableModel implements MethodModel {
             result.add(factory.variable(element.getParameters().get(i), type.getParameterTypes().get(i)));
         }
         return result;
+    }
+
+    @Override
+    public List<TypeModel> typeVariables() {
+        return type.getTypeVariables().stream().map(factory::type).collect(Collectors.toList());
     }
 
     @Override

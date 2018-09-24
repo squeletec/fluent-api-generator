@@ -6,7 +6,10 @@ import javax.annotation.Generated;
 import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
-public class {{ className }} {
+public class {{ className }}{% if method.isConstructor
+        %}{% if empty(productType.parameters) %}{% else %}<{{ join(productType.parameters, ", ") }}>{% endif %}{% elseif method.isStatic
+        %}{% if empty(method.typeVariables) %}{% else %}<{{ join(method.typeVariables, ", ") }}>{% endif %}{% else
+        %}{% set parameters = merge(method.declaringClass.parameters, method.typeVariables) %}{% if not empty(parameters) %}<{{ join(parameters, ", ") }}>{% endif %}{% endif %} {
 
 {% for parameter in method.parameters %}
     private {{ parameter.type }} {{ parameter.name }};
@@ -30,10 +33,10 @@ public class {{ className }} {
         if method.isConstructor
             %}new {{ method.declaringClass }}{%
         elseif method.isStatic
-            %}{{ method.declaringClass }}.{{ method.name }}{%
+            %}{{ method.declaringClass.raw }}.{{ method.name }}{%
         else
             %}factory.{{ method.name }}{%
         endif
-        %}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{parameter.name}}{% endfor %});
+        %}({{ join(method.parameters, ", ") }});
     }
 }

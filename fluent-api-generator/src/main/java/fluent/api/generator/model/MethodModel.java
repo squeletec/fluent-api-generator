@@ -58,6 +58,8 @@ public interface MethodModel {
      */
     List<VarModel> parameters();
 
+    List<TypeModel> typeVariables();
+
     TypeModel declaringClass();
 
     boolean isConstructor();

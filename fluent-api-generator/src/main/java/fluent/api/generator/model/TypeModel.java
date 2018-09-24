@@ -30,23 +30,29 @@
 package fluent.api.generator.model;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
+/**
+ * Model of java type (class, primitive type, type variable, etc.).
+ */
 public interface TypeModel {
 
-    String wrapper();
-
+    /**
+     * Simple name of the type (without package).
+     * @return Simple name.
+     */
     String simpleName();
 
     String packageName();
 
     List<MethodModel> methods();
 
+    String wrapper();
+
     List<TypeModel> interfaces();
 
     TypeModel superClass();
+
+    String raw();
 
     List<TypeModel> parameters();
 
@@ -60,8 +66,6 @@ public interface TypeModel {
 
     boolean isComplex();
 
-    default boolean isTypeVariable() {
-        return false;
-    }
+    boolean isTypeVariable();
 
 }

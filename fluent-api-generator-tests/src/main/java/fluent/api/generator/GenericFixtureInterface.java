@@ -27,74 +27,22 @@
  *
  */
 
-package fluent.api.generator.model.impl;
+package fluent.api.generator;
 
-import fluent.api.generator.model.MethodModel;
-import fluent.api.generator.model.TypeModel;
-
+import java.time.ZonedDateTime;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
+public interface GenericFixtureInterface<T> {
 
-public abstract class AbstractTypeModel implements TypeModel {
+    @GenerateParameterBuilder(methodName = "invoke")
+    void myGenericMethod(String first, String last, int age, ZonedDateTime birth, List<Double> list);
 
-    @Override
-    public abstract String toString();
+    @GenerateParameterBuilder(methodName = "make")
+    <U> void m(T t, U u);
 
-    @Override
-    public List<MethodModel> methods() {
-        return emptyList();
-    }
+    @GenerateFullParameterBuilder()
+    static <T> void staticGenericMethod(T input, String first, String last, int age, ZonedDateTime birth, List<Double> list) {
 
-    @Override
-    public List<TypeModel> interfaces() {
-        return emptyList();
-    }
-
-    @Override
-    public TypeModel superClass() {
-        return null;
-    }
-
-    @Override
-    public String raw() {
-        return toString();
-    }
-
-    @Override
-    public List<TypeModel> parameters() {
-        return emptyList();
-    }
-
-    @Override
-    public List<TypeModel> parameterVariables() {
-        return parameters().stream().filter(TypeModel::isTypeVariable).collect(toList());
-    }
-
-    @Override
-    public boolean isMissing() {
-        return false;
-    }
-
-    @Override
-    public boolean isPrimitive() {
-        return false;
-    }
-
-    @Override
-    public boolean isSimple() {
-        return false;
-    }
-
-    @Override
-    public boolean isComplex() {
-        return !isSimple();
-    }
-
-    @Override
-    public boolean isTypeVariable() {
-        return false;
     }
 
 }

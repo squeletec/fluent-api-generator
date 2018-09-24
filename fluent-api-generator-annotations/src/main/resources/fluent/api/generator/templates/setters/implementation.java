@@ -6,7 +6,8 @@ import javax.annotation.Generated;
 import {{ packageName }}.{{ className }};
 
 @Generated("Generated code using {{ templatePath }}")
-public final class {{ className }}Impl{% if empty(productType.parameterVariables) %}{% else %}<{% for t in productType.parameterVariables %}{{ t }}{% endfor %}>{% endif %} implements {{ className }}{% if empty(productType.parameterVariables) %}{% else %}<{% for t in productType.parameterVariables %}{{ t }}{% endfor %}>{% endif %} {
+public final class {{ className }}Impl{% if not empty(productType.parameterVariables) %}<{{ join(productType.parameterVariables, ", ") }}>{% endif %}
+    implements {{ className }}{% if not empty(productType.parameterVariables) %}<{{ join(productType.parameterVariables, ", ") }}>{% endif %} {
 
     private final {{ productType }} object;
 
@@ -22,7 +23,7 @@ public final class {{ className }}Impl{% if empty(productType.parameterVariables
 {% endif %}{% endfor %}
     @Override
     public {{ productType }} {{ methodName }}() {
-        return {{ method.name }}(object);
+        return object;
     }
 
 }

@@ -88,6 +88,11 @@ class DeclaredTypeModel extends AbstractTypeModel {
     }
 
     @Override
+    public String raw() {
+        return element.toString();
+    }
+
+    @Override
     public List<TypeModel> parameters() {
         return type.getTypeArguments().stream().map(factory::type).collect(toList());
     }
