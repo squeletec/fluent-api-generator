@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
-public class {{ className }}{% if empty(modelVar.type.parameterVariables) %}{% else %}<{% for t in modelVar.type.parameterVariables %}{{ t }}{% endfor %}>{% endif %} {
+public class {{ className }}{% if not empty(modelVar.type.parameterVariables) %}<{{ join(modelVar.type.parameterVariables, ", ") }}>{% endif %} {
 {% for parameter in method.parameters %}
     private final {{ parameter.type }} {{ parameter.name }};
 {% endfor %}
@@ -37,6 +37,6 @@ public class {{ className }}{% if empty(modelVar.type.parameterVariables) %}{% e
         else
             %}factory.{{ method.name }}{%
         endif
-        %}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{parameter.name}}{% endfor %});
+        %}({{ join(method.parameters, ", ") }});
     }
 }

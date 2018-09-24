@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
-public interface {{ className }}{% if empty(modelVar.type.parameterVariables) %}{% else %}<{% for t in modelVar.type.parameterVariables %}{{ t }}{% endfor %}>{% endif %} {
+public interface {{ className }}{% if not empty(modelVar.type.parameterVariables) %}<{{ join(modelVar.type.parameterVariables, ", ")}}>{% endif %} {
 {% for setter in modelVar.type.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
     public {{ className }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value);
 {% endif %}{% endfor %}
