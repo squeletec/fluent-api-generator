@@ -27,7 +27,9 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.full;
+
+import fluent.api.generator.Templates;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -54,7 +56,7 @@ import java.lang.annotation.Target;
         "/fluent/api/generator/templates/parameters/interface.java",
         "/fluent/api/generator/templates/parameters/implementation.java"
 })
-public @interface GenerateFullParameterBuilder {
+public @interface FluentParameters {
 
     /**
      * Specify package name, where to create the generated class.
@@ -80,6 +82,6 @@ public @interface GenerateFullParameterBuilder {
      * By default the method name is "build()".
      * @return Terminal method name.
      */
-    String methodName() default "build";
+    String methodName() default "";
 
 }

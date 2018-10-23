@@ -27,22 +27,40 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.generator.parameters;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
-public interface GenericFixtureInterface<T> {
+public class ParametersFixtureClass {
 
-    @GenerateParameterBuilder(methodName = "invoke")
-    void myGenericMethod(T input, String last, int age, ZonedDateTime birth, List<Double> list);
+    public static ParametersFixtureInterface fixtureInterface;
 
-    @GenerateParameterBuilder(methodName = "make")
-    <U> void m(T t, U u);
+    private final int anInt;
+    private final String aString;
+    private final LocalDateTime aDate;
+    private final List<Double> aList;
 
-    @GenerateFullParameterBuilder()
-    static <T> T staticGenericMethod(T input, String first, String last, int age, ZonedDateTime birth, List<Double> list) {
-        return input;
+    @fluent.api.simple.FluentParameters(methodName = "simpleBuild")
+    @fluent.api.full.FluentParameters
+    public ParametersFixtureClass(int anInt, String aString, LocalDateTime aDate, List<Double> aList) {
+        this.anInt = anInt;
+        this.aString = aString;
+        this.aDate = aDate;
+        this.aList = aList;
+        fixtureInterface.call(anInt, aString, aDate, aList);
+    }
+
+    @fluent.api.simple.FluentParameters(className = "ParametersFixtureClassFullCaller")
+    @fluent.api.full.FluentParameters
+    public static void call(int anInt, String aString, LocalDateTime aDate, List<Double> aList) {
+        fixtureInterface.call(anInt, aString, aDate, aList);
+    }
+
+    @fluent.api.simple.FluentParameters(packageName = "fluent.api.generator.parameters.simple")
+    @fluent.api.full.FluentParameters
+    public static Integer create(int anInt, String aString, LocalDateTime aDate, List<Double> aList) {
+        return anInt;
     }
 
 }

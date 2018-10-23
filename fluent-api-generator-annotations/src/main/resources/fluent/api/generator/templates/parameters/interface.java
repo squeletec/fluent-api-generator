@@ -1,6 +1,8 @@
 {% set productType = (method.isConstructor) ? (method.declaringClass) : (method.type) %}
 {% set packageName = (packageName == "") ? method.declaringClass.packageName : packageName %}
-{% set className = (className == "") ? concat(method.declaringClass.simpleName, (method.isConstructor) ? "" : capitalize(method.name), capitalize(methodName), "er") : className %}
+{% set methodName = (methodName == "") ? ((method.isConstructor) ? "build" : method.name) : methodName %}
+{% set classSuffix = concat(capitalize(methodName), "er") %}
+{% set className = (className == "") ? concat(method.declaringClass.simpleName, classSuffix.replaceFirst("teer", "tor").replaceFirst("eer", "er")) : className %}
 {% set typeParameterList = (method.isConstructor) ? productType.parameters : ((method.isStatic) ? method.typeVariables : merge(method.declaringClass.parameters, method.typeVariables)) %}
 {% set classParameters = (empty(typeParameterList)) ? "" : concat("<", join(typeParameterList, ", "), ">") %}
 package {{ packageName }};

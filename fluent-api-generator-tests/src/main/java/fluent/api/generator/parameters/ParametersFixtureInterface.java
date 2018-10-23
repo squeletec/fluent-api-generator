@@ -27,21 +27,24 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.generator.parameters;
 
-import fluent.api.full.FluentParameters;
-
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
-public class GenericImmutableFixture<T, U> {
+public interface ParametersFixtureInterface {
 
-    public final T t;
-    public final List<U> u;
+    @fluent.api.simple.FluentParameters
+    @fluent.api.full.FluentParameters(methodName = "fullCall")
+    void call(int anInt, String aString, LocalDateTime aTime, List<Double> aList);
 
-    @FluentParameters
-    public GenericImmutableFixture(T t, List<U> u) {
-        this.t = t;
-        this.u = u;
-    }
+    @fluent.api.simple.FluentParameters
+    @fluent.api.full.FluentParameters(className = "ParametersFixtureInterfaceFullCalculator")
+    int calculate(int anInt, String aString, LocalDateTime aTime, List<Double> aList);
+
+    @fluent.api.simple.FluentParameters
+    @fluent.api.full.FluentParameters(packageName = "fluent.api.generator.parameters.full")
+    ZonedDateTime create(int antInt, String aString, LocalDateTime aTime, List<Double> aList);
 
 }

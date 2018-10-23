@@ -27,17 +27,20 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.generator.parameters;
 
-import fluent.api.generator.impl.FixtureInterfaceCreateBuilderImpl;
-import fluent.api.generator.impl.GenericFixtureInterfaceStaticGenericMethodBuilderImpl;
+import fluent.api.generator.*;
 import fluent.api.generator.impl.GenericImmutableFixtureBuilderImpl;
+import fluent.api.generator.parameters.impl.ParametersFixtureInterfaceFullCalculatorImpl;
 import org.mockito.Mock;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
@@ -48,7 +51,7 @@ import static org.testng.Assert.assertEquals;
 public class ParametersBuilderTest extends TestBase {
 
     @Mock
-    private FixtureInterface fixtureInterface;
+    private ParametersFixtureInterface parametersFixtureInterface;
 
     @Mock
     private List<Double> list;
@@ -59,23 +62,31 @@ public class ParametersBuilderTest extends TestBase {
     private final ZonedDateTime birth = now().atZone(ZoneId.systemDefault());
 
     @Test
-    public void testInstanceMethodBuilder() {
-        when(fixtureInterface.createName("a", "b", 5)).thenReturn(1);
-        assertEquals(new FixtureInterfaceCreateNameSender(fixtureInterface).prefix("a").suffix("b").padding(5).send(), Integer.valueOf(1));
-        verify(fixtureInterface).createName("a", "b", 5);
+    public void testInstanceMethodCaller() {
+        LocalDateTime time = LocalDateTime.now();
+        List<Double> list = new LinkedList<>();
+        new ParametersFixtureInterfaceCaller(parametersFixtureInterface).anInt(5).aString("value").aTime(time).aList(list).call();
+        verify(parametersFixtureInterface).call(5, "value", time, list);
     }
 
     @Test
+    public void testInstanceMethodCalculator() {
+        when(parametersFixtureInterface.calculate(5, "value", null, null)).thenReturn(6);
+        ParametersFixtureInterfaceFullCalculator calculator = new ParametersFixtureInterfaceFullCalculatorImpl(parametersFixtureInterface);
+        Assert.assertEquals(calculator.anInt(5).aString("value").calculate(), 6);
+    }
+/*
+    @Test
     public void testStaticMethodBuilder() {
-        FixtureClass.fixtureInterface = fixtureInterface;
-        assertEquals(new FixtureBuilder().first("a").last("b").age(5).birth(birth).build(), birth);
+        FixtureClass.fixtureInterface = parametersFixtureInterface;
+        assertEquals(new FactoryFixtureCaller(parametersFixtureInterface).first("a").last("b").age(5).birth(birth).build(), birth);
     }
 
     @Test
     public void testConstructorBuilder() {
-        FixtureClass.fixtureInterface = fixtureInterface;
+        FixtureClass.fixtureInterface = parametersFixtureInterface;
         FixtureClass fixtureClass = new FixtureClassBuilder().first("a").last("b").age(5).birth(birth).list(list).build();
-        verify(fixtureInterface).myMethod("a", "b", 5, birth, list);
+        verify(parametersFixtureInterface).myMethod("a", "b", 5, birth, list);
         assertEquals(fixtureClass.first, "a");
         assertEquals(fixtureClass.last, "b");
         assertEquals(fixtureClass.age, 5);
@@ -84,27 +95,21 @@ public class ParametersBuilderTest extends TestBase {
 
 
     @Test
-    public void testInstanceMethodCaller() {
-        new FixtureInterfaceMyMethodCaller(fixtureInterface).first("a").last("b").age(5).list(list).birth(birth).call();
-        verify(fixtureInterface).myMethod("a", "b", 5, birth, list);
-    }
-
-    @Test
     public void testStaticMethodCaller() {
-        FixtureClass.fixtureInterface = fixtureInterface;
+        FixtureClass.fixtureInterface = parametersFixtureInterface;
         new FixtureClassStaticMethodSender().first("a").last("b").age(5).birth(birth).list(list).send();
-        verify(fixtureInterface).myMethod("a", "b", 5, birth, list);
+        verify(parametersFixtureInterface).myMethod("a", "b", 5, birth, list);
     }
 
     @Test void testFullParametersBuilder() {
-        when(fixtureInterface.create("a", "b", 5)).thenReturn("c");
-        FixtureInterfaceCreateBuilder builder = new FixtureInterfaceCreateBuilderImpl(fixtureInterface);
+        when(parametersFixtureInterface.create("a", "b", 5)).thenReturn("c");
+        FixtureInterfaceCreateBuilder builder = new FixtureInterfaceCreateBuilderImpl(parametersFixtureInterface);
         assertEquals(builder.age(5).first("a").last("b").build(), "c");
-        verify(fixtureInterface).create("a", "b", 5);
+        verify(parametersFixtureInterface).create("a", "b", 5);
     }
 
     @Test void testGenericParameterBuilder() {
-        new GenericFixtureInterfaceMyGenericMethodInvokeer<>(genericFixtureInterface).input("Aha").invoke();
+        new GenericFixtureInterfaceInvoker<>(genericFixtureInterface).input("Aha").invoke();
         verify(genericFixtureInterface).myGenericMethod("Aha", null, 0, null, null);
     }
 
@@ -112,7 +117,7 @@ public class ParametersBuilderTest extends TestBase {
         GenericFixtureInterfaceStaticGenericMethodBuilder<String> builder = new GenericFixtureInterfaceStaticGenericMethodBuilderImpl<>();
         assertEquals(builder.input("Aha").age(5).build(), "Aha");
     }
-
+*/
     @Test void testGenericConstructorParmateresBuilder() {
         GenericImmutableFixtureBuilder<Integer, String> builder = new GenericImmutableFixtureBuilderImpl<>();
         GenericImmutableFixture<Integer, String> result = builder.t(5).u(Collections.singletonList("Ua")).build();

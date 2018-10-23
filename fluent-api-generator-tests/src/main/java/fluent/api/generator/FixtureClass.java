@@ -29,6 +29,8 @@
 
 package fluent.api.generator;
 
+import fluent.api.simple.FluentParameters;
+
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -40,28 +42,17 @@ public class FixtureClass {
     public final int age;
     public final ZonedDateTime birth;
 
-    @GenerateParameterBuilder
+    @FluentParameters
     public FixtureClass(String first, String last, int age, ZonedDateTime birth, List<Double> list) {
         this.first = first;
         this.last = last;
         this.age = age;
         this.birth = birth;
-        fixtureInterface.myMethod(first, last, age, birth, list);
-    }
+     }
 
     @GenerateSender
     public FixtureClass(FixtureBean bean) {
         this(bean.getFirstName(), bean.getLastName(), bean.getAge(), null, null);
-    }
-
-    @GenerateParameterBuilder(methodName = "send")
-    public static void staticMethod(String first, String last, int age, ZonedDateTime birth, List<Double> list) {
-        fixtureInterface.myMethod(first, last, age, birth, list);
-    }
-
-    @GenerateParameterBuilder(className = "FixtureBuilder")
-    public static ZonedDateTime stringMethod(String first, String last, int age, ZonedDateTime birth) {
-        return birth;
     }
 
     @GenerateFullSender(modelArgument = 1, packageName = "fluent.api.dsl")
