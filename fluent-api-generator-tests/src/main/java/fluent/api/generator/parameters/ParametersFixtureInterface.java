@@ -47,4 +47,8 @@ public interface ParametersFixtureInterface {
     @fluent.api.full.FluentParameters(packageName = "fluent.api.generator.parameters.full")
     ZonedDateTime create(int antInt, String aString, LocalDateTime aTime, List<Double> aList);
 
+    @fluent.api.simple.FluentParameters
+    @fluent.api.full.FluentParameters(packageName = "fluent.api.generator.parameters.full")
+    <T> void generate(T aGenericParameter, int anInt, String aString, List<T> aList);
+
 }

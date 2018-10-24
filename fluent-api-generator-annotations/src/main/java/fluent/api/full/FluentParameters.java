@@ -79,7 +79,7 @@ public @interface FluentParameters {
 
     /**
      * Specify name of the terminal method (method which really does perform the call to the factory method).
-     * By default the method name is "build()".
+     * By default the method name is the target method name, or "build()" for constructors.
      * @return Terminal method name.
      */
     String methodName() default "";

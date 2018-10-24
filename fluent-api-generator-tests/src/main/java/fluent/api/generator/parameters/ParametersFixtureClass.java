@@ -38,28 +38,28 @@ public class ParametersFixtureClass {
 
     private final int anInt;
     private final String aString;
-    private final LocalDateTime aDate;
+    private final LocalDateTime aTime;
     private final List<Double> aList;
 
     @fluent.api.simple.FluentParameters(methodName = "simpleBuild")
     @fluent.api.full.FluentParameters
-    public ParametersFixtureClass(int anInt, String aString, LocalDateTime aDate, List<Double> aList) {
+    public ParametersFixtureClass(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
         this.anInt = anInt;
         this.aString = aString;
-        this.aDate = aDate;
+        this.aTime = aTime;
         this.aList = aList;
-        fixtureInterface.call(anInt, aString, aDate, aList);
+        fixtureInterface.call(anInt, aString, aTime, aList);
     }
 
-    @fluent.api.simple.FluentParameters(className = "ParametersFixtureClassFullCaller")
+    @fluent.api.simple.FluentParameters(className = "ParametersFixtureClassSimpleCaller")
     @fluent.api.full.FluentParameters
-    public static void call(int anInt, String aString, LocalDateTime aDate, List<Double> aList) {
-        fixtureInterface.call(anInt, aString, aDate, aList);
+    public static void call(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
+        fixtureInterface.call(anInt, aString, aTime, aList);
     }
 
     @fluent.api.simple.FluentParameters(packageName = "fluent.api.generator.parameters.simple")
     @fluent.api.full.FluentParameters
-    public static Integer create(int anInt, String aString, LocalDateTime aDate, List<Double> aList) {
+    public static Integer create(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
         return anInt;
     }
 
