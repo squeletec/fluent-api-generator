@@ -27,10 +27,10 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.generator.sender;
 
-import fluent.api.dsl.impl.FixtureBeanSenderImpl;
-import fluent.api.generator.impl.FixtureSenderImpl;
+import fluent.api.generator.TestBase;
+import fluent.api.generator.sender.impl.FixtureBeanAccepterImpl;
 import org.mockito.Mock;
 import org.testng.annotations.Test;
 
@@ -46,17 +46,14 @@ public class SenderTest extends TestBase {
     private FixtureBean fixtureBean;
 
     @Mock
-    private FixtureInterface fixtureInterface;
+    private SenderFixtureInterface fixtureInterface;
 
     @Mock
     private List<FixtureBean> list;
 
-    @Mock
-    private GenericFixture<String> genericFixture;
-
     @Test
     public void testSimpleSender() {
-        new FixtureBeanAccepter(fixtureInterface, fixtureBean).firstName("a").accept();
+        new FixtureBeanSimpleAccepter(fixtureInterface, fixtureBean).firstName("a").simpleAccept();
         verify(fixtureInterface).accept(fixtureBean);
         verify(fixtureBean).setFirstName("a");
         verifyNoMoreInteractions(fixtureBean);
@@ -64,8 +61,8 @@ public class SenderTest extends TestBase {
 
     @Test
     public void testFullSender() {
-        FixtureSender sender = new FixtureSenderImpl(fixtureInterface, fixtureBean);
-        sender.children(list).age(5).send();
+        FixtureBeanAccepter sender = new FixtureBeanAccepterImpl(fixtureInterface, fixtureBean);
+        sender.children(list).age(5).accept();
         verify(fixtureInterface).accept(fixtureBean);
         verify(fixtureBean).setAge(5);
         verify(fixtureBean).setChildren(list);
@@ -74,29 +71,18 @@ public class SenderTest extends TestBase {
 
     @Test
     public void testConstructorSender() {
-        FixtureClass.fixtureInterface = fixtureInterface;
-        FixtureClass fixtureClass = new FixtureBeanSender(fixtureBean).lastName("a").send();
+        SenderFixtureClass fixtureClass = new FixtureBeanSender(fixtureBean).firstName("f").lastName("a").send();
+        verify(fixtureBean).setFirstName("f");
         verify(fixtureBean).setLastName("a");
-        verify(fixtureBean).getFirstName();
-        verify(fixtureBean).getLastName();
-        verify(fixtureBean).getAge();
-        verifyNoMoreInteractions(fixtureBean);
+        assertEquals(fixtureClass.fixtureBean, fixtureBean);
     }
 
     @Test
     public void testStaticMethodSender() {
-        fluent.api.dsl.FixtureBeanSender sender = new FixtureBeanSenderImpl("1", fixtureBean);
-        assertEquals(sender.age(5).send(), "1");
+        FixtureBeanLocator locator = new FixtureBeanLocator("1", fixtureBean);
+        assertEquals(locator.age(5).locate(), "1");
         verify(fixtureBean).setAge(5);
         verifyNoMoreInteractions(fixtureBean);
-    }
-
-
-    @Test
-    public void testGenericSender() {
-        new GenericFixtureGenericSender<>(fixtureInterface, genericFixture).value("").genericSend();
-        verify(genericFixture).setValue("");
-        verify(fixtureInterface).otherGeneric(genericFixture);
     }
 
 }

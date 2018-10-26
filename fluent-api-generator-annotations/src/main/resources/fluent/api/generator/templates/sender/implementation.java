@@ -1,7 +1,9 @@
 {% set method = var.method %}
 {% set productType = (method.isConstructor) ? (method.declaringClass) : (method.type) %}
 {% set packageName = (packageName == "") ? method.declaringClass.packageName : packageName %}
-{% set className = (className == "") ? concat(var.type.simpleName, capitalize(methodName), "er") : className %}
+{% set methodName = (methodName == "") ? ((method.isConstructor) ? "send" : method.name) : methodName %}
+{% set classSuffix = concat(capitalize(methodName), "er").replaceFirst("teer", "tor").replaceFirst("eer", "er") %}
+{% set className = (className == "") ? concat(var.type.simpleName, capitalize(classSuffix)) : className %}
 {% set classParameters = empty(var.type.parameterVariables) ? "" : concat("<", join(var.type.parameterVariables, ", "), ">") %}
 package {{ packageName }}.impl;
 import javax.annotation.Generated;

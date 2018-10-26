@@ -27,17 +27,27 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.generator.sender;
 
-import fluent.api.simple.FluentBuilder;
+public class SenderFixtureClass {
 
-public interface FixtureInterface {
+    public final FixtureBean fixtureBean;
 
-    @fluent.api.full.FluentBuilder(className = "FixtureBeanFullBuilder")
-    FixtureBean BEAN = null;
+    public SenderFixtureClass(
+            @fluent.api.simple.FluentSender
+            @fluent.api.full.FluentSender(methodName = "fullSend")
+            FixtureBean bean
+    ) {
+        this.fixtureBean = bean;
+    }
 
-    void accept(@FluentBuilder FixtureBean bean);
-
-    void generic(@FluentBuilder(methodName = "pass") GenericFixture<String> genericValue);
+    public static String locate(
+            String id,
+            @fluent.api.simple.FluentSender
+            @fluent.api.full.FluentSender(packageName = "fluent.api.dsl")
+            FixtureBean bean
+    ) {
+        return id;
+    }
 
 }

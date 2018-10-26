@@ -78,7 +78,7 @@ public @interface FluentSender {
      * By default the method name is "build()".
      * @return Terminal method name.
      */
-    String methodName() default "send";
+    String methodName() default "";
 
     /**
      * Specify factory method used to create instances of the fluent parameters builder instead of constructor.

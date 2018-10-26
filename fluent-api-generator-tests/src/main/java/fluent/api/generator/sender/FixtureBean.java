@@ -27,17 +27,26 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.generator.sender;
 
-import fluent.api.simple.FluentBuilder;
+import java.util.List;
 
-public interface FixtureInterface {
+public interface FixtureBean {
 
-    @fluent.api.full.FluentBuilder(className = "FixtureBeanFullBuilder")
-    FixtureBean BEAN = null;
+    void setFirstName(String value);
 
-    void accept(@FluentBuilder FixtureBean bean);
+    void setLastName(String value);
 
-    void generic(@FluentBuilder(methodName = "pass") GenericFixture<String> genericValue);
+    void setAge(int age);
+
+    void setChildren(List<FixtureBean> value);
+
+    void setArray(int[] value);
+
+    String getFirstName();
+
+    String getLastName();
+
+    int getAge();
 
 }

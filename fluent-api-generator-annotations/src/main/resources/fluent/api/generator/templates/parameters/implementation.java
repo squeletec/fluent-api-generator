@@ -16,13 +16,21 @@ public class {{ className }}Impl{% if not empty(typeParameterList) %}<{% for t i
 {% for parameter in method.parameters %}
     private {{ parameter.type }} {{ parameter.name }};
 {% endfor %}
-{% if method.isConstructor or method.isStatic %}{% else %}
+{% if method.isConstructor or method.isStatic %}{% if factoryMethod != "" %}
+    public static {% if not empty(typeParameterList) %}<{% for t in typeParameterList %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %} {{ className }}{{ classParameters }} {{ factoryMethod }}() {
+        return new {{ className }}{% if not empty(typeParameterList) %}<>{% endif %}();
+    }
+{% endif %}{% else %}
     private final {{ method.declaringClass }} factory;
 
     public {{ className }}Impl({{ method.declaringClass }} factory) {
         this.factory = factory;
     }
-{% endif %}
+{% if factoryMethod != "" %}
+    public static {% if not empty(typeParameterList) %}<{% for t in typeParameterList %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %} {{ className }}{{ classParameters }} {{ factoryMethod }}({{ method.declaringClass }} factory) {
+        return new {{ className }}{% if not empty(typeParameterList) %}<>{% endif %}(factory);
+    }
+{% endif %}{% endif %}
 {% for parameter in method.parameters %}
     @Override
     public {{ className }}{{ classParameters }} {{ parameter.name }}({{ parameter.type }} value) {
