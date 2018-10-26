@@ -31,8 +31,8 @@ package fluent.api.generator.parameters;
 
 import fluent.api.generator.*;
 import fluent.api.generator.impl.GenericImmutableFixtureBuilderImpl;
+import fluent.api.generator.parameters.full.impl.ParametersFixtureInterfaceCreatorImpl;
 import fluent.api.generator.parameters.impl.*;
-import fluent.api.generator.parameters.simple.ParametersFixtureClassCreator;
 import org.mockito.Mock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -41,9 +41,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
+import static fluent.api.generator.parameters.ParametersFixtureInterfaceCreator.fixtureInterface;
+import static fluent.api.generator.parameters.simple.ParametersFixtureClassCreator.fixtureClass;
 import static java.time.LocalDateTime.now;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,12 +61,11 @@ public class ParametersBuilderTest extends TestBase {
     @Mock
     private GenericFixtureInterface<String> genericFixtureInterface;
 
-    private final ZonedDateTime birth = now().atZone(ZoneId.systemDefault());
+    private final ZonedDateTime zonedDateTime = now().atZone(ZoneId.systemDefault());
 
     @Test
     public void testSimpleInstanceMethodCaller() {
         LocalDateTime time = LocalDateTime.now();
-        List<Double> list = new LinkedList<>();
         new ParametersFixtureInterfaceCaller(parametersFixtureInterface).anInt(5).aString("value").aTime(time).aList(list).call();
         verify(parametersFixtureInterface).call(5, "value", time, list);
     }
@@ -73,7 +73,6 @@ public class ParametersBuilderTest extends TestBase {
     @Test
     public void testFullInstanceMethodCaller() {
         LocalDateTime time = LocalDateTime.now();
-        List<Double> list = new LinkedList<>();
         ParametersFixtureInterfaceFullCallerImpl caller = new ParametersFixtureInterfaceFullCallerImpl(parametersFixtureInterface);
         caller.anInt(5).aString("value").aTime(time).aList(list).fullCall();
         verify(parametersFixtureInterface).call(5, "value", time, list);
@@ -94,10 +93,22 @@ public class ParametersBuilderTest extends TestBase {
     }
 
     @Test
+    public void testSimpleInstanceMethodCreator() {
+        when(parametersFixtureInterface.create(5, "value", null, null)).thenReturn(zonedDateTime);
+        Assert.assertEquals(fixtureInterface(parametersFixtureInterface).anInt(5).aString("value").create(), zonedDateTime);
+    }
+
+    @Test
+    public void testFullInstanceMethodCreator() {
+        when(parametersFixtureInterface.create(5, "value", null, null)).thenReturn(zonedDateTime);
+        fluent.api.generator.parameters.full.ParametersFixtureInterfaceCreator calculator = new ParametersFixtureInterfaceCreatorImpl(parametersFixtureInterface);
+        Assert.assertEquals(calculator.anInt(5).aString("value").create(), zonedDateTime);
+    }
+
+    @Test
     public void testSimpleStaticMethodCaller() {
         ParametersFixtureClass.fixtureInterface = parametersFixtureInterface;
         LocalDateTime time = LocalDateTime.now();
-        List<Double> list = new LinkedList<>();
         new ParametersFixtureClassSimpleCaller().anInt(5).aString("value").aTime(time).aList(list).call();
         verify(parametersFixtureInterface).call(5, "value", time, list);
     }
@@ -106,7 +117,6 @@ public class ParametersBuilderTest extends TestBase {
     public void testFullStaticMethodCaller() {
         ParametersFixtureClass.fixtureInterface = parametersFixtureInterface;
         LocalDateTime time = LocalDateTime.now();
-        List<Double> list = new LinkedList<>();
         ParametersFixtureClassCaller caller = new ParametersFixtureClassCallerImpl();
         caller.anInt(5).aString("value").aTime(time).aList(list).call();
         verify(parametersFixtureInterface).call(5, "value", time, list);
@@ -116,7 +126,6 @@ public class ParametersBuilderTest extends TestBase {
     public void testSimpleConstructorBuilder() {
         ParametersFixtureClass.fixtureInterface = parametersFixtureInterface;
         LocalDateTime time = LocalDateTime.now();
-        List<Double> list = new LinkedList<>();
         ParametersFixtureClass fixtureClass = new ParametersFixtureClassSimpleBuilder().anInt(5).aString("value").aTime(time).aList(list).simpleBuild();
         verify(parametersFixtureInterface).call(5, "value", time, list);
     }
@@ -125,7 +134,6 @@ public class ParametersBuilderTest extends TestBase {
     public void testFullConstructorBuilder() {
         ParametersFixtureClass.fixtureInterface = parametersFixtureInterface;
         LocalDateTime time = LocalDateTime.now();
-        List<Double> list = new LinkedList<>();
         ParametersFixtureClassBuilder builder = new ParametersFixtureClassBuilderImpl();
         ParametersFixtureClass fixtureClass = builder.anInt(5).aString("value").aTime(time).aList(list).build();
         verify(parametersFixtureInterface).call(5, "value", time, list);
@@ -135,16 +143,14 @@ public class ParametersBuilderTest extends TestBase {
     public void testSimpleStaticMethodCreator() {
         ParametersFixtureClass.fixtureInterface = parametersFixtureInterface;
         LocalDateTime time = LocalDateTime.now();
-        List<Double> list = new LinkedList<>();
-        assertEquals(new ParametersFixtureClassCreator().anInt(5).aString("value").aTime(time).aList(list).create(), Integer.valueOf(5));
+        assertEquals(fixtureClass().anInt(5).aString("value").aTime(time).aList(list).create(), Integer.valueOf(5));
     }
 
     @Test
     public void testFullStaticMethodCreator() {
         ParametersFixtureClass.fixtureInterface = parametersFixtureInterface;
         LocalDateTime time = LocalDateTime.now();
-        List<Double> list = new LinkedList<>();
-        fluent.api.generator.parameters.ParametersFixtureClassCreator creator = new ParametersFixtureClassCreatorImpl();
+        ParametersFixtureClassCreator creator = new ParametersFixtureClassCreatorImpl();
         assertEquals(creator.anInt(5).aString("value").aTime(time).aList(list).create(), Integer.valueOf(5));
     }
 

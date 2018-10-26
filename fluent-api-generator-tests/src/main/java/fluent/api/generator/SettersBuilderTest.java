@@ -75,10 +75,4 @@ public class SettersBuilderTest extends TestBase {
         verifyNoMoreInteractions(fixtureBean);
     }
 
-    @Test
-    public void testGenericSender() {
-        new GenericFixtureGenericSender<>(fixtureInterface, genericFixture).value("").genericSend();
-        verify(genericFixture).setValue("");
-        verify(fixtureInterface).otherGeneric(genericFixture);
-    }
 }

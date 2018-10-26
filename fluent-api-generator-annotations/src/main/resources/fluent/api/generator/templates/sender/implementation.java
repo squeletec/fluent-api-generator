@@ -1,14 +1,14 @@
+{% set method = var.method %}
 {% set productType = (method.isConstructor) ? (method.declaringClass) : (method.type) %}
 {% set packageName = (packageName == "") ? method.declaringClass.packageName : packageName %}
-{% set modelVar = method.parameters[modelArgument] %}
-{% set className = (className == "") ? concat(modelVar.type.simpleName, capitalize(methodName), "er") : className %}
-{% set classParameters = empty(modelVar.type.parameterVariables) ? "" : concat("<", join(modelVar.type.parameterVariables, ", "), ">") %}
+{% set className = (className == "") ? concat(var.type.simpleName, capitalize(methodName), "er") : className %}
+{% set classParameters = empty(var.type.parameterVariables) ? "" : concat("<", join(var.type.parameterVariables, ", "), ">") %}
 package {{ packageName }}.impl;
 import javax.annotation.Generated;
 import {{ packageName }}.{{ className }};
 
 @Generated("Generated code using {{ templatePath }}")
-public class {{ className }}Impl{% if not empty(modelVar.type.parameterVariables) %}<{% for t in modelVar.type.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %}
+public class {{ className }}Impl{% if not empty(var.type.parameterVariables) %}<{% for t in var.type.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %}
     implements {{ className }}{{ classParameters }} {
 
 {% for parameter in method.parameters %}
@@ -25,10 +25,10 @@ public class {{ className }}Impl{% if not empty(modelVar.type.parameterVariables
 {% for parameter in method.parameters %}
         this.{{parameter.name}} = {{parameter.name}};{% endfor %}
     }
-{% for setter in modelVar.type.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
+{% for setter in var.type.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
     @Override
     public {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
-        this.{{ modelVar.name }}.{{ setter.name }}(value);
+        this.{{ var.name }}.{{ setter.name }}(value);
         return this;
     }
 {% endif %}{% endfor %}

@@ -27,7 +27,9 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.simple;
+
+import fluent.api.generator.Templates;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -50,7 +52,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
 @Templates("/fluent/api/generator/templates/setters/builder.java")
-public @interface GenerateBuilder {
+public @interface FluentBuilder {
 
     /**
      * Specify package name, where to create the generated class.
@@ -77,5 +79,11 @@ public @interface GenerateBuilder {
      * @return Terminal method name.
      */
     String methodName() default "build";
+
+    /**
+     * Specify factory method used to create instances of the fluent parameters builder instead of constructor.
+     * @return Name of the factory method.
+     */
+    String factoryMethod() default "";
 
 }

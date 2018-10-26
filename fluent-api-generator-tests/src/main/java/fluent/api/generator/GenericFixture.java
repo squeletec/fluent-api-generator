@@ -29,7 +29,9 @@
 
 package fluent.api.generator;
 
-@GenerateFullBuilder
+import fluent.api.full.FluentBuilder;
+
+@FluentBuilder
 public interface GenericFixture<T> {
 
     void setValue(T genericObject);

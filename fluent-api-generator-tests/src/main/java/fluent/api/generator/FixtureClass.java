@@ -30,6 +30,7 @@
 package fluent.api.generator;
 
 import fluent.api.simple.FluentParameters;
+import fluent.api.simple.FluentSender;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -50,13 +51,11 @@ public class FixtureClass {
         this.birth = birth;
      }
 
-    @GenerateSender
-    public FixtureClass(FixtureBean bean) {
+    public FixtureClass(@FluentSender FixtureBean bean) {
         this(bean.getFirstName(), bean.getLastName(), bean.getAge(), null, null);
     }
 
-    @GenerateFullSender(modelArgument = 1, packageName = "fluent.api.dsl")
-    public static String id(String id, FixtureBean bean) {
+    public static String id(String id, @fluent.api.full.FluentSender(packageName = "fluent.api.dsl") FixtureBean bean) {
         return id;
     }
 

@@ -35,6 +35,8 @@ public interface VarModel {
 
     TypeModel type();
 
+    MethodModel method();
+
     String packageName();
 
 }

@@ -29,19 +29,18 @@
 
 package fluent.api.generator;
 
+import fluent.api.simple.FluentBuilder;
+import fluent.api.simple.FluentSender;
+
 public interface FixtureInterface {
 
-    @GenerateFullBuilder(className = "FixtureBeanFullBuilder")
+    @fluent.api.full.FluentBuilder(className = "FixtureBeanFullBuilder")
     FixtureBean BEAN = null;
 
-    @GenerateSender(methodName = "accept")
-    @GenerateFullSender(className = "FixtureSender")
-    void accept(@GenerateBuilder FixtureBean bean);
+    void accept(@FluentBuilder @FluentSender(methodName = "accept") @fluent.api.full.FluentSender(className = "FixtureSender") FixtureBean bean);
 
-    @GenerateFullSender
-    void generic(@GenerateBuilder(methodName = "pass") GenericFixture<String> genericValue);
+    void generic(@FluentBuilder(methodName = "pass") @fluent.api.full.FluentSender GenericFixture<String> genericValue);
 
-    @GenerateSender(methodName = "genericSend")
-    <T> void otherGeneric(GenericFixture<T> genericValue);
+    <T> void otherGeneric(@FluentSender(methodName = "genericSend") GenericFixture<T> genericValue);
 
 }

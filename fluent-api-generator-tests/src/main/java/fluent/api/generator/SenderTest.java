@@ -51,6 +51,9 @@ public class SenderTest extends TestBase {
     @Mock
     private List<FixtureBean> list;
 
+    @Mock
+    private GenericFixture<String> genericFixture;
+
     @Test
     public void testSimpleSender() {
         new FixtureBeanAccepter(fixtureInterface, fixtureBean).firstName("a").accept();
@@ -87,4 +90,13 @@ public class SenderTest extends TestBase {
         verify(fixtureBean).setAge(5);
         verifyNoMoreInteractions(fixtureBean);
     }
+
+
+    @Test
+    public void testGenericSender() {
+        new GenericFixtureGenericSender<>(fixtureInterface, genericFixture).value("").genericSend();
+        verify(genericFixture).setValue("");
+        verify(fixtureInterface).otherGeneric(genericFixture);
+    }
+
 }

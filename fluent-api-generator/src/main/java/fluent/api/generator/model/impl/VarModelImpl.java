@@ -29,10 +29,13 @@
 
 package fluent.api.generator.model.impl;
 
+import fluent.api.generator.model.MethodModel;
 import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.TypeModel;
 import fluent.api.generator.model.VarModel;
 
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
@@ -56,6 +59,13 @@ public class VarModelImpl implements VarModel {
     @Override
     public TypeModel type() {
         return factory.type(type);
+    }
+
+    @Override
+    public MethodModel method() {
+        if(element.getKind() == ElementKind.PARAMETER) {
+            return factory.method((ExecutableElement) element.getEnclosingElement());
+        } else return null;
     }
 
     @Override

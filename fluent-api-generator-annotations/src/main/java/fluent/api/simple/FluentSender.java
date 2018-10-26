@@ -27,7 +27,9 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.simple;
+
+import fluent.api.generator.Templates;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -48,9 +50,9 @@ import java.lang.annotation.Target;
  * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+@Target({ElementType.PARAMETER})
 @Templates("/fluent/api/generator/templates/sender/sender.java")
-public @interface GenerateSender {
+public @interface FluentSender {
 
     /**
      * Specify package name, where to create the generated class.
@@ -79,10 +81,9 @@ public @interface GenerateSender {
     String methodName() default "send";
 
     /**
-     * Specify, which argument on the annotated method, is the model for the fluent API.
-     * By default it's 1st argument (index 0).
-     * @return Position of the model argument.
+     * Specify factory method used to create instances of the fluent parameters builder instead of constructor.
+     * @return Name of the factory method.
      */
-    int modelArgument() default 0;
+    String factoryMethod() default "";
 
 }

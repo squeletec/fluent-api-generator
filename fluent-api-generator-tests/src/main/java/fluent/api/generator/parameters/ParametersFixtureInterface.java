@@ -43,9 +43,9 @@ public interface ParametersFixtureInterface {
     @fluent.api.full.FluentParameters(className = "ParametersFixtureInterfaceFullCalculator")
     int calculate(int anInt, String aString, LocalDateTime aTime, List<Double> aList);
 
-    @fluent.api.simple.FluentParameters
+    @fluent.api.simple.FluentParameters(factoryMethod = "fixtureInterface")
     @fluent.api.full.FluentParameters(packageName = "fluent.api.generator.parameters.full")
-    ZonedDateTime create(int antInt, String aString, LocalDateTime aTime, List<Double> aList);
+    ZonedDateTime create(int anInt, String aString, LocalDateTime aTime, List<Double> aList);
 
     @fluent.api.simple.FluentParameters
     @fluent.api.full.FluentParameters(packageName = "fluent.api.generator.parameters.full")

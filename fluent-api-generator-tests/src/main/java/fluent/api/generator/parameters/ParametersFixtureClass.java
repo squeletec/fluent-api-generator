@@ -57,7 +57,7 @@ public class ParametersFixtureClass {
         fixtureInterface.call(anInt, aString, aTime, aList);
     }
 
-    @fluent.api.simple.FluentParameters(packageName = "fluent.api.generator.parameters.simple")
+    @fluent.api.simple.FluentParameters(packageName = "fluent.api.generator.parameters.simple", factoryMethod = "fixtureClass")
     @fluent.api.full.FluentParameters
     public static Integer create(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
         return anInt;
