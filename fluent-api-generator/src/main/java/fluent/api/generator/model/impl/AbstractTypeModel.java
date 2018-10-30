@@ -31,6 +31,7 @@ package fluent.api.generator.model.impl;
 
 import fluent.api.generator.model.MethodModel;
 import fluent.api.generator.model.TypeModel;
+import fluent.api.generator.model.VarModel;
 
 import java.util.List;
 
@@ -44,6 +45,11 @@ public abstract class AbstractTypeModel implements TypeModel {
 
     @Override
     public List<MethodModel> methods() {
+        return emptyList();
+    }
+
+    @Override
+    public List<VarModel> fields() {
         return emptyList();
     }
 
@@ -73,11 +79,6 @@ public abstract class AbstractTypeModel implements TypeModel {
     }
 
     @Override
-    public boolean isMissing() {
-        return false;
-    }
-
-    @Override
     public boolean isPrimitive() {
         return false;
     }
@@ -99,6 +100,11 @@ public abstract class AbstractTypeModel implements TypeModel {
 
     @Override
     public boolean isTypeVariable() {
+        return false;
+    }
+
+    @Override
+    public boolean hasDefaultConstructor() {
         return false;
     }
 

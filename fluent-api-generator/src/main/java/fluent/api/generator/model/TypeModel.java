@@ -48,6 +48,8 @@ public interface TypeModel {
 
     String wrapper();
 
+    List<VarModel> fields();
+
     List<TypeModel> interfaces();
 
     TypeModel superClass();
@@ -58,8 +60,6 @@ public interface TypeModel {
 
     List<TypeModel> parameterVariables();
 
-    boolean isMissing();
-
     boolean isPrimitive();
 
     boolean isSimple();
@@ -69,5 +69,7 @@ public interface TypeModel {
     String declaration();
 
     boolean isTypeVariable();
+
+    boolean hasDefaultConstructor();
 
 }

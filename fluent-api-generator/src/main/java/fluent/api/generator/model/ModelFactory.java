@@ -38,12 +38,6 @@ import javax.lang.model.type.TypeMirror;
 
 public interface ModelFactory {
 
-    MethodModel model(ExecutableElement methodElement);
-
-    TypeModel model(TypeMirror typeMirror);
-
-    VarModel model(VariableElement variableElement);
-
     TypeModel asMemberOf(TypeElement declaring, TypeElement member);
 
     VarModel asMemberOf(DeclaredType declaring, VariableElement member);

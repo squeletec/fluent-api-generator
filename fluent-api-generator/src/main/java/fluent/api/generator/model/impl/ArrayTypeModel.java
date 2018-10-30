@@ -32,7 +32,6 @@ package fluent.api.generator.model.impl;
 import fluent.api.generator.model.ModelFactory;
 
 import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.TypeKind;
 
 public class ArrayTypeModel extends AbstractTypeModel {
 
@@ -63,8 +62,8 @@ public class ArrayTypeModel extends AbstractTypeModel {
     }
 
     @Override
-    public boolean isMissing() {
-        return type.getComponentType().getKind() == TypeKind.ERROR;
+    public boolean hasDefaultConstructor() {
+        return true;
     }
 
 }

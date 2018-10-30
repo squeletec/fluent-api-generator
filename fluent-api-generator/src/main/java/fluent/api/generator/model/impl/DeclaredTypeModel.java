@@ -32,12 +32,11 @@ package fluent.api.generator.model.impl;
 import fluent.api.generator.model.MethodModel;
 import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.TypeModel;
+import fluent.api.generator.model.VarModel;
 
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.util.Elements;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -47,11 +46,13 @@ class DeclaredTypeModel extends AbstractTypeModel {
     private final DeclaredType type;
     private final TypeElement element;
     private final ModelFactory factory;
+    private final Elements elements;
 
-    DeclaredTypeModel(DeclaredType type, ModelFactory factory) {
+    DeclaredTypeModel(DeclaredType type, ModelFactory factory, Elements elements) {
         this.type = type;
         this.element = (TypeElement) type.asElement();
         this.factory = factory;
+        this.elements = elements;
     }
 
     @Override
@@ -71,8 +72,16 @@ class DeclaredTypeModel extends AbstractTypeModel {
 
     @Override
     public List<MethodModel> methods() {
-        return element.getEnclosedElements().stream()
+        return elements.getAllMembers(element).stream()
                 .filter(element -> element.getModifiers().contains(Modifier.PUBLIC) && !element.getModifiers().contains(Modifier.STATIC) && element instanceof ExecutableElement).map(ExecutableElement.class::cast)
+                .map(method -> factory.asMemberOf(type, method))
+                .collect(toList());
+    }
+
+    @Override
+    public List<VarModel> fields() {
+        return elements.getAllMembers(element).stream()
+                .filter(element -> element.getModifiers().contains(Modifier.PUBLIC) && !element.getModifiers().contains(Modifier.STATIC) && element instanceof VariableElement).map(VariableElement.class::cast)
                 .map(method -> factory.asMemberOf(type, method))
                 .collect(toList());
     }
@@ -106,4 +115,10 @@ class DeclaredTypeModel extends AbstractTypeModel {
     public String toString() {
         return type.toString();
     }
+
+    @Override
+    public boolean hasDefaultConstructor() {
+        return elements.getAllMembers(element).stream().anyMatch(member -> member.getKind() == ElementKind.CONSTRUCTOR && member.getModifiers().contains(Modifier.PUBLIC) && ((ExecutableElement)member).getParameters().isEmpty());
+    }
+
 }

@@ -59,7 +59,7 @@ public class GeneratingProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        ModelFactory factory = new ModelTypeFactory(processingEnv.getTypeUtils());
+        ModelFactory factory = new ModelTypeFactory(processingEnv.getTypeUtils(), processingEnv.getElementUtils());
         GeneratingVisitor visitor = new GeneratingVisitor(processingEnv.getFiler(), factory);
 
         for(TypeElement annotation : annotations) {

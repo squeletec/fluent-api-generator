@@ -34,40 +34,21 @@ import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.TypeModel;
 import fluent.api.generator.model.VarModel;
 
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.*;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 public class ModelTypeFactory implements ModelFactory {
 
     private final Types types;
+    private final Elements elements;
 
-    public ModelTypeFactory(Types types) {
+    public ModelTypeFactory(Types types, Elements elements) {
         this.types = types;
-    }
-
-    @Override
-    public MethodModel model(ExecutableElement methodElement) {
-        throw new UnsupportedOperationException("Unsupported");
-    }
-
-    @Override
-    public TypeModel model(TypeMirror typeMirror) {
-        throw new UnsupportedOperationException("Unsupported");
-    }
-
-    @Override
-    public VarModel model(VariableElement variableElement) {
-        throw new UnsupportedOperationException("Unsupported");
-    }
-
-    private Element generalMemberOf(DeclaredType declaring, Element member) {
-        TypeMirror memberOf = types.asMemberOf(declaring, member);
-        Element element = types.asElement(memberOf);
-        return element == null ? member : element;
+        this.elements = elements;
     }
 
     @Override
@@ -125,7 +106,7 @@ public class ModelTypeFactory implements ModelFactory {
 
             @Override
             public TypeModel visitDeclared(DeclaredType type, ModelFactory factory) {
-                return new DeclaredTypeModel(type, factory);
+                return new DeclaredTypeModel(type, factory, elements);
             }
 
             @Override
