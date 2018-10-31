@@ -16,7 +16,7 @@ maven dependency:
 <dependency>
     <groupId>foundation.fluent.api</groupId>
     <artifactId>fluent-api-generator-annotations</artifactId>
-    <version>1.3</version>
+    <version>2.0</version>
 </dependency>
 ```
 
@@ -34,7 +34,7 @@ To include the dependency use following:
 <dependency>
     <groupId>foundation.fluent.api</groupId>
     <artifactId>fluent-api-generator</artifactId>
-    <version>1.3</version>
+    <version>2.0</version>
 </dependency>
 ```
 
@@ -54,7 +54,7 @@ Using maven you can achieve it this way:
                     <annotationProcessorPath>
                         <groupId>foundation.fluent.api</groupId>
                         <artifactId>fluent-api-generator</artifactId>
-                        <version>1.3</version>
+                        <version>2.0</version>
                     </annotationProcessorPath>
                 </annotationProcessorPaths>
             </configuration>
@@ -89,7 +89,7 @@ Then you can use following configuration:
                 <dependency>
                     <groupId>foundation.fluent.api</groupId>
                     <artifactId>fluent-api-generator</artifactId>
-                    <version>1.3</version>
+                    <version>2.0</version>
                 </dependency>
             </dependencies>
             <configuration>
@@ -143,7 +143,7 @@ public class Person {
 
 You can use following annotation on the constructor:
 ```java
-    @GenerateParametersBuilder
+    @FluentParameters
     public Person(String firstName, String lastName, ZonedDateTime birth, Gender gender) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -206,6 +206,19 @@ public @interface GenerateParametersBuilder {
 TBD
 
 ## Release notes
+
+### Version 2.0 (released on 31st October 2018)
+
+- Changed annotations to:
+  @FluentParameters
+  @FluentBuilder
+  @FluentSender
+- Added possibility to specify custom terminal method name using `methodName` attribute.
+- Default method name is now not hardcoded, but detected from method name, which is annotated, or
+  contains annotated type.
+- Added possibility to generate factory method, so it's not necessary to use constructor.
+- Added detection of default constructor of target entity, and creating default constructor of parameter-less factory
+  method
 
 ### Version 1.4 (released on 24th September 2018)
 
