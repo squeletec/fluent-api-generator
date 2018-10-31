@@ -1,6 +1,7 @@
 {% set productType = empty(var) ? type : var.type %}
 {% set packageName = (packageName == "") ? (empty(var) ? type.packageName : var.packageName) : packageName %}
-{% set className = (className == "") ? concat(productType.simpleName, capitalize(methodName), "er") : className %}
+{% set classSuffix = concat(capitalize(methodName), "er").replaceFirst("teer", "tor").replaceFirst("eer", "er") %}
+{% set className = (className == "") ? concat(productType.simpleName, classSuffix) : className %}
 {% set classParameters = empty(productType.parameterVariables) ? "" : concat("<", join(productType.parameterVariables, ", "), ">") %}
 package {{ packageName }};
 
