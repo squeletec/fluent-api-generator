@@ -119,6 +119,17 @@ The code generator comes with couple of ready to use annotations, which can be u
 derived from some model Java element (class, method, field).
 
 #### 2.1 Builder for call of factory method / constructor with many arguments
+
+For creating fluent interface, which contain methods for every parameter of a method or
+constructor, there is annotation:
+
+```java
+@FluentParameters
+```
+
+It can be used on: constructor, instance method, static method.
+
+##### 2.1.1 Constructor builder
 Let's have following class, which we need to be immutable, so we
 pass all field values to constructor:
 
@@ -161,10 +172,165 @@ Person person = new PersonBuilder()
     .build();
 ```
 
-Targets: constructor, instance method, static method.
+##### 2.1.2 Factory method builder
+To create factory method builder you can annotate any method with the annotation:
 
-#### 2.2 Fluent builder for beans with setters
+```java
+public class PersonFactory {
+    @FluentParameters
+    public static Person create(String firstName, String lastName, ZonedDateTime birth, Gender gender) {
+        return new Person(firstName, lastName, birth, gender);
+    }    
+}
+```
 
+You'll get following fleunt interface, very similar to previous, but by default with naming derived
+from the factory method like this:
+```java
+Person person = new PersonFactoryCreator()
+    .firstName("John")
+    .lastName("Doe")
+    .birth(birthDate)
+    .gender(MALE)
+    .create();
+```
+In case of instance factory method, the fluent interface constructor accepts the factory instance:
+```java
+Person person = new PersonFactoryCreator(factory)
+    .firstName("John")
+    .lastName("Doe")
+    .birth(birthDate)
+    .gender(MALE)
+    .create();
+```
+##### 2.1.3 All parameters and configuration for parameters builder
+The annotation `@FluentParameters` has following parameters to customize the generated code:
+
+| Parameter   | Description | Default behavior |
+| ----------- | ----------- | ---------------- |
+| packageName | Specify package name, where to generate the class | Package name of the class, containing the annotated method / constructor |
+| methodName  | Name of the terminal method | Name of the annotated factory method, or `build` for constructor |
+| className   | Name of the generated class | Name of the class, containing the annotated method / constructor with method name derived suffix (e.g. `build` -> `Builder`) |
+| factoryMethod | Name of the fluent interface factory method | If not defined, no factory method is generated. |
+
+Return value of the builder terminal method is:
+- return type of the factory method in case of annotated factory method (it will be `void`, if the return type is `void`)
+- class owning the annotated constructor in case of constructor
+
+Terminal method is always annotated with `@End` annotation to benefit from compile time check, that it gets
+invoked. See: [Fluent API sentence end check](https://github.com/c0stra/fluent-api-end-check)
+
+There are actually two different annotations:
+- `@fluent.api.simple.FluentParameters`: generates just a simple builder class.
+- `@fluent.api.full.FluentParameters`: generates separate interface, and it's implementation.
+
+#### 2.2 Fluent builder for bean with setters
+
+For creating fluent interface, which contain methods for every setter method of a class, e.g. PoJo bean,
+use annotation:
+
+```java
+@FluentBuilder
+```
+
+It can be used on: class, field, method parameter.
+
+To generate fluent builder for PoJo, simply annotate any of the targets mentioned above, e.g. the class itself:
+```java
+@FluentBuilder
+public class PoJo {
+    private String firstName;
+    private String lastName;
+    private Gender gender;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+}
+```
+Then you get a builder:
+```java
+PoJo pojo = new PoJoBuilder()
+    .firstName("John")
+    .lastName("Doe")
+    .gender(MALE)
+    .build();
+```
+##### 2.2.1 All parameters and configuration for parameters builder
+The annotation `@FluentBuilder` has following parameters to customize the generated code:
+
+| Parameter   | Description | Default behavior |
+| ----------- | ----------- | ---------------- |
+| packageName | Specify package name, where to generate the class | Package name of the class, containing the annotated method / constructor |
+| methodName  | Name of the terminal method | `build` |
+| className   | Name of the generated class | Name of the annotated class with method name derived suffix (e.g. `build` -> `Builder`) |
+| factoryMethod | Name of the fluent interface factory method | If not defined, no factory method is generated. |
+
+The generated builder always contains constructor (and factory method) with one parameter - the initial instance
+to be updated fluently.
+
+If the annotated class has default constructor, then there is additional constructor (and factory method)
+without arguments created.
+
+Return value of the builder terminal method is:
+- return type of the factory method in case of annotated factory method
+- class owning the annotated constructor in case of constructor
+
+Terminal method is always annotated with `@End` annotation to benefit from compile time check, that it gets
+invoked. See: [Fluent API sentence end check](https://github.com/c0stra/fluent-api-end-check)
+
+There are actually two different annotations:
+- `@fluent.api.simple.FluentBuilder`: generates just a simple builder class.
+- `@fluent.api.full.FluentBuilder`: generates separate interface, and it's implementation.
+
+#### 2.3 Fluent sender for beans with setter
+Very similar to fluent builder described above is `@FLuentSender`. It also generates fluent interface for applying setter
+methods on an underlying object (e.g. a PoJo).
+
+Additionally it associates this builder with consumer method of the result, and generates terminal method so, that it
+invokes the consumer, passing it the result. If there are other parameters to be passed to the consumer,
+they have to be provided to the constructor, as well as the factory instance in case of instance
+factory method.
+
+This annotation can be only applied on method parameter:
+```java
+public interface Consumer {
+    void send(@FluentSender PoJo pojo, int additionalParameter);    
+}
+```
+It will be used this way:
+```java
+new ConsumerSender(consumer, 5)
+    .firstName("John")
+    .lastName("Doe")
+    .gender(MALE)
+    .send();
+```
+
+##### 2.3.1 All parameters and configuration for parameters builder
+The annotation `@FluentSender` has following parameters to customize the generated code:
+
+| Parameter   | Description | Default behavior |
+| ----------- | ----------- | ---------------- |
+| packageName | Specify package name, where to generate the class | Package name of the class, containing the method with annotated parameter |
+| methodName  | Name of the terminal method | Name of the method with annotated parameter |
+| className   | Name of the generated class | Name of the class containing method with annotated parameter, with method name derived suffix (e.g. `build` -> `Builder`) |
+| factoryMethod | Name of the fluent interface factory method | If not defined, no factory method is generated. |
+
+Return value of the builder terminal method is:
+- return type of the factory method in case of annotated factory method (it will be `void`, if the return type is `void`)
+
+Terminal method is always annotated with `@End` annotation to benefit from compile time check, that it gets
+invoked. See: [Fluent API sentence end check](https://github.com/c0stra/fluent-api-end-check)
+
+There are actually two different annotations:
+- `@fluent.api.simple.FluentSender`: generates just a simple builder class.
+- `@fluent.api.full.FluentSender`: generates separate interface, and it's implementation.
 
 ### 3. Custom fluent API generator development
 
