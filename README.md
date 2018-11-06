@@ -224,6 +224,37 @@ There are actually two different annotations:
 - `@fluent.api.simple.FluentParameters`: generates just a simple builder class.
 - `@fluent.api.full.FluentParameters`: generates separate interface, and it's implementation.
 
+##### 2.1.4 Example of designing "readable" fluent interface
+The goal of fluent API (fluent interface) is not only chaining of the methods, but also being
+a platform for designing readable "english like" language. Meaning, that if you ignore
+java specific syntax, and expand Camel case to normal words, you get meaningful english
+sentence.
+
+An example of such readable sentence can be achieved by this example:
+```java
+    @FluentParameters(factoryMethod = "createObjectWith", methodName = "andSend")
+    public static void call(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
+        fixtureInterface.call(anInt, aString, aTime, aList);
+    }
+```
+You get generated code, that can be used using static import like this:
+```java
+createObjectWith().anInt(5).aString("value").aTime(time).aList(list).andSend();
+```
+
+There are many options how to achieve readability, and it's up to everybody's taste.
+Another example (very unusual for Java, but nicely readable) can be:
+```java
+    @FluentParameters(className = "Create", factoryMethod = "objectWith", methodName = "andSend")
+    public static void call(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
+        fixtureInterface.call(anInt, aString, aTime, aList);
+    }
+```
+
+Resulting in following sentence:
+```java
+Create.objectWith().anInt(5).aString("value").aTime(time).aList(list).andSend();
+```
 #### 2.2 Fluent builder for bean with setters
 
 For creating fluent interface, which contain methods for every setter method of a class, e.g. PoJo bean,
@@ -289,7 +320,7 @@ There are actually two different annotations:
 - `@fluent.api.full.FluentBuilder`: generates separate interface, and it's implementation.
 
 #### 2.3 Fluent sender for beans with setter
-Very similar to fluent builder described above is `@FLuentSender`. It also generates fluent interface for applying setter
+Very similar to fluent builder described above is `@FluentSender`. It also generates fluent interface for applying setter
 methods on an underlying object (e.g. a PoJo).
 
 Additionally it associates this builder with consumer method of the result, and generates terminal method so, that it

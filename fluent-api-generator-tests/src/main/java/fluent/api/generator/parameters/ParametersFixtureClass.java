@@ -41,7 +41,7 @@ public class ParametersFixtureClass {
     private final LocalDateTime aTime;
     private final List<Double> aList;
 
-    @fluent.api.simple.FluentParameters(methodName = "simpleBuild")
+    @fluent.api.simple.FluentParameters(className = "ParametersFixtureClassSimpleCaller")
     @fluent.api.full.FluentParameters
     public ParametersFixtureClass(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
         this.anInt = anInt;
@@ -51,7 +51,7 @@ public class ParametersFixtureClass {
         fixtureInterface.call(anInt, aString, aTime, aList);
     }
 
-    @fluent.api.simple.FluentParameters(className = "ParametersFixtureClassSimpleCaller")
+    @fluent.api.simple.FluentParameters(factoryMethod = "createObjectWith", methodName = "andSend")
     @fluent.api.full.FluentParameters
     public static void call(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
         fixtureInterface.call(anInt, aString, aTime, aList);

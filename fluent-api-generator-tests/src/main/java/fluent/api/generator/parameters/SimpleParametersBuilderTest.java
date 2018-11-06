@@ -41,6 +41,7 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static fluent.api.generator.parameters.ParametersFixtureClassAndSender.createObjectWith;
 import static fluent.api.generator.parameters.ParametersFixtureInterfaceCreator.fixtureInterface;
 import static fluent.api.generator.parameters.simple.ParametersFixtureClassCreator.fixtureClass;
 import static java.time.LocalDateTime.now;
@@ -85,7 +86,7 @@ public class SimpleParametersBuilderTest extends TestBase {
     public void testSimpleStaticMethodCaller() {
         ParametersFixtureClass.fixtureInterface = parametersFixtureInterface;
         LocalDateTime time = LocalDateTime.now();
-        new ParametersFixtureClassSimpleCaller().anInt(5).aString("value").aTime(time).aList(list).call();
+        createObjectWith().anInt(5).aString("value").aTime(time).aList(list).andSend();
         verify(parametersFixtureInterface).call(5, "value", time, list);
     }
 
@@ -93,7 +94,7 @@ public class SimpleParametersBuilderTest extends TestBase {
     public void testSimpleConstructorBuilder() {
         ParametersFixtureClass.fixtureInterface = parametersFixtureInterface;
         LocalDateTime time = LocalDateTime.now();
-        ParametersFixtureClass fixtureClass = new ParametersFixtureClassSimpleBuilder().anInt(5).aString("value").aTime(time).aList(list).simpleBuild();
+        ParametersFixtureClass fixtureClass = new ParametersFixtureClassSimpleCaller().anInt(5).aString("value").aTime(time).aList(list).build();
         verify(parametersFixtureInterface).call(5, "value", time, list);
     }
 
