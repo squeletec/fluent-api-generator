@@ -33,6 +33,7 @@ import fluent.api.generator.model.MethodModel;
 import fluent.api.generator.model.TypeModel;
 import fluent.api.generator.model.VarModel;
 
+import javax.lang.model.type.DeclaredType;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -45,6 +46,11 @@ public abstract class AbstractTypeModel implements TypeModel {
 
     @Override
     public List<MethodModel> methods() {
+        return emptyList();
+    }
+
+    @Override
+    public List<MethodModel> declaredMethods() {
         return emptyList();
     }
 
@@ -89,11 +95,6 @@ public abstract class AbstractTypeModel implements TypeModel {
     }
 
     @Override
-    public boolean isComplex() {
-        return !isSimple();
-    }
-
-    @Override
     public String declaration() {
         return toString();
     }
@@ -105,6 +106,26 @@ public abstract class AbstractTypeModel implements TypeModel {
 
     @Override
     public boolean hasDefaultConstructor() {
+        return false;
+    }
+
+    @Override
+    public boolean isPublic() {
+        return true;
+    }
+
+    @Override
+    public boolean isSubclassOf(DeclaredType parent) {
+        return false;
+    }
+
+    @Override
+    public boolean isArray() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnum() {
         return false;
     }
 

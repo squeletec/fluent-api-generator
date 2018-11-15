@@ -36,6 +36,7 @@ import fluent.api.generator.model.VarModel;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
@@ -71,6 +72,16 @@ public class VarModelImpl implements VarModel {
     @Override
     public String packageName() {
         return type().packageName();
+    }
+
+    @Override
+    public boolean isStatic() {
+        return element.getModifiers().contains(Modifier.STATIC);
+    }
+
+    @Override
+    public boolean isPublic() {
+        return element.getModifiers().contains(Modifier.PUBLIC);
     }
 
     @Override

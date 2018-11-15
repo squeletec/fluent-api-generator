@@ -57,6 +57,11 @@ public class ExecutableModel implements MethodModel {
     }
 
     @Override
+    public String toString() {
+        return name();
+    }
+
+    @Override
     public TypeModel type() {
         return factory.type(type.getReturnType());
     }

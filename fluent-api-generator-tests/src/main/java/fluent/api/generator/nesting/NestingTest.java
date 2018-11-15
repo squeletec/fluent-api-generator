@@ -27,60 +27,19 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.nesting;
 
-import com.sun.tools.javac.code.Type;
+import org.testng.annotations.Test;
 
-import javax.lang.model.type.DeclaredType;
-import java.util.List;
+import static org.mockito.Mockito.mock;
 
-/**
- * Model of java type (class, primitive type, type variable, etc.).
- */
-public interface TypeModel {
+public class NestingTest {
 
-    /**
-     * Simple name of the type (without package).
-     * @return Simple name.
-     */
-    String simpleName();
-
-    String packageName();
-
-    List<MethodModel> methods();
-
-    List<MethodModel> declaredMethods();
-
-    String wrapper();
-
-    List<VarModel> fields();
-
-    List<TypeModel> interfaces();
-
-    TypeModel superClass();
-
-    String raw();
-
-    List<TypeModel> parameters();
-
-    List<TypeModel> parameterVariables();
-
-    boolean isPrimitive();
-
-    boolean isSimple();
-
-    String declaration();
-
-    boolean isTypeVariable();
-
-    boolean hasDefaultConstructor();
-
-    boolean isPublic();
-
-    boolean isSubclassOf(DeclaredType parent);
-
-    boolean isArray();
-
-    boolean isEnum();
+    @Test
+    public void test() {
+        NestingNestingFixtureClass mock = mock(NestingNestingFixtureClass.class);
+        mock.groupStrings();
+        mock.simpleString();
+    }
 
 }

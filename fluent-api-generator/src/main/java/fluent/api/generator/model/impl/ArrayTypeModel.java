@@ -66,4 +66,8 @@ public class ArrayTypeModel extends AbstractTypeModel {
         return true;
     }
 
+    @Override
+    public boolean isArray() {
+        return true;
+    }
 }

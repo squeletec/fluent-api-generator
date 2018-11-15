@@ -58,9 +58,4 @@ public class NoTypeModel extends AbstractTypeModel {
     public String packageName() {
         return "";
     }
-
-    @Override
-    public boolean isComplex() {
-        return false;
-    }
 }

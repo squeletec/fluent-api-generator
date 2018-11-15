@@ -1,5 +1,5 @@
-{% set productType = empty(var) ? type : var.type %}
-{% set packageName = (packageName == "") ? (empty(var) ? type.packageName : var.packageName) : packageName %}
+{% set productType = defined(var) ? var.type : type %}
+{% set packageName = (packageName == "") ? (defined(var) ? var.packageName : type.packageName) : packageName %}
 {% set classSuffix = concat(capitalize(methodName), "er").replaceFirst("teer", "tor").replaceFirst("eer", "er") %}
 {% set className = (className == "") ? concat(productType.simpleName, classSuffix) : className %}
 {% set classParameters = empty(productType.parameterVariables) ? "" : concat("<", join(productType.parameterVariables, ", "), ">") %}

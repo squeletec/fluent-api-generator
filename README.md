@@ -184,7 +184,7 @@ public class PersonFactory {
 }
 ```
 
-You'll get following fleunt interface, very similar to previous, but by default with naming derived
+You'll get following fluent interface, very similar to previous, but by default with naming derived
 from the factory method like this:
 ```java
 Person person = new PersonFactoryCreator()

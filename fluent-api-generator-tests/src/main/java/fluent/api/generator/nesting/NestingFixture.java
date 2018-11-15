@@ -27,60 +27,15 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.nesting;
 
-import com.sun.tools.javac.code.Type;
-
-import javax.lang.model.type.DeclaredType;
 import java.util.List;
 
-/**
- * Model of java type (class, primitive type, type variable, etc.).
- */
-public interface TypeModel {
+@Nesting
+public interface NestingFixture {
 
-    /**
-     * Simple name of the type (without package).
-     * @return Simple name.
-     */
-    String simpleName();
+    List<String> Strings();
 
-    String packageName();
-
-    List<MethodModel> methods();
-
-    List<MethodModel> declaredMethods();
-
-    String wrapper();
-
-    List<VarModel> fields();
-
-    List<TypeModel> interfaces();
-
-    TypeModel superClass();
-
-    String raw();
-
-    List<TypeModel> parameters();
-
-    List<TypeModel> parameterVariables();
-
-    boolean isPrimitive();
-
-    boolean isSimple();
-
-    String declaration();
-
-    boolean isTypeVariable();
-
-    boolean hasDefaultConstructor();
-
-    boolean isPublic();
-
-    boolean isSubclassOf(DeclaredType parent);
-
-    boolean isArray();
-
-    boolean isEnum();
+    String String();
 
 }

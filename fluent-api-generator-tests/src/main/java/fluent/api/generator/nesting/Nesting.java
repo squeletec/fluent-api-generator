@@ -27,60 +27,34 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.nesting;
 
-import com.sun.tools.javac.code.Type;
+import fluent.api.generator.Templates;
 
-import javax.lang.model.type.DeclaredType;
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.Collection;
 
 /**
- * Model of java type (class, primitive type, type variable, etc.).
+ * Annotation, that triggers code generator to create a fluent builder for an existing factory method with many arguments.
+ *
+ * E.g. for method:
+ *
+ * public MyClass(String a, String b, int c, Object d) {
+ *
+ * }
+ *
+ * it will generate fluent API, which can be used like following:
+ *
+ * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
  */
-public interface TypeModel {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
+@Templates({"/test/templates/nesting.java"})
+public @interface Nesting {
 
-    /**
-     * Simple name of the type (without package).
-     * @return Simple name.
-     */
-    String simpleName();
-
-    String packageName();
-
-    List<MethodModel> methods();
-
-    List<MethodModel> declaredMethods();
-
-    String wrapper();
-
-    List<VarModel> fields();
-
-    List<TypeModel> interfaces();
-
-    TypeModel superClass();
-
-    String raw();
-
-    List<TypeModel> parameters();
-
-    List<TypeModel> parameterVariables();
-
-    boolean isPrimitive();
-
-    boolean isSimple();
-
-    String declaration();
-
-    boolean isTypeVariable();
-
-    boolean hasDefaultConstructor();
-
-    boolean isPublic();
-
-    boolean isSubclassOf(DeclaredType parent);
-
-    boolean isArray();
-
-    boolean isEnum();
+    Class<?> nestedType() default Collection.class;
 
 }

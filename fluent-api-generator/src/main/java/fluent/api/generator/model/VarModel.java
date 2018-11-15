@@ -39,4 +39,8 @@ public interface VarModel {
 
     String packageName();
 
+    boolean isStatic();
+
+    boolean isPublic();
+
 }

@@ -37,6 +37,7 @@ import fluent.api.generator.model.VarModel;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -47,12 +48,14 @@ class DeclaredTypeModel extends AbstractTypeModel {
     private final TypeElement element;
     private final ModelFactory factory;
     private final Elements elements;
+    private final Types types;
 
-    DeclaredTypeModel(DeclaredType type, ModelFactory factory, Elements elements) {
+    DeclaredTypeModel(DeclaredType type, ModelFactory factory, Elements elements, Types types) {
         this.type = type;
         this.element = (TypeElement) type.asElement();
         this.factory = factory;
         this.elements = elements;
+        this.types = types;
     }
 
     @Override
@@ -76,6 +79,12 @@ class DeclaredTypeModel extends AbstractTypeModel {
                 .filter(element -> element.getModifiers().contains(Modifier.PUBLIC) && !element.getModifiers().contains(Modifier.STATIC) && element instanceof ExecutableElement).map(ExecutableElement.class::cast)
                 .map(method -> factory.asMemberOf(type, method))
                 .collect(toList());
+    }
+
+    @Override
+    public List<MethodModel> declaredMethods() {
+        return element.getEnclosedElements().stream().filter(element -> (element.getKind() == ElementKind.METHOD)).map(ExecutableElement.class::cast)
+                .map(method -> factory.asMemberOf(type, method)).collect(toList());
     }
 
     @Override
@@ -108,7 +117,7 @@ class DeclaredTypeModel extends AbstractTypeModel {
 
     @Override
     public boolean isSimple() {
-        return element.getKind() == ElementKind.ENUM || "java.lang".equals(packageName());
+        return isEnum() || "java.lang".equals(packageName());
     }
 
     @Override
@@ -119,6 +128,21 @@ class DeclaredTypeModel extends AbstractTypeModel {
     @Override
     public boolean hasDefaultConstructor() {
         return elements.getAllMembers(element).stream().anyMatch(member -> member.getKind() == ElementKind.CONSTRUCTOR && member.getModifiers().contains(Modifier.PUBLIC) && ((ExecutableElement)member).getParameters().isEmpty());
+    }
+
+    @Override
+    public boolean isPublic() {
+        return element.getModifiers().contains(Modifier.PUBLIC);
+    }
+
+    @Override
+    public boolean isSubclassOf(DeclaredType parent) {
+        return types.isAssignable(type, parent);
+    }
+
+    @Override
+    public boolean isEnum() {
+        return element.getKind() == ElementKind.ENUM;
     }
 
 }

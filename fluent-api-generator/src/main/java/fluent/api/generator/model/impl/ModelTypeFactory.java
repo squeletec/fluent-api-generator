@@ -106,7 +106,7 @@ public class ModelTypeFactory implements ModelFactory {
 
             @Override
             public TypeModel visitDeclared(DeclaredType type, ModelFactory factory) {
-                return new DeclaredTypeModel(type, factory, elements);
+                return new DeclaredTypeModel(type, factory, elements, types);
             }
 
             @Override
