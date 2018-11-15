@@ -10,6 +10,7 @@ import fluent.api.End;
 import fluent.validation.Check;
 import fluent.validation.CheckDsl;
 import {{productType}};
+import static fluent.validation.Checks.equalTo;
 
 
 @Generated("Generated code using {{ templatePath }}")
@@ -28,8 +29,12 @@ public final class {{ className }}{% if not empty(productType.parameterVariables
         return new {{ className }}{% if not empty(productType.parameterVariables) %}<>{% endif %}();
     }
 {% for getter in productType.methods %}{% if getter.name.startsWith("get") and getter.name != "getClass" and getter.parameters.size == 0 %}
+    public {{ className }}{{ classParameters }} {{ getter.propertyName }}(Check<? super {{ getter.type.wrapper }}> value) {
+        return withField("{{ getter.propertyName }}", {{ productType.simpleName }}::{{ getter }}).matching(value);
+    }
+
     public {{ className }}{{ classParameters }} {{ getter.propertyName }}({{ getter.type }} value) {
-        return withField("{{ getter.propertyName }}", {{ productType.simpleName }}::{{ getter }}).equalTo(value);
+        return {{ getter.propertyName }}(equalTo(value));
     }
 {% endif %}{% endfor %}
 
