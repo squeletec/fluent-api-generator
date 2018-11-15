@@ -9,6 +9,7 @@
         <module>fluent-api-generator-annotations</module>
         <module>fluent-api-generator</module>
         <module>fluent-api-generator-tests</module>
+        <module>fluent-validation-generator</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
 
