@@ -404,6 +404,11 @@ TBD
 
 ## Release notes
 
+### Version 2.1 (released on 15th November 2018)
+- Fixed template loading. Not any more using class path loader (that would only use annotation processor classpath),
+  but using compiled project's class path.
+- Introduced more features to type model: isArray, isPublic, isEnum, isSubclassOf(type)
+
 ### Version 2.0 (released on 31st October 2018)
 
 - Changed annotations to:
