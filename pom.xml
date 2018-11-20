@@ -4,7 +4,7 @@
     <groupId>foundation.fluent.api</groupId>
     <artifactId>fluent-api-generator-project</artifactId>
     <packaging>pom</packaging>
-    <version>2.2-SNAPSHOT</version>
+    <version>2.2</version>
     <modules>
         <module>fluent-api-generator-annotations</module>
         <module>fluent-api-generator</module>
@@ -46,7 +46,7 @@
         <connection>scm:git:git://github.com/c0stra/fluent-api-generator.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/c0stra/fluent-api-generator.git</developerConnection>
         <url>https://github.com/c0stra/fluent-api-generator</url>
-        <tag>HEAD</tag>
+        <tag>fluent-api-generator-2.2</tag>
     </scm>
 
     <properties>
