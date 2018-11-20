@@ -127,6 +127,7 @@
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <goals>deploy</goals>
+                    <tagNameFormat>fluent-api-generator-@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
             <plugin>
