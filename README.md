@@ -404,6 +404,10 @@ TBD
 
 ## Release notes
 
+### Version 2.2 (released on 20th November 2018)
+- Introduced generator of fluent validators
+- Generators of various builders separated to specific module. Not any-more part of annotations.
+
 ### Version 2.1 (released on 15th November 2018)
 - Fixed template loading. Not any more using class path loader (that would only use annotation processor classpath),
   but using compiled project's class path.
