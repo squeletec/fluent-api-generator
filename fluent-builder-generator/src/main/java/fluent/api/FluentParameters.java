@@ -27,7 +27,7 @@
  *
  */
 
-package fluent.api.generator.validation;
+package fluent.api;
 
 import fluent.api.generator.Templates;
 
@@ -50,9 +50,9 @@ import java.lang.annotation.Target;
  * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
-@Templates({"/fluent/api/generator/templates/validation/check.jtwig"})
-public @interface FluentCheck {
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+@Templates("/fluent/api/templates/parameters.jtwig")
+public @interface FluentParameters {
 
     /**
      * Specify package name, where to create the generated class.
@@ -72,6 +72,13 @@ public @interface FluentCheck {
      * @return Generated class name.
      */
     String className() default "";
+
+    /**
+     * Specify name of the terminal method (method which really does perform the call to the factory method).
+     * By default the method name is the target method name, or "build()" for constructors.
+     * @return Terminal method name.
+     */
+    String methodName() default "";
 
     /**
      * Specify factory method used to create instances of the fluent parameters builder instead of constructor.

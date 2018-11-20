@@ -20,7 +20,12 @@
     <dependencies>
         <dependency>
             <groupId>foundation.fluent.api</groupId>
-            <artifactId>fluent-api-generator-annotations</artifactId>
+            <artifactId>fluent-builder-generator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>foundation.fluent.api</groupId>
+            <artifactId>fluent-builder-api-generator</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

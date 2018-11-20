@@ -29,6 +29,9 @@
 
 package fluent.api.generator.parameters;
 
+import fluent.api.FluentParameters;
+import fluent.api.FluentParametersApi;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,8 +44,8 @@ public class ParametersFixtureClass {
     private final LocalDateTime aTime;
     private final List<Double> aList;
 
-    @fluent.api.simple.FluentParameters(className = "ParametersFixtureClassSimpleCaller")
-    @fluent.api.full.FluentParameters
+    @FluentParameters(className = "ParametersFixtureClassSimpleCaller")
+    @FluentParametersApi
     public ParametersFixtureClass(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
         this.anInt = anInt;
         this.aString = aString;
@@ -51,14 +54,14 @@ public class ParametersFixtureClass {
         fixtureInterface.call(anInt, aString, aTime, aList);
     }
 
-    @fluent.api.simple.FluentParameters(factoryMethod = "createObjectWith", methodName = "andSend")
-    @fluent.api.full.FluentParameters
+    @FluentParameters(factoryMethod = "createObjectWith", methodName = "andSend")
+    @FluentParametersApi
     public static void call(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
         fixtureInterface.call(anInt, aString, aTime, aList);
     }
 
-    @fluent.api.simple.FluentParameters(packageName = "fluent.api.generator.parameters.simple", factoryMethod = "fixtureClass")
-    @fluent.api.full.FluentParameters
+    @FluentParameters(packageName = "fluent.api.generator.parameters.simple", factoryMethod = "fixtureClass")
+    @FluentParametersApi
     public static Integer create(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
         return anInt;
     }

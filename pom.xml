@@ -10,6 +10,8 @@
         <module>fluent-api-generator</module>
         <module>fluent-api-generator-tests</module>
         <module>fluent-validation-generator</module>
+        <module>fluent-builder-generator</module>
+        <module>fluent-builder-api-generator</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
 
@@ -44,8 +46,8 @@
         <connection>scm:git:git://github.com/c0stra/fluent-api-generator.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/c0stra/fluent-api-generator.git</developerConnection>
         <url>https://github.com/c0stra/fluent-api-generator</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <java.version>1.8</java.version>
@@ -53,6 +55,7 @@
         <testng.version>6.14.3</testng.version>
         <mockito.version>2.18.3</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <fluent.api.end.check.version>1.12</fluent.api.end.check.version>
     </properties>
 
     <distributionManagement>

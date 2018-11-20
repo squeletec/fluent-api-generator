@@ -29,13 +29,16 @@
 
 package fluent.api.generator.sender;
 
+import fluent.api.FluentSender;
+import fluent.api.FluentSenderApi;
+
 public class SenderFixtureClass {
 
     public final FixtureBean fixtureBean;
 
     public SenderFixtureClass(
-            @fluent.api.simple.FluentSender
-            @fluent.api.full.FluentSender(methodName = "fullSend")
+            @FluentSender
+            @FluentSenderApi(methodName = "fullSend")
             FixtureBean bean
     ) {
         this.fixtureBean = bean;
@@ -43,8 +46,8 @@ public class SenderFixtureClass {
 
     public static String locate(
             String id,
-            @fluent.api.simple.FluentSender
-            @fluent.api.full.FluentSender(packageName = "fluent.api.dsl")
+            @FluentSender
+            @FluentSenderApi(packageName = "fluent.api.dsl")
             FixtureBean bean
     ) {
         return id;

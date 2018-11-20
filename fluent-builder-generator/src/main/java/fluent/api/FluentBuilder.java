@@ -27,7 +27,7 @@
  *
  */
 
-package fluent.api.simple;
+package fluent.api;
 
 import fluent.api.generator.Templates;
 
@@ -51,7 +51,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
-@Templates("/fluent/api/generator/templates/setters/builder.java")
+@Templates("/fluent/api/templates/builder.jtwig")
 public @interface FluentBuilder {
 
     /**

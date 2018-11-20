@@ -29,9 +29,9 @@
 
 package fluent.api.generator;
 
-import fluent.api.full.FluentBuilder;
+import fluent.api.FluentBuilderApi;
 
-@FluentBuilder
+@FluentBuilderApi
 public class BoundedGenericFixture<T extends Number> {
 
 

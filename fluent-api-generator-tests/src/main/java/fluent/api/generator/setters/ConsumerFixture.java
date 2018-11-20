@@ -29,23 +29,26 @@
 
 package fluent.api.generator.setters;
 
+import fluent.api.FluentBuilder;
+import fluent.api.FluentBuilderApi;
+
 public interface ConsumerFixture {
 
     void accept(
-            @fluent.api.simple.FluentBuilder(factoryMethod = "pojo")
-            @fluent.api.full.FluentBuilder(packageName = "fluent.api.generator.setters.full")
+            @FluentBuilder(factoryMethod = "pojo")
+            @FluentBuilderApi(packageName = "fluent.api.generator.builder.full")
             PojoFixture pojoFixture
     );
 
     void accept(
-            @fluent.api.simple.FluentBuilder(packageName = "fluent.api.generator.setters.simple")
-            @fluent.api.full.FluentBuilder(factoryMethod = "stringPojo")
+            @FluentBuilder(packageName = "fluent.api.generator.builder.simple")
+            @FluentBuilderApi(factoryMethod = "stringPojo")
             GenericPojoFixture<String> genericPojoFixture
     );
 
     <T> void acceptGeneric(
-            @fluent.api.simple.FluentBuilder(methodName = "create")
-            @fluent.api.full.FluentBuilder(factoryMethod = "genericPojo", className = "TPojoBuilder")
+            @FluentBuilder(methodName = "create")
+            @FluentBuilderApi(factoryMethod = "genericPojo", className = "TPojoBuilder")
             GenericPojoFixture<T> genericPojoFixture
     );
 }

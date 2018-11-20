@@ -29,11 +29,12 @@
 
 package fluent.api.generator;
 
-import fluent.api.simple.FluentBuilder;
+import fluent.api.FluentBuilder;
+import fluent.api.FluentBuilderApi;
 
 public interface FixtureInterface {
 
-    @fluent.api.full.FluentBuilder(className = "FixtureBeanFullBuilder")
+    @FluentBuilderApi(className = "FixtureBeanFullBuilder")
     FixtureBean BEAN = null;
 
     void accept(@FluentBuilder FixtureBean bean);

@@ -29,8 +29,6 @@
 
 package fluent.api.generator.model;
 
-import com.sun.tools.javac.code.Type;
-
 import javax.lang.model.type.DeclaredType;
 import java.util.List;
 

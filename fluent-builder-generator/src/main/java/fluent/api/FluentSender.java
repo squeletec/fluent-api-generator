@@ -27,7 +27,7 @@
  *
  */
 
-package fluent.api.full;
+package fluent.api;
 
 import fluent.api.generator.Templates;
 
@@ -37,8 +37,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation, that triggers code generator to create a fluent builder interface + implementation for an existing factory
- * method with many arguments.
+ * Annotation, that triggers code generator to create a fluent builder for an existing factory method with many arguments.
  *
  * E.g. for method:
  *
@@ -47,15 +46,12 @@ import java.lang.annotation.Target;
  * }
  *
  * it will generate fluent API, which can be used like following:
- * MyClassBuilder builder = new MyClassBuilderImpl();
- * MyClass myClass = builder.a("a").b("b").c(4).d(new Object()).build();
+ *
+ * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER})
-@Templates({
-        "/fluent/api/generator/templates/sender/interface.java",
-        "/fluent/api/generator/templates/sender/implementation.java"
-})
+@Templates("/fluent/api/templates/sender.jtwig")
 public @interface FluentSender {
 
     /**

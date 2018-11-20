@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-import fluent.api.generator.setters.simple.GenericPojoFixtureBuilder;
+import fluent.api.generator.builder.simple.GenericPojoFixtureBuilder;
 
 import static fluent.api.generator.setters.PojoFixtureBuilder.pojo;
 import static org.testng.Assert.assertEquals;

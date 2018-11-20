@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  * Annotation, that drives generation of derived java classes from annotated elements.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.ANNOTATION_TYPE})
 public @interface Templates {
 
     /**

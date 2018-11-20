@@ -27,7 +27,7 @@
  *
  */
 
-package fluent.api.full;
+package fluent.api;
 
 import fluent.api.generator.Templates;
 
@@ -37,7 +37,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation, that triggers code generator to create a fluent builder for an existing factory method with many arguments.
+ * Annotation, that triggers code generator to create a fluent builder interface + implementation for an existing factory
+ * method with many arguments.
  *
  * E.g. for method:
  *
@@ -46,16 +47,13 @@ import java.lang.annotation.Target;
  * }
  *
  * it will generate fluent API, which can be used like following:
- *
- * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
+ * MyClassBuilder builder = new MyClassBuilderImpl();
+ * MyClass myClass = builder.a("a").b("b").c(4).d(new Object()).build();
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
-@Templates({
-        "/fluent/api/generator/templates/setters/interface.java",
-        "/fluent/api/generator/templates/setters/implementation.java"
-})
-public @interface FluentBuilder {
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+@Templates({"/fluent/api/templates/parameters/interface.jtwig", "/fluent/api/templates/parameters/implementation.jtwig"})
+public @interface FluentParametersApi {
 
     /**
      * Specify package name, where to create the generated class.
@@ -78,10 +76,10 @@ public @interface FluentBuilder {
 
     /**
      * Specify name of the terminal method (method which really does perform the call to the factory method).
-     * By default the method name is "build()".
+     * By default the method name is the target method name, or "build()" for constructors.
      * @return Terminal method name.
      */
-    String methodName() default "build";
+    String methodName() default "";
 
     /**
      * Specify factory method used to create instances of the fluent parameters builder instead of constructor.

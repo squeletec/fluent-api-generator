@@ -29,7 +29,7 @@
 
 package fluent.api.generator.setters;
 
-import fluent.api.generator.setters.full.impl.PojoFixtureBuilderImpl;
+import fluent.api.generator.builder.full.impl.PojoFixtureBuilderImpl;
 import fluent.api.generator.setters.impl.GenericPojoFixtureBuilderImpl;
 import fluent.api.generator.setters.impl.TPojoBuilderImpl;
 import org.testng.annotations.Test;

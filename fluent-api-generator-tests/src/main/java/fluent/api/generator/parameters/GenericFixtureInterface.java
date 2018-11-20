@@ -29,20 +29,20 @@
 
 package fluent.api.generator.parameters;
 
-import fluent.api.full.FluentParameters;
+import fluent.api.FluentParametersApi;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface GenericFixtureInterface<T> {
 
-    @fluent.api.simple.FluentParameters(methodName = "invoke")
+    @fluent.api.FluentParameters(methodName = "invoke")
     void myGenericMethod(T input, String last, int age, ZonedDateTime birth, List<Double> list);
 
-    @fluent.api.simple.FluentParameters(methodName = "make")
+    @fluent.api.FluentParameters(methodName = "make")
     <U> void m(T t, U u);
 
-    @FluentParameters()
+    @FluentParametersApi()
     static <T> T staticGenericMethod(T input, String first, String last, int age, ZonedDateTime birth, List<Double> list) {
         return input;
     }

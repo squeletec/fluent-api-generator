@@ -221,8 +221,8 @@ Terminal method is always annotated with `@End` annotation to benefit from compi
 invoked. See: [Fluent API sentence end check](https://github.com/c0stra/fluent-api-end-check)
 
 There are actually two different annotations:
-- `@fluent.api.simple.FluentParameters`: generates just a simple builder class.
-- `@fluent.api.full.FluentParameters`: generates separate interface, and it's implementation.
+- `@fluent.api.FluentParameters`: generates just a simple builder class.
+- `@fluent.api.FluentParametersApi`: generates separate interface, and it's implementation.
 
 ##### 2.1.4 Example of designing "readable" fluent interface
 The goal of fluent API (fluent interface) is not only chaining of the methods, but also being
@@ -316,8 +316,8 @@ Terminal method is always annotated with `@End` annotation to benefit from compi
 invoked. See: [Fluent API sentence end check](https://github.com/c0stra/fluent-api-end-check)
 
 There are actually two different annotations:
-- `@fluent.api.simple.FluentBuilder`: generates just a simple builder class.
-- `@fluent.api.full.FluentBuilder`: generates separate interface, and it's implementation.
+- `@fluent.api.FluentBuilder`: generates just a simple builder class.
+- `@fluent.api.FluentBuilderApi`: generates separate interface, and it's implementation.
 
 #### 2.3 Fluent sender for beans with setter
 Very similar to fluent builder described above is `@FluentSender`. It also generates fluent interface for applying setter
@@ -360,8 +360,8 @@ Terminal method is always annotated with `@End` annotation to benefit from compi
 invoked. See: [Fluent API sentence end check](https://github.com/c0stra/fluent-api-end-check)
 
 There are actually two different annotations:
-- `@fluent.api.simple.FluentSender`: generates just a simple builder class.
-- `@fluent.api.full.FluentSender`: generates separate interface, and it's implementation.
+- `@fluent.api.FluentSender`: generates just a simple builder class.
+- `@fluent.api.FluentSenderApi`: generates separate interface, and it's implementation.
 
 ### 3. Custom fluent API generator development
 

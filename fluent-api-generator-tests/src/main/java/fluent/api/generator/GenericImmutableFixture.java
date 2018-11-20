@@ -29,7 +29,7 @@
 
 package fluent.api.generator;
 
-import fluent.api.full.FluentParameters;
+import fluent.api.FluentParametersApi;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class GenericImmutableFixture<T, U> {
     public final T t;
     public final List<U> u;
 
-    @FluentParameters
+    @FluentParametersApi
     public GenericImmutableFixture(T t, List<U> u) {
         this.t = t;
         this.u = u;

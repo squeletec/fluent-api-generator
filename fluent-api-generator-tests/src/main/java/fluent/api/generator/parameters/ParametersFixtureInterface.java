@@ -29,26 +29,29 @@
 
 package fluent.api.generator.parameters;
 
+import fluent.api.FluentParameters;
+import fluent.api.FluentParametersApi;
+
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface ParametersFixtureInterface {
 
-    @fluent.api.simple.FluentParameters
-    @fluent.api.full.FluentParameters(methodName = "fullCall")
+    @FluentParameters
+    @FluentParametersApi(methodName = "fullCall")
     void call(int anInt, String aString, LocalDateTime aTime, List<Double> aList);
 
-    @fluent.api.simple.FluentParameters
-    @fluent.api.full.FluentParameters(className = "ParametersFixtureInterfaceFullCalculator")
+    @FluentParameters
+    @FluentParametersApi(className = "ParametersFixtureInterfaceFullCalculator")
     int calculate(int anInt, String aString, LocalDateTime aTime, List<Double> aList);
 
-    @fluent.api.simple.FluentParameters(factoryMethod = "fixtureInterface")
-    @fluent.api.full.FluentParameters(packageName = "fluent.api.generator.parameters.full")
+    @FluentParameters(factoryMethod = "fixtureInterface")
+    @FluentParametersApi(packageName = "fluent.api.generator.parameters.full")
     ZonedDateTime create(int anInt, String aString, LocalDateTime aTime, List<Double> aList);
 
-    @fluent.api.simple.FluentParameters
-    @fluent.api.full.FluentParameters(packageName = "fluent.api.generator.parameters.full")
+    @FluentParameters
+    @FluentParametersApi(packageName = "fluent.api.generator.parameters.full")
     <T> void generate(T aGenericParameter, int anInt, String aString, List<T> aList);
 
 }
