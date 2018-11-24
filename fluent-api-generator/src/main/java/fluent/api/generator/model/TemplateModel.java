@@ -27,17 +27,12 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.generator.model;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public interface TemplateModel {
 
-/**
- * Annotation, for registering custom annotations, that will be used to mark elements as parameters for the
- * annotation processing based code generator.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.ANNOTATION_TYPE})
-public @interface Parameter { }
+    TemplateModel with(String name, Object value);
+
+    String render(String templatePath);
+
+}

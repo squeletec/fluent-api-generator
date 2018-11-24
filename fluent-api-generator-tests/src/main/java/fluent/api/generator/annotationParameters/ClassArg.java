@@ -27,7 +27,10 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.generator.annotationParameters;
+
+import fluent.api.generator.Parameter;
+import fluent.api.generator.Templates;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -35,9 +38,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation, for registering custom annotations, that will be used to mark elements as parameters for the
- * annotation processing based code generator.
+ * Annotation, that triggers code generator to create a fluent builder for an existing factory method with many arguments.
+ *
+ * E.g. for method:
+ *
+ * public MyClass(String a, String b, int c, Object d) {
+ *
+ * }
+ *
+ * it will generate fluent API, which can be used like following:
+ *
+ * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.ANNOTATION_TYPE})
-public @interface Parameter { }
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+@Parameter
+public @interface ClassArg { }

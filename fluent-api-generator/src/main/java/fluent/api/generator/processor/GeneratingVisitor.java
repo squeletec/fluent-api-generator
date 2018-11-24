@@ -31,10 +31,7 @@ package fluent.api.generator.processor;
 
 import fluent.api.generator.Templates;
 import fluent.api.generator.model.ModelFactory;
-import org.jtwig.JtwigModel;
-import org.jtwig.JtwigTemplate;
-import org.jtwig.environment.EnvironmentConfiguration;
-import org.jtwig.environment.EnvironmentConfigurationBuilder;
+import fluent.api.generator.model.TemplateModel;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.*;
@@ -44,9 +41,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static javax.tools.StandardLocation.CLASS_PATH;
-import static org.jtwig.JtwigModel.newModel;
 
 
 /**
@@ -61,13 +55,12 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
     private final Filer filer;
     private final Set<String> generated = new HashSet<>();
     private final ModelFactory factory;
-    private final EnvironmentConfiguration config = EnvironmentConfigurationBuilder.configuration()
-            .render().withStrictMode(true)
-            .and().build();
+    private final ParameterScanner parametersScanner;
 
-    GeneratingVisitor(Filer filer, ModelFactory factory) {
+    GeneratingVisitor(Filer filer, ModelFactory factory, ParameterScanner parametersScanner) {
         this.filer = filer;
         this.factory = factory;
+        this.parametersScanner = parametersScanner;
     }
 
     @Override
@@ -87,17 +80,17 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
 
     @Override
     public Void visitType(TypeElement e, TypeElement annotation) {
-        return render(newModel().with("type", factory.type(e.asType())), e, annotation);
+        return render(factory.model().with("type", factory.type(e.asType())), e, annotation);
     }
 
     @Override
     public Void visitVariable(VariableElement e, TypeElement annotation) {
-        return render(newModel().with("var", factory.variable(e)), e, annotation);
+        return render(factory.model().with("var", factory.variable(e)), e, annotation);
     }
 
     @Override
     public Void visitExecutable(ExecutableElement e, TypeElement annotation) {
-        return render(newModel().with("method", factory.method(e)), e, annotation);
+        return render(factory.model().with("method", factory.method(e)), e, annotation);
     }
 
     @Override
@@ -110,22 +103,8 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
         return null;
     }
 
-    private String readTemplate(String path) {
-        if(path.startsWith("/")) {
-            path = path.substring(1);
-        }
-        int split = path.lastIndexOf('/');
-        String toPackage = path.substring(0, split).replace('/', '.');
-        String toName = path.substring(split + 1);
-        try {
-            CharSequence charContent = filer.getResource(CLASS_PATH, toPackage, toName).getCharContent(true);
-            return charContent.toString();
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Template: " + path + " not found on classpath.");
-        }
-    }
-
-    private Void render(JtwigModel model, Element annotatedElement, TypeElement annotation) {
+    private Void render(TemplateModel model, Element annotatedElement, TypeElement annotation) {
+        parametersScanner.scan(annotatedElement, model);
         annotation.getEnclosedElements().forEach(new DefaultValueVisitor(
                 method -> model.with(method.getSimpleName().toString(), method.getDefaultValue().getValue())
         ));
@@ -135,7 +114,7 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
                 (name, value) -> model.with(name.getSimpleName().toString(), value.getValue())
         ));
         for(String path : annotation.getAnnotation(Templates.class).value()) {
-            String source = JtwigTemplate.inlineTemplate(readTemplate(path), config).render(model.with("templatePath", path));
+            String source = model.render(path);
             Matcher packageName = PACKAGE.matcher(source);
             Matcher className = CLASS.matcher(source);
             if(packageName.find() && className.find()) {

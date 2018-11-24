@@ -29,11 +29,9 @@
 
 package fluent.api.generator.model.impl;
 
-import fluent.api.generator.model.MethodModel;
-import fluent.api.generator.model.ModelFactory;
-import fluent.api.generator.model.TypeModel;
-import fluent.api.generator.model.VarModel;
+import fluent.api.generator.model.*;
 
+import javax.annotation.processing.Filer;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -45,10 +43,12 @@ public class ModelTypeFactory implements ModelFactory {
 
     private final Types types;
     private final Elements elements;
+    private final Filer filer;
 
-    public ModelTypeFactory(Types types, Elements elements) {
+    public ModelTypeFactory(Types types, Elements elements, Filer filer) {
         this.types = types;
         this.elements = elements;
+        this.filer = filer;
     }
 
     @Override
@@ -150,4 +150,10 @@ public class ModelTypeFactory implements ModelFactory {
             }
         }, this);
     }
+
+    @Override
+    public TemplateModel model() {
+        return new JtwigTemplateModel(filer);
+    }
+
 }

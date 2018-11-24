@@ -129,4 +129,9 @@ public abstract class AbstractTypeModel implements TypeModel {
         return false;
     }
 
+    @Override
+    public TypeModel type() {
+        return this;
+    }
+
 }

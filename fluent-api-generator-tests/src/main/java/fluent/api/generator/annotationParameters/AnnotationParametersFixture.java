@@ -27,17 +27,19 @@
  *
  */
 
-package fluent.api.generator;
+package fluent.api.generator.annotationParameters;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+@Generate
+@ClassArg
+public class AnnotationParametersFixture {
 
-/**
- * Annotation, for registering custom annotations, that will be used to mark elements as parameters for the
- * annotation processing based code generator.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.ANNOTATION_TYPE})
-public @interface Parameter { }
+    @VariableArg
+    private int field = 0;
+
+    @MethodArg
+    public int method(@ParameterArg String parameter) {
+        return 1;
+    }
+
+
+}

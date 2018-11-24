@@ -81,4 +81,6 @@ public interface TypeModel {
 
     boolean isEnum();
 
+    TypeModel type();
+
 }

@@ -29,14 +29,12 @@
 
 package fluent.api.generator.processor;
 
+import com.sun.source.util.Trees;
 import fluent.api.generator.Templates;
 import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.impl.ModelTypeFactory;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
@@ -59,8 +57,10 @@ public class GeneratingProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        ModelFactory factory = new ModelTypeFactory(processingEnv.getTypeUtils(), processingEnv.getElementUtils());
-        GeneratingVisitor visitor = new GeneratingVisitor(processingEnv.getFiler(), factory);
+        Filer filer = processingEnv.getFiler();
+        ModelFactory factory = new ModelTypeFactory(processingEnv.getTypeUtils(), processingEnv.getElementUtils(), filer);
+        ParameterScanner parameterScanner = new ParameterScanner(Trees.instance(processingEnv), factory);
+        GeneratingVisitor visitor = new GeneratingVisitor(filer, factory, parameterScanner);
 
         for(TypeElement annotation : annotations) {
             Templates templatesAnnotation = annotation.getAnnotation(Templates.class);

@@ -58,4 +58,6 @@ public interface ModelFactory {
 
     TypeModel type(TypeMirror typeMirror);
 
+    TemplateModel model();
+
 }
