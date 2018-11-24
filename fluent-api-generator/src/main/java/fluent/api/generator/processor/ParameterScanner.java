@@ -33,6 +33,7 @@ import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import fluent.api.generator.Parameter;
@@ -54,7 +55,10 @@ public class ParameterScanner extends TreePathScanner<Void, TemplateModel> {
     }
 
     public void scan(Element e, TemplateModel model) {
-        scan(trees.getPath(e), model);
+        TreePath path = trees.getPath(e);
+        if(nonNull(path)) {
+            scan(path, model);
+        }
     }
 
     private void tryAddParameter(Element element, TemplateModel model) {
@@ -63,43 +67,36 @@ public class ParameterScanner extends TreePathScanner<Void, TemplateModel> {
             Parameter parameter = annotationType.getAnnotation(Parameter.class);
             if(nonNull(parameter)) {
                 element.accept(new ElementVisitor<Void, String>() {
+                    private Void add(String s, Object o) {
+                        model.with(s, o);
+                        return null;
+                    }
                     @Override public Void visit(Element e, String s) {
                         return null;
                     }
-
                     @Override public Void visit(Element e) {
                         return null;
                     }
-
                     @Override public Void visitPackage(PackageElement e, String s) {
                         return null;
                     }
-
                     @Override public Void visitType(TypeElement e, String s) {
-                        model.with(s, factory.type(e.asType()));
-                        return null;
+                        return add(s, factory.type(e.asType()));
                     }
-
                     @Override public Void visitVariable(VariableElement e, String s) {
-                        model.with(s, factory.variable(e));
-                        return null;
+                        return add(s, factory.variable(e));
                     }
-
                     @Override public Void visitExecutable(ExecutableElement e, String s) {
-                        model.with(s, factory.method(e));
-                        return null;
+                        return add(s, factory.method(e));
                     }
-
                     @Override public Void visitTypeParameter(TypeParameterElement e, String s) {
                         return null;
                     }
-
                     @Override public Void visitUnknown(Element e, String s) {
                         return null;
                     }
                 }, annotationType.getSimpleName().toString());
             }
-
         });
     }
 
@@ -126,4 +123,5 @@ public class ParameterScanner extends TreePathScanner<Void, TemplateModel> {
         tryAddParameter(trees.getElement(getCurrentPath()), templateModel);
         return super.visitClass(classTree, templateModel);
     }
+
 }
