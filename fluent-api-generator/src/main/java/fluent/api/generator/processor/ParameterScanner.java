@@ -29,10 +29,8 @@
 
 package fluent.api.generator.processor;
 
-import com.sun.source.tree.AnnotatedTypeTree;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.*;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
@@ -41,6 +39,8 @@ import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.TemplateModel;
 
 import javax.lang.model.element.*;
+
+import java.util.stream.Stream;
 
 import static java.util.Objects.nonNull;
 
@@ -61,12 +61,11 @@ public class ParameterScanner extends TreePathScanner<Void, TemplateModel> {
         }
     }
 
-    private void tryAddParameter(Element element, TemplateModel model) {
-        element.getAnnotationMirrors().forEach(annotation -> {
-            Element annotationType = annotation.getAnnotationType().asElement();
+    private void tryAddParameter(Element annotatedElement, Stream<Element> annotationTypes, TemplateModel model) {
+        annotationTypes.forEach(annotationType -> {
             Parameter parameter = annotationType.getAnnotation(Parameter.class);
             if(nonNull(parameter)) {
-                element.accept(new ElementVisitor<Void, String>() {
+                annotatedElement.accept(new ElementVisitor<Void, String>() {
                     private Void add(String s, Object o) {
                         model.with(s, o);
                         return null;
@@ -90,7 +89,7 @@ public class ParameterScanner extends TreePathScanner<Void, TemplateModel> {
                         return add(s, factory.method(e));
                     }
                     @Override public Void visitTypeParameter(TypeParameterElement e, String s) {
-                        return null;
+                        return add(s, factory.type(e.asType()));
                     }
                     @Override public Void visitUnknown(Element e, String s) {
                         return null;
@@ -98,6 +97,14 @@ public class ParameterScanner extends TreePathScanner<Void, TemplateModel> {
                 }, annotationType.getSimpleName().toString());
             }
         });
+    }
+
+    private void tryAddParameter(Element element, TemplateModel model) {
+        tryAddParameter(element, element.getAnnotationMirrors().stream().map(annotation -> annotation.getAnnotationType().asElement()), model);
+    }
+
+    private Element asElement(Tree tree) {
+        return trees.getElement(trees.getPath(getCurrentPath().getCompilationUnit(), tree));
     }
 
     @Override
@@ -108,7 +115,17 @@ public class ParameterScanner extends TreePathScanner<Void, TemplateModel> {
 
     @Override
     public Void visitAnnotatedType(AnnotatedTypeTree tree, TemplateModel templateModel) {
-        tryAddParameter(trees.getElement(getCurrentPath()), templateModel);
+        Stream<Element> annotationTypes = tree.getAnnotations().stream().map(annotation -> asElement(annotation.getAnnotationType()));
+        tree.getUnderlyingType().accept(new SimpleTreeVisitor<Void, Void>() {
+            @Override public Void visitWildcard(WildcardTree wildcardTree, Void aVoid) {
+                tryAddParameter(asElement(wildcardTree.getBound()), annotationTypes, templateModel);
+                return null;
+            }
+            @Override protected Void defaultAction(Tree tree, Void aVoid) {
+                tryAddParameter(asElement(tree), annotationTypes, templateModel);
+                return null;
+            }
+        }, null);
         return super.visitAnnotatedType(tree, templateModel);
     }
 
@@ -124,4 +141,9 @@ public class ParameterScanner extends TreePathScanner<Void, TemplateModel> {
         return super.visitClass(classTree, templateModel);
     }
 
+    @Override
+    public Void visitTypeParameter(TypeParameterTree typeParameterTree, TemplateModel templateModel) {
+        tryAddParameter(trees.getElement(getCurrentPath()), templateModel);
+        return super.visitTypeParameter(typeParameterTree, templateModel);
+    }
 }

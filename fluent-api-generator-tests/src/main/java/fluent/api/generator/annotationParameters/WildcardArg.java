@@ -29,20 +29,27 @@
 
 package fluent.api.generator.annotationParameters;
 
-import java.util.List;
-import java.util.function.Consumer;
+import fluent.api.generator.Parameter;
 
-@Generate
-@ClassArg
-public class AnnotationParametersFixture<@TypeParameterArg T> {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    @VariableArg
-    private int field = 0;
-
-    @MethodArg
-    public int method(@ParameterArg String parameter, List<@AnnotatedTypeArg Integer> list, Consumer<@WildcardArg ? super Number> consumer) {
-        return 1;
-    }
-
-
-}
+/**
+ * Annotation, that triggers code generator to create a fluent builder for an existing factory method with many arguments.
+ *
+ * E.g. for method:
+ *
+ * public MyClass(String a, String b, int c, Object d) {
+ *
+ * }
+ *
+ * it will generate fluent API, which can be used like following:
+ *
+ * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+@Parameter
+public @interface WildcardArg { }

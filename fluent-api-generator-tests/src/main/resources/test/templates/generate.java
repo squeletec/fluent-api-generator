@@ -8,6 +8,9 @@ public interface Generate{{ type.simpleName }}Class {
     Variable arg: {{ VariableArg.type }};
     Method arg: {{ MethodArg.type }};
     Parameter arg: {{ ParameterArg.type }};
+    Type Parameter arg: {{ TypeParameterArg.type }};
+    AnnotatedType arg: {{ AnnotatedTypeArg.type }};
+    Wildcard arg: {{ WildcardArg.type }};
 
      */
 
