@@ -39,13 +39,14 @@ public class Config {
     public String name;
     public String region;
 
-    public void region(Region value) {
+    public Config region(Region value) {
         this.region = value.toString();
+        return this;
     }
 
     @FluentConfig
-    public static ConfigBuilder name(String name) {
-        return new ConfigBuilder().name(name);
+    public static ConfigBuilder config() {
+        return new ConfigBuilder();
     }
 
     public enum Region { US, EU }

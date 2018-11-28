@@ -33,24 +33,24 @@ import org.testng.annotations.Test;
 
 import java.time.Duration;
 
-import static fluent.api.Config.name;
+import static fluent.api.Config.config;
 import static org.testng.Assert.assertEquals;
 
 public class FluentConfigTest {
 
     @Test
     public void testName() {
-        assertEquals(name("NAME").get().name, "NAME");
+        assertEquals(config().name("NAME").name, "NAME");
     }
 
     @Test
     public void testDefaultDuration() {
-        assertEquals(name("NAME").get().aDuration, Duration.ofSeconds(5));
+        assertEquals(config().aDuration, Duration.ofSeconds(5));
     }
 
     @Test
     public void testConversion() {
-        assertEquals(name("NAME").region(Config.Region.EU).get().region, "EU");
+        assertEquals(config().region(Config.Region.EU).region, "EU");
     }
 
 }
