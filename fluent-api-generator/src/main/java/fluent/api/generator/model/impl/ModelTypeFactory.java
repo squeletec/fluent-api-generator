@@ -111,7 +111,7 @@ public class ModelTypeFactory implements ModelFactory {
 
             @Override
             public TypeModel visitError(ErrorType type, ModelFactory factory) {
-                return null;
+                return new ErrorTypeModel(type);
             }
 
             @Override

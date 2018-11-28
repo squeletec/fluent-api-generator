@@ -42,6 +42,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.Objects.nonNull;
+
 
 /**
  * Generator of java code, which creates different models for different visited elements.
@@ -106,7 +108,11 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
     private Void render(TemplateModel model, Element annotatedElement, TypeElement annotation) {
         parametersScanner.scan(annotatedElement, model);
         annotation.getEnclosedElements().forEach(new DefaultValueVisitor(
-                method -> model.with(method.getSimpleName().toString(), method.getDefaultValue().getValue())
+                method -> {
+                    if(nonNull(method.getDefaultValue())) {
+                        model.with(method.getSimpleName().toString(), method.getDefaultValue().getValue());
+                    }
+                }
         ));
         annotatedElement.getAnnotationMirrors().stream().filter(
                 mirror -> mirror.getAnnotationType().asElement().equals(annotation)

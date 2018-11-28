@@ -1,0 +1,28 @@
+{% set config = method.declaringClass %}
+{% set className = method.type.simpleName %}
+package {{ config.packageName }};
+
+import javax.annotation.Generated;
+
+@Generated("Generated code using {{ templatePath }}")
+public final class {{ className }} {
+
+    private final {{ config.simpleName }} config = new {{ config.simpleName }}();
+
+{% for field in config.fields %}
+    public {{ className }} {{ field }}({{ field.type }} value) {
+        config.{{ field }} = value;
+        return this;
+    }
+{% endfor %}
+{% for method in config.declaredMethods %}{% if not (method.static) %}
+    public {{ className }} {{ method }}({{ method.parameters[0].type }} value) {
+        config.{{ method }}(value);
+        return this;
+    }
+{% endif %}{% endfor %}
+
+    public {{ config.simpleName }} get() {
+        return config;
+    }
+}

@@ -90,7 +90,7 @@ class DeclaredTypeModel extends AbstractTypeModel {
     @Override
     public List<VarModel> fields() {
         return elements.getAllMembers(element).stream()
-                .filter(element -> element.getModifiers().contains(Modifier.PUBLIC) && !element.getModifiers().contains(Modifier.STATIC) && element instanceof VariableElement).map(VariableElement.class::cast)
+                .filter(element -> element.getKind() == ElementKind.FIELD).map(VariableElement.class::cast)
                 .map(method -> factory.asMemberOf(type, method))
                 .collect(toList());
     }
