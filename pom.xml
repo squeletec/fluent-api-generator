@@ -56,7 +56,7 @@
         <testng.version>6.14.3</testng.version>
         <mockito.version>2.18.3</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <fluent.api.end.check.version>1.12</fluent.api.end.check.version>
+        <fluent.api.end.check.version>1.14</fluent.api.end.check.version>
     </properties>
 
     <distributionManagement>
