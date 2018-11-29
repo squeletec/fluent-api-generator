@@ -29,38 +29,20 @@
 
 package fluent.api.generator.model;
 
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ExecutableType;
-import javax.lang.model.type.TypeMirror;
+import java.util.Map;
 
-public interface ModelFactory {
+public interface ElementModel {
 
-    TypeModel asMemberOf(TypeElement declaring, TypeElement member);
+    /**
+     * Get type model representing the return type.
+     * @return TypeModel
+     */
+    TypeModel type();
 
-    VarModel asMemberOf(DeclaredType declaring, VariableElement member);
+    boolean isStatic();
 
-    MethodModel asMemberOf(DeclaredType declaring, ExecutableElement member);
+    boolean isPublic();
 
-    MethodModel method(ExecutableElement executableElement, ExecutableType type);
-
-    default MethodModel method(ExecutableElement executableElement) {
-        return method(executableElement, (ExecutableType) executableElement.asType());
-    }
-
-    VarModel variable(VariableElement variableElement, TypeMirror type);
-
-    default VarModel variable(VariableElement variableElement) {
-        return variable(variableElement, variableElement.asType());
-    }
-
-    TypeModel type(TypeMirror typeMirror);
-
-    TemplateModel model();
-
-    Object annotationValue(AnnotationValue value);
+    Map<String, Map<String, Object>> annotations();
 
 }

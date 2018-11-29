@@ -29,18 +29,12 @@
 
 package fluent.api.generator.model;
 
-public interface VarModel {
+public interface VarModel extends ElementModel {
 
     String name();
-
-    TypeModel type();
 
     MethodModel method();
 
     String packageName();
-
-    boolean isStatic();
-
-    boolean isPublic();
 
 }

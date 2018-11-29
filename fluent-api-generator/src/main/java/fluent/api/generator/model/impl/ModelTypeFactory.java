@@ -32,12 +32,13 @@ package fluent.api.generator.model.impl;
 import fluent.api.generator.model.*;
 
 import javax.annotation.processing.Filer;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.*;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class ModelTypeFactory implements ModelFactory {
 
@@ -154,6 +155,91 @@ public class ModelTypeFactory implements ModelFactory {
     @Override
     public TemplateModel model() {
         return new JtwigTemplateModel(filer);
+    }
+
+    @Override
+    public Object annotationValue(AnnotationValue value) {
+        return new AnnotationValueVisitor<Object, Void>() {
+            @Override
+            public Object visit(AnnotationValue av, Void aVoid) {
+                return av.accept(this, aVoid);
+            }
+
+            @Override
+            public Object visit(AnnotationValue av) {
+                return av.accept(this, null);
+            }
+
+            @Override
+            public Object visitBoolean(boolean b, Void aVoid) {
+                return b;
+            }
+
+            @Override
+            public Object visitByte(byte b, Void aVoid) {
+                return b;
+            }
+
+            @Override
+            public Object visitChar(char c, Void aVoid) {
+                return c;
+            }
+
+            @Override
+            public Object visitDouble(double d, Void aVoid) {
+                return d;
+            }
+
+            @Override
+            public Object visitFloat(float f, Void aVoid) {
+                return f;
+            }
+
+            @Override
+            public Object visitInt(int i, Void aVoid) {
+                return i;
+            }
+
+            @Override
+            public Object visitLong(long i, Void aVoid) {
+                return i;
+            }
+
+            @Override
+            public Object visitShort(short s, Void aVoid) {
+                return s;
+            }
+
+            @Override
+            public Object visitString(String s, Void aVoid) {
+                return s;
+            }
+
+            @Override
+            public Object visitType(TypeMirror t, Void aVoid) {
+                return type(t);
+            }
+
+            @Override
+            public Object visitEnumConstant(VariableElement c, Void aVoid) {
+                return variable(c);
+            }
+
+            @Override
+            public Object visitAnnotation(AnnotationMirror a, Void aVoid) {
+                return null;
+            }
+
+            @Override
+            public Object visitArray(List<? extends AnnotationValue> vals, Void aVoid) {
+                return vals.stream().map(a -> annotationValue(a)).collect(toList());
+            }
+
+            @Override
+            public Object visitUnknown(AnnotationValue av, Void aVoid) {
+                return null;
+            }
+        }.visit(value);
     }
 
 }

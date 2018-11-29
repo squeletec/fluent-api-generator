@@ -30,6 +30,7 @@
 package fluent.api.generator.processor;
 
 import fluent.api.generator.Templates;
+import fluent.api.generator.model.ElementModel;
 import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.TemplateModel;
 
@@ -110,7 +111,7 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
         annotation.getEnclosedElements().forEach(new DefaultValueVisitor(
                 method -> {
                     if(nonNull(method.getDefaultValue())) {
-                        model.with(method.getSimpleName().toString(), method.getDefaultValue().getValue());
+                        model.with(method.getSimpleName().toString(), factory.annotationValue(method.getDefaultValue()));
                     }
                 }
         ));

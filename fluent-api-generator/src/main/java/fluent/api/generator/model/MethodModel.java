@@ -30,25 +30,20 @@
 package fluent.api.generator.model;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
  * Model of a method, that will be passed to the template, and can be used to drive generation of
  * derived java classes.
  */
-public interface MethodModel {
+public interface MethodModel extends ElementModel {
 
     /**
      * Get name of the method (simple string).
      * @return Name of the method.
      */
     String name();
-
-    /**
-     * Get type model representing the return type.
-     * @return TypeModel
-     */
-    TypeModel type();
 
     String propertyName() ;
 
@@ -64,7 +59,4 @@ public interface MethodModel {
 
     boolean isConstructor();
 
-    boolean isStatic();
-
-    boolean isPublic();
 }

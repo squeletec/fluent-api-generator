@@ -37,7 +37,10 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.ExecutableType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 public class ExecutableModel implements MethodModel {
 
@@ -103,5 +106,16 @@ public class ExecutableModel implements MethodModel {
     @Override
     public boolean isPublic() {
         return element.getModifiers().contains(Modifier.PUBLIC);
+    }
+
+    @Override
+    public Map<String, Map<String, Object>> annotations() {
+        return element.getAnnotationMirrors().stream().collect(toMap(
+                a -> a.getAnnotationType().asElement().getSimpleName().toString(),
+                a -> a.getElementValues().entrySet().stream().collect(toMap(
+                        e -> e.getKey().getSimpleName().toString(),
+                        e -> factory.annotationValue(e.getValue())
+                ))
+        ));
     }
 }

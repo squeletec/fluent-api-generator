@@ -29,13 +29,12 @@
 
 package fluent.api.generator.model;
 
-import javax.lang.model.type.DeclaredType;
 import java.util.List;
 
 /**
  * Model of java type (class, primitive type, type variable, etc.).
  */
-public interface TypeModel {
+public interface TypeModel extends ElementModel {
 
     /**
      * Simple name of the type (without package).
@@ -73,14 +72,10 @@ public interface TypeModel {
 
     boolean hasDefaultConstructor();
 
-    boolean isPublic();
-
-    boolean isSubclassOf(DeclaredType parent);
+    boolean isSubclassOf(TypeModel parent);
 
     boolean isArray();
 
     boolean isEnum();
-
-    TypeModel type();
 
 }

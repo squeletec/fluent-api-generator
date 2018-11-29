@@ -39,8 +39,13 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static javax.lang.model.element.ElementKind.*;
+import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.STATIC;
 
 class DeclaredTypeModel extends AbstractTypeModel {
 
@@ -76,21 +81,21 @@ class DeclaredTypeModel extends AbstractTypeModel {
     @Override
     public List<MethodModel> methods() {
         return elements.getAllMembers(element).stream()
-                .filter(element -> element.getModifiers().contains(Modifier.PUBLIC) && !element.getModifiers().contains(Modifier.STATIC) && element instanceof ExecutableElement).map(ExecutableElement.class::cast)
+                .filter(element -> element.getModifiers().contains(PUBLIC) && !element.getModifiers().contains(STATIC) && element instanceof ExecutableElement).map(ExecutableElement.class::cast)
                 .map(method -> factory.asMemberOf(type, method))
                 .collect(toList());
     }
 
     @Override
     public List<MethodModel> declaredMethods() {
-        return element.getEnclosedElements().stream().filter(element -> (element.getKind() == ElementKind.METHOD)).map(ExecutableElement.class::cast)
+        return element.getEnclosedElements().stream().filter(element -> (element.getKind() == METHOD)).map(ExecutableElement.class::cast)
                 .map(method -> factory.asMemberOf(type, method)).collect(toList());
     }
 
     @Override
     public List<VarModel> fields() {
         return elements.getAllMembers(element).stream()
-                .filter(element -> element.getKind() == ElementKind.FIELD).map(VariableElement.class::cast)
+                .filter(element -> element.getKind() == FIELD).map(VariableElement.class::cast)
                 .map(method -> factory.asMemberOf(type, method))
                 .collect(toList());
     }
@@ -127,22 +132,32 @@ class DeclaredTypeModel extends AbstractTypeModel {
 
     @Override
     public boolean hasDefaultConstructor() {
-        return elements.getAllMembers(element).stream().anyMatch(member -> member.getKind() == ElementKind.CONSTRUCTOR && member.getModifiers().contains(Modifier.PUBLIC) && ((ExecutableElement)member).getParameters().isEmpty());
+        return elements.getAllMembers(element).stream().anyMatch(m -> m.getKind() == CONSTRUCTOR && m.getModifiers().contains(PUBLIC) && ((ExecutableElement)m).getParameters().isEmpty());
     }
 
     @Override
     public boolean isPublic() {
-        return element.getModifiers().contains(Modifier.PUBLIC);
+        return element.getModifiers().contains(PUBLIC);
     }
 
     @Override
-    public boolean isSubclassOf(DeclaredType parent) {
-        return types.isAssignable(type, parent);
+    public boolean isSubclassOf(TypeModel parent) {
+        return parent instanceof DeclaredTypeModel && types.isAssignable(type, ((DeclaredTypeModel) parent).type);
     }
 
     @Override
     public boolean isEnum() {
-        return element.getKind() == ElementKind.ENUM;
+        return element.getKind() == ENUM;
     }
 
+    @Override
+    public Map<String, Map<String, Object>> annotations() {
+        return element.getAnnotationMirrors().stream().collect(toMap(
+                a -> a.getAnnotationType().asElement().getSimpleName().toString(),
+                a -> a.getElementValues().entrySet().stream().collect(toMap(
+                        e -> e.getKey().getSimpleName().toString(),
+                        e -> factory.annotationValue(e.getValue())
+                ))
+        ));
+    }
 }

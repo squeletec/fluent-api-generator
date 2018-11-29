@@ -33,10 +33,11 @@ import fluent.api.generator.model.MethodModel;
 import fluent.api.generator.model.TypeModel;
 import fluent.api.generator.model.VarModel;
 
-import javax.lang.model.type.DeclaredType;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 
 public abstract class AbstractTypeModel implements TypeModel {
@@ -115,7 +116,7 @@ public abstract class AbstractTypeModel implements TypeModel {
     }
 
     @Override
-    public boolean isSubclassOf(DeclaredType parent) {
+    public boolean isSubclassOf(TypeModel parent) {
         return false;
     }
 
@@ -132,6 +133,16 @@ public abstract class AbstractTypeModel implements TypeModel {
     @Override
     public TypeModel type() {
         return this;
+    }
+
+    @Override
+    public boolean isStatic() {
+        return true;
+    }
+
+    @Override
+    public Map<String, Map<String, Object>> annotations() {
+        return emptyMap();
     }
 
 }

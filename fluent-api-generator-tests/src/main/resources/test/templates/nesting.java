@@ -2,6 +2,8 @@ package {{ type.packageName }};
 
 public interface Nesting{{ type.simpleName }}Class {
 
+    // {{ type.annotations }}
+
 {% for method in type.declaredMethods %}
 
         {% if method.type.isSubclassOf(nestedType) %}

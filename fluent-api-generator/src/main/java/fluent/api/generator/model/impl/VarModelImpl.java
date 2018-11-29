@@ -39,6 +39,9 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
 
 public class VarModelImpl implements VarModel {
 
@@ -82,6 +85,17 @@ public class VarModelImpl implements VarModel {
     @Override
     public boolean isPublic() {
         return element.getModifiers().contains(Modifier.PUBLIC);
+    }
+
+    @Override
+    public Map<String, Map<String, Object>> annotations() {
+        return element.getAnnotationMirrors().stream().collect(toMap(
+                a -> a.getAnnotationType().asElement().getSimpleName().toString(),
+                a -> a.getElementValues().entrySet().stream().collect(toMap(
+                        e -> e.getKey().getSimpleName().toString(),
+                        e -> factory.annotationValue(e.getValue())
+                ))
+        ));
     }
 
     @Override
