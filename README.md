@@ -404,6 +404,20 @@ TBD
 
 ## Release notes
 
+### Version 2.6 (released on 29th November 2018)
+- Upgrade of dependency on `@End` metod check.
+
+### Version 2.5 (released on 29th November 2018)
+- Introduced simple model of annotations present on any element
+- Implemented scanner of additional named elements for use in templates using custom annotations annotated with `@Parameter`
+
+### Version 2.4 (released on 28th November 2018)
+- Introduced Fluent config generator
+- Fixed issue in annotation scanner if no default value exists for annotation's property.
+
+### Version 2.3 (released on 25th November 2018)
+- ParameterScanner to support generics properly.
+
 ### Version 2.2 (released on 20th November 2018)
 - Introduced generator of fluent validators
 - Generators of various builders separated to specific module. Not any-more part of annotations.
