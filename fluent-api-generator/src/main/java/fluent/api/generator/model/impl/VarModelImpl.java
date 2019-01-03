@@ -88,6 +88,11 @@ public class VarModelImpl implements VarModel {
     }
 
     @Override
+    public boolean isFinal() {
+        return element.getModifiers().contains(Modifier.FINAL);
+    }
+
+    @Override
     public Map<String, Map<String, Object>> annotations() {
         return element.getAnnotationMirrors().stream().collect(toMap(
                 a -> a.getAnnotationType().asElement().getSimpleName().toString(),

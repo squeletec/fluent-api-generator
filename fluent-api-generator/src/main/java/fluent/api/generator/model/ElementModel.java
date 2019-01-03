@@ -43,6 +43,8 @@ public interface ElementModel {
 
     boolean isPublic();
 
+    boolean isFinal();
+
     Map<String, Map<String, Object>> annotations();
 
 }

@@ -1,7 +1,7 @@
 /*
  * BSD 2-Clause License
  *
- * Copyright (c) 2018, Ondrej Fischer
+ * Copyright (c) 2019, Ondrej Fischer
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,28 +27,34 @@
  *
  */
 
-package fluent.api;
+package fluent.api.generator.config;
 
-import java.time.Duration;
+import fluent.api.FluentConfig;
 
-public class Config {
+import java.net.URI;
+import java.time.LocalDate;
 
-    public String aString = "DEFAULT";
-    public int anInt = 10;
-    public Duration aDuration = Duration.ofSeconds(5);
-    public String name;
-    public int age;
-    public String region;
+public class AppConfig {
 
-    public Config region(Region value) {
-        this.region = value.toString();
+    public final String name;
+    public final int age;
+    public String parent = "";
+    public LocalDate birthDate;
+    public URI documentation = null;
+
+    @FluentConfig
+    protected AppConfig(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public AppConfig documentation(String uri) {
+        documentation = URI.create(uri);
         return this;
     }
 
-    @FluentConfig
-    public static ConfigBuilder config() {
-        return new ConfigBuilder();
+    public static AppConfigBuilder.Age<AppConfigBuilder> name(String name) {
+        return age -> new AppConfigBuilder(name, age);
     }
 
-    public enum Region { US, EU }
 }

@@ -25,6 +25,11 @@
         </dependency>
         <dependency>
             <groupId>foundation.fluent.api</groupId>
+            <artifactId>fluent-config-generator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>foundation.fluent.api</groupId>
             <artifactId>fluent-builder-api-generator</artifactId>
             <version>${project.version}</version>
         </dependency>

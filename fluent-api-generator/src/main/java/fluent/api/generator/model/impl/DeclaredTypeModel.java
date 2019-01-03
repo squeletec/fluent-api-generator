@@ -44,8 +44,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static javax.lang.model.element.ElementKind.*;
-import static javax.lang.model.element.Modifier.PUBLIC;
-import static javax.lang.model.element.Modifier.STATIC;
+import static javax.lang.model.element.Modifier.*;
 
 class DeclaredTypeModel extends AbstractTypeModel {
 
@@ -89,6 +88,13 @@ class DeclaredTypeModel extends AbstractTypeModel {
     @Override
     public List<MethodModel> declaredMethods() {
         return element.getEnclosedElements().stream().filter(element -> (element.getKind() == METHOD)).map(ExecutableElement.class::cast)
+                .map(method -> factory.asMemberOf(type, method)).collect(toList());
+    }
+
+
+    @Override
+    public List<MethodModel> constructors() {
+        return element.getEnclosedElements().stream().filter(element -> (element.getKind() == CONSTRUCTOR)).map(ExecutableElement.class::cast)
                 .map(method -> factory.asMemberOf(type, method)).collect(toList());
     }
 
@@ -138,6 +144,11 @@ class DeclaredTypeModel extends AbstractTypeModel {
     @Override
     public boolean isPublic() {
         return element.getModifiers().contains(PUBLIC);
+    }
+
+    @Override
+    public boolean isFinal() {
+        return element.getModifiers().contains(FINAL);
     }
 
     @Override

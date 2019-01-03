@@ -50,6 +50,8 @@ public interface TypeModel extends ElementModel {
 
     String wrapper();
 
+    List<MethodModel> constructors();
+
     List<VarModel> fields();
 
     List<TypeModel> interfaces();

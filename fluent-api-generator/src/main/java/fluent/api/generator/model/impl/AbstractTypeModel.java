@@ -56,6 +56,11 @@ public abstract class AbstractTypeModel implements TypeModel {
     }
 
     @Override
+    public List<MethodModel> constructors() {
+        return emptyList();
+    }
+
+    @Override
     public List<VarModel> fields() {
         return emptyList();
     }
@@ -137,6 +142,11 @@ public abstract class AbstractTypeModel implements TypeModel {
 
     @Override
     public boolean isStatic() {
+        return true;
+    }
+
+    @Override
+    public boolean isFinal() {
         return true;
     }
 

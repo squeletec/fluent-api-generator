@@ -1,5 +1,5 @@
 {% set config = method.declaringClass %}
-{% set className = method.type.simpleName %}
+{% set className = concat(config.simpleName, "Builder") %}
 package {{ config.packageName }};
 
 import javax.annotation.Generated;
@@ -7,17 +7,32 @@ import javax.annotation.Generated;
 @Generated("Generated code using {{ templatePath }}")
 public final class {{ className }} extends {{ config.simpleName }} {
 
-{% for field in config.fields %}
+{% for constructor in config.constructors %}
+{% set parameters = constructor.parameters %}
+    public {{ className }}({% if not empty(parameters) %}{% for t in parameters %}{% if loop.first %}{% else %}, {% endif %}{{ t.type }} {{t}}{% endfor %}{% endif %}) {
+        super({{ join(parameters, ", ") }});
+    }
+{% endfor %}
+
+{% for field in config.fields %}{% if not (field.final) %}
     public {{ className }} {{ field }}({{ field.type }} value) {
         this.{{ field }} = value;
         return this;
     }
-{% endfor %}
+{% endif %}{% endfor %}
 {% for method in config.declaredMethods %}{% if not (method.static) %}
     public {{ className }} {{ method }}({{ method.parameters[0].type }} value) {
         super.{{ method }}(value);
         return this;
     }
 {% endif %}{% endfor %}
+{% for constructor in config.constructors %}
+{% for parameter in constructor.parameters %}
+    @FunctionalInterface
+    public interface {{ capitalize(parameter) }}<T> {
+        T {{ parameter }}({{ parameter.type }} {{ parameter }});
+    }
+{% endfor %}
+{% endfor %}
 
 }

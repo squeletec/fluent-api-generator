@@ -100,7 +100,9 @@ public class ParameterScanner extends TreePathScanner<Void, TemplateModel> {
     }
 
     private void tryAddParameter(Element element, TemplateModel model) {
-        tryAddParameter(element, element.getAnnotationMirrors().stream().map(annotation -> annotation.getAnnotationType().asElement()), model);
+        if(nonNull(element)) {
+            tryAddParameter(element, element.getAnnotationMirrors().stream().map(annotation -> annotation.getAnnotationType().asElement()), model);
+        }
     }
 
     private Element asElement(Tree tree) {

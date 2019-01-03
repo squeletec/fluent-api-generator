@@ -1,7 +1,7 @@
 /*
  * BSD 2-Clause License
  *
- * Copyright (c) 2018, Ondrej Fischer
+ * Copyright (c) 2019, Ondrej Fischer
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,28 +27,24 @@
  *
  */
 
-package fluent.api;
+package fluent.api.generator.config;
 
-import java.time.Duration;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-public class Config {
+import java.time.LocalDate;
 
-    public String aString = "DEFAULT";
-    public int anInt = 10;
-    public Duration aDuration = Duration.ofSeconds(5);
-    public String name;
-    public int age;
-    public String region;
+public class AppConfigTest {
 
-    public Config region(Region value) {
-        this.region = value.toString();
-        return this;
+    @Test
+    public void testConfigBuilder() {
+        LocalDate birth = LocalDate.of(1978, 9, 9);
+
+        AppConfig config = AppConfig.name("name").age(14).documentation("http://www.google.com/").birthDate(birth);
+
+        Assert.assertEquals(config.name, "name");
+        Assert.assertEquals(config.age, 14);
+        Assert.assertEquals(config.birthDate, birth);
     }
 
-    @FluentConfig
-    public static ConfigBuilder config() {
-        return new ConfigBuilder();
-    }
-
-    public enum Region { US, EU }
 }

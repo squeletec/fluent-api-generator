@@ -37,9 +37,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation, that triggers code generator to create a fluent builder for an existing factory method with many arguments.
+ * Annotation, that triggers code generator to create a fluent builder for configuration class.
  *
- * E.g. for method:
+ * E.g. for config class:
  *
  * public MyClass(String a, String b, int c, Object d) {
  *
@@ -50,6 +50,6 @@ import java.lang.annotation.Target;
  * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @Templates("/fluent/api/templates/config.jtwig")
 public @interface FluentConfig { }

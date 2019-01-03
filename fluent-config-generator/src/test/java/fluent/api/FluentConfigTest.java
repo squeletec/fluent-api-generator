@@ -40,12 +40,12 @@ public class FluentConfigTest {
 
     @Test
     public void testName() {
-        assertEquals(config().name("NAME").name, "NAME");
+        assertEquals(config().name("NAME").age(10).name, "NAME");
     }
 
     @Test
     public void testDefaultDuration() {
-        assertEquals(config().aDuration, Duration.ofSeconds(5));
+        assertEquals(config().age(6).aDuration, Duration.ofSeconds(5));
     }
 
     @Test
