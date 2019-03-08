@@ -49,4 +49,6 @@ public interface FixtureBean {
 
     int getAge();
 
+    void addChild(String name);
+
 }

@@ -1,7 +1,7 @@
 /*
  * BSD 2-Clause License
  *
- * Copyright (c) 2018, Ondrej Fischer
+ * Copyright (c) 2019, Ondrej Fischer
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,22 +29,33 @@
 
 package fluent.api.generator.model.impl;
 
-import static java.lang.Character.toLowerCase;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
-public class TypeUtils {
+import static org.testng.Assert.assertEquals;
 
-    public static String propertyName(String name) {
-        char[] chars = name.toCharArray();
-        switch (chars[0]) {
-            case 'g':
-            case 's':
-                return chars.length > 3 && chars[1] == 'e' && chars[2] == 't' ? toLowerCase(name.charAt(3)) + name.substring(4) : name;
-            case 'a':
-                return chars.length > 3 && chars[1] == 'd' && chars[2] == 'd' ? toLowerCase(name.charAt(3)) + name.substring(4) : name;
-            case 'i':
-                return chars.length > 2 && chars[1] == 's' ? toLowerCase(name.charAt(2)) + name.substring(3) : name;
-        }
-        return name;
+public class TypeUtilsTest {
+
+    @DataProvider
+    public static Object[][] testPropertyNameData() {
+        return new Object[][] {
+                {"getName1", "name1"},
+                {"setName2", "name2"},
+                {"addName3", "name3"},
+                {"isName4", "name4"},
+                {"name5", "name5"},
+                {"a", "a"},
+                {"get", "get"},
+                {"set", "set"},
+                {"add", "add"},
+                {"is", "is"},
+                {"i", "i"},
+        };
+    }
+
+    @Test(dataProvider = "testPropertyNameData")
+    public void testPropertyName(String methodName, String expectedPropertyName) {
+        assertEquals(TypeUtils.propertyName(methodName), expectedPropertyName);
     }
 
 }

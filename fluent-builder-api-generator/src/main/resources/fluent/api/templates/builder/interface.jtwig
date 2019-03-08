@@ -13,6 +13,8 @@ public interface {{ className }}{% if not empty(productType.parameterVariables) 
 
 {% for setter in productType.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
     {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value);
+{% endif %}{% if setter.name.startsWith("add") and setter.parameters.size == 1 %}
+    {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value);
 {% endif %}{% endfor %}
     @End
     {{ productType }} {{ methodName }}();

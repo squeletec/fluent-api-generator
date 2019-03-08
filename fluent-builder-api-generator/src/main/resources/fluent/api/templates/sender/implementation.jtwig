@@ -33,6 +33,12 @@ public class {{ className }}Impl{% if not empty(var.type.parameterVariables) %}<
         this.{{ var.name }}.{{ setter.name }}(value);
         return this;
     }
+{% endif %}{% if setter.name.startsWith("add") and setter.parameters.size == 1 %}
+    @Override
+    public {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
+        this.{{ var.name }}.{{ setter.name }}(value);
+        return this;
+    }
 {% endif %}{% endfor %}
     @Override
     public {{ productType }} {{ methodName }}() {

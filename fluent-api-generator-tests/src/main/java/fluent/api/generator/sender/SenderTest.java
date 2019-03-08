@@ -71,9 +71,10 @@ public class SenderTest extends TestBase {
 
     @Test
     public void testConstructorSender() {
-        SenderFixtureClass fixtureClass = new FixtureBeanSender(fixtureBean).firstName("f").lastName("a").send();
+        SenderFixtureClass fixtureClass = new FixtureBeanSender(fixtureBean).firstName("f").lastName("a").child("one").send();
         verify(fixtureBean).setFirstName("f");
         verify(fixtureBean).setLastName("a");
+        verify(fixtureBean).addChild("one");
         assertEquals(fixtureClass.fixtureBean, fixtureBean);
     }
 
