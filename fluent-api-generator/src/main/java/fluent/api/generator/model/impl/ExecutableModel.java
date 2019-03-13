@@ -75,6 +75,12 @@ public class ExecutableModel implements MethodModel {
     }
 
     @Override
+    public String toProperty(String regexPrefix, String group) {
+        String result = name().replaceFirst(regexPrefix, group);
+        return Character.toLowerCase(result.charAt(0)) + result.substring(1);
+    }
+
+    @Override
     public List<VarModel> parameters() {
         List<VarModel> result = new ArrayList<>(type.getParameterTypes().size());
         for(int i = 0; i < type.getParameterTypes().size(); i++) {

@@ -28,13 +28,8 @@ public final class {{ className }}{% if not empty(productType.parameterVariables
         return new {{ className }}{% if not empty(productType.parameterVariables) %}<>{% endif %}();
     }
 {% endif %}{% endif %}
-{% for setter in productType.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
-    public {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
-        object.{{ setter.name }}(value);
-        return this;
-    }
-{% endif %}{% if setter.name.startsWith("add") and setter.parameters.size == 1 %}
-    public {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
+{% for setter in productType.methods %}{% if setter.name.matches(setterPattern) and setter.parameters.size == 1 %}
+    public {{ className }}{{ classParameters }} {{ setter.toProperty(setterPattern, setterNameGroup) }}({{ setter.parameters[0].type }} value) {
         object.{{ setter.name }}(value);
         return this;
     }

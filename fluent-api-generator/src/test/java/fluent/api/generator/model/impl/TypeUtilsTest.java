@@ -41,7 +41,7 @@ public class TypeUtilsTest {
         return new Object[][] {
                 {"getName1", "name1"},
                 {"setName2", "name2"},
-                {"addName3", "name3"},
+                {"addName3", "addName3"},
                 {"isName4", "name4"},
                 {"name5", "name5"},
                 {"a", "a"},

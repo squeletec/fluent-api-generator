@@ -86,4 +86,16 @@ public @interface FluentSender {
      */
     String factoryMethod() default "";
 
+    /**
+     * Specify prefixes of setter methods.
+     * @return All prefixes, by which we can identify setter method.
+     */
+    String setterPattern() default "set(.+)";
+
+    /**
+     * Specify regex group, which should contain the name of the setter within the original method name.
+     * @return Group in Java regex notation (e.g. $1, $2 etc.)
+     */
+    String setterNameGroup() default "$1";
+
 }

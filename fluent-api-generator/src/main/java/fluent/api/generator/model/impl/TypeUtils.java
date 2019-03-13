@@ -39,8 +39,6 @@ public class TypeUtils {
             case 'g':
             case 's':
                 return chars.length > 3 && chars[1] == 'e' && chars[2] == 't' ? toLowerCase(name.charAt(3)) + name.substring(4) : name;
-            case 'a':
-                return chars.length > 3 && chars[1] == 'd' && chars[2] == 'd' ? toLowerCase(name.charAt(3)) + name.substring(4) : name;
             case 'i':
                 return chars.length > 2 && chars[1] == 's' ? toLowerCase(name.charAt(2)) + name.substring(3) : name;
         }

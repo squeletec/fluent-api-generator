@@ -29,9 +29,9 @@ public final class {{ className }}Impl{% if not empty(productType.parameterVaria
         return new {{ className }}Impl{% if not empty(productType.parameterVariables) %}<>{% endif %}();
     }
 {% endif %}{% endif %}
-{% for setter in productType.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
+{% for setter in productType.methods %}{% if setter.name.matches(setterPattern) and setter.parameters.size == 1 %}
     @Override
-    public {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
+    public {{ className }}{{ classParameters }} {{ setter.toProperty(setterPattern, setterNameGroup) }}({{ setter.parameters[0].type }} value) {
         object.{{ setter.name }}(value);
         return this;
     }

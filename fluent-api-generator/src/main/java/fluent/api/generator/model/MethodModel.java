@@ -30,7 +30,6 @@
 package fluent.api.generator.model;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -45,7 +44,19 @@ public interface MethodModel extends ElementModel {
      */
     String name();
 
+    /**
+     * Get property name using standard prefixes - setX/getX/isX.
+     * @return Property name.
+     */
     String propertyName() ;
+
+    /**
+     * Convert method name to property name by replacement using regular expression end replacement group.
+     * @param regexPrefix Regular expression to match property name part of the method name.
+     * @param group Which group identifies the name.
+     * @return Property name.
+     */
+    String toProperty(String regexPrefix, String group);
 
     /**
      * Get list of parameter (variable) models.

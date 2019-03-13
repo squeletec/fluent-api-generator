@@ -27,15 +27,9 @@ public class {{ className }}Impl{% if not empty(var.type.parameterVariables) %}<
 {% for parameter in method.parameters %}
         this.{{parameter.name}} = {{parameter.name}};{% endfor %}
     }
-{% for setter in var.type.methods %}{% if setter.name.startsWith("set") and setter.parameters.size == 1 %}
+{% for setter in var.type.methods %}{% if setter.name.matches(setterPattern) and setter.parameters.size == 1 %}
     @Override
-    public {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
-        this.{{ var.name }}.{{ setter.name }}(value);
-        return this;
-    }
-{% endif %}{% if setter.name.startsWith("add") and setter.parameters.size == 1 %}
-    @Override
-    public {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
+    public {{ className }}{{ classParameters }} {{ setter.toProperty(setterPattern, setterNameGroup) }}({{ setter.parameters[0].type }} value) {
         this.{{ var.name }}.{{ setter.name }}(value);
         return this;
     }

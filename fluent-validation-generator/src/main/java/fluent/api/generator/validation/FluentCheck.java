@@ -78,5 +78,17 @@ public @interface FluentCheck {
      * @return Name of the factory method.
      */
     String factoryMethod() default "";
+    /**
+     * Specify prefixes of getter methods.
+     * @return All prefixes, by which we can identify getter method.
+     */
+    String getterPattern() default "(get|is)(.+)";
+
+    /**
+     * Specify regex group, which should contain the name of the getter within the original method name.
+     * @return Group in Java regex notation (e.g. $1, $2 etc.)
+     */
+    String getterNameGroup() default "$2";
+
 
 }
