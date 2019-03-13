@@ -37,7 +37,7 @@ public class SenderFixtureClass {
     public final FixtureBean fixtureBean;
 
     public SenderFixtureClass(
-            @FluentSender(setterPattern = "(set|add)(.+)", setterNameGroup = "$2")
+            @FluentSender(setterPattern = "(set|add)(.+)")
             @FluentSenderApi(methodName = "fullSend")
             FixtureBean bean
     ) {
