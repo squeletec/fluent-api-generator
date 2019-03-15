@@ -1,0 +1,22 @@
+{%
+ set className = (var.method.annotations.containsKey("CommonApi")) ? (var.method.annotations.CommonApi.className != "") ? var.method.annotations.CommonApi.className : capitalize(var.method.name) : capitalize(var.method.name)
+%}{%
+ set packageName = (var.method.annotations.containsKey("CommonApi")) ? (var.method.annotations.CommonApi.packageName != "") ? var.method.annotations.CommonApi.packageName : var.packageName : var.packageName
+%}package {{ packageName }};
+import javax.annotation.Generated;
+{% set apiMethods = [] %}
+{% for adapter in var.method.parameters %}{%
+  if empty(apiMethods) %}{% set ignore =  apiMethods.addAll(adapter.type.methods) %}{%
+  else
+   %}{% for m in apiMethods %}{% set remove = true %}{% for c in adapter.type.methods %}{%
+    if m.name == c.name and m.parameterTypes == c.parameterTypes %}{% set remove = false %}{%
+     endif %}{% endfor %}{% if remove %}{% set ign = apiMethods.remove(m) %}{% endif %}{% endfor %}{% endif %}{% endfor %}
+
+@Generated("Generated code using {{ templatePath }}")
+public interface {{ className }} {
+
+{% for method in apiMethods %}{% if method.declaringClass.toString() != "java.lang.Object" %}
+    public {{ className }} {{ method }}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{ parameter.type }} {{ parameter }}{% endfor %});
+{% endif %}{% endfor %}
+
+}

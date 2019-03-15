@@ -40,6 +40,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -170,5 +171,19 @@ class DeclaredTypeModel extends AbstractTypeModel {
                         e -> factory.annotationValue(e.getValue())
                 ))
         ));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DeclaredTypeModel that = (DeclaredTypeModel) o;
+        return Objects.equals(type, that.type) &&
+                Objects.equals(element, that.element);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, element);
     }
 }

@@ -1,7 +1,7 @@
 /*
  * BSD 2-Clause License
  *
- * Copyright (c) 2018, Ondrej Fischer
+ * Copyright (c) 2019, Ondrej Fischer
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,49 +27,31 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.common;
 
-import java.util.List;
+import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-/**
- * Model of a method, that will be passed to the template, and can be used to drive generation of
- * derived java classes.
- */
-public interface MethodModel extends ElementModel {
+public class CommonApiTest {
 
-    /**
-     * Get name of the method (simple string).
-     * @return Name of the method.
-     */
-    String name();
+    @Test
+    public void testSenderAdapter() {
+        Sender sender = mock(Sender.class);
+        CommonApi api = new CommonApiSenderAdapter(sender);
+        api.field1("value").field2(4);
+        verify(sender).field1("value");
+        verify(sender).field2(4);
+    }
 
-    /**
-     * Get property name using standard prefixes - setX/getX/isX.
-     * @return Property name.
-     */
-    String propertyName() ;
-
-    /**
-     * Convert method name to property name by replacement using regular expression end replacement group.
-     * @param regexPrefix Regular expression to match property name part of the method name.
-     * @param group Which group identifies the name.
-     * @return Property name.
-     */
-    String toProperty(String regexPrefix, String group);
-
-    /**
-     * Get list of parameter (variable) models.
-     * @return List of parameter (variable) models.
-     */
-    List<VarModel> parameters();
-
-    List<TypeModel> typeVariables();
-
-    TypeModel declaringClass();
-
-    boolean isConstructor();
-
-    List<TypeModel> parameterTypes();
+    @Test
+    public void testVerifierAdapter() {
+        Verifier verifier = mock(Verifier.class);
+        CommonApi api = new CommonApiVerifierAdapter(verifier);
+        api.field1("value").field2(4);
+        verify(verifier).field1("value");
+        verify(verifier).field2(4);
+    }
 
 }

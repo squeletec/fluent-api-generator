@@ -1,7 +1,7 @@
 /*
  * BSD 2-Clause License
  *
- * Copyright (c) 2018, Ondrej Fischer
+ * Copyright (c) 2019, Ondrej Fischer
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,49 +27,12 @@
  *
  */
 
-package fluent.api.generator.model;
+package fluent.api.generator.common;
 
-import java.util.List;
+import fluent.api.Adapter;
 
+public interface AdapterConfig {
 
-/**
- * Model of a method, that will be passed to the template, and can be used to drive generation of
- * derived java classes.
- */
-public interface MethodModel extends ElementModel {
-
-    /**
-     * Get name of the method (simple string).
-     * @return Name of the method.
-     */
-    String name();
-
-    /**
-     * Get property name using standard prefixes - setX/getX/isX.
-     * @return Property name.
-     */
-    String propertyName() ;
-
-    /**
-     * Convert method name to property name by replacement using regular expression end replacement group.
-     * @param regexPrefix Regular expression to match property name part of the method name.
-     * @param group Which group identifies the name.
-     * @return Property name.
-     */
-    String toProperty(String regexPrefix, String group);
-
-    /**
-     * Get list of parameter (variable) models.
-     * @return List of parameter (variable) models.
-     */
-    List<VarModel> parameters();
-
-    List<TypeModel> typeVariables();
-
-    TypeModel declaringClass();
-
-    boolean isConstructor();
-
-    List<TypeModel> parameterTypes();
+    void commonApi(@Adapter Sender sender, @Adapter Verifier verifier);
 
 }

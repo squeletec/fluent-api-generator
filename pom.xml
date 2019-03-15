@@ -13,6 +13,7 @@
         <module>fluent-builder-generator</module>
         <module>fluent-builder-api-generator</module>
         <module>fluent-config-generator</module>
+        <module>fluent-common-api-generator</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
 

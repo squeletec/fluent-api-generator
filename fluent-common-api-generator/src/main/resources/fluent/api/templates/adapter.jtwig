@@ -1,0 +1,29 @@
+{%
+ set api = (var.method.annotations.containsKey("CommonApi")) ? (var.method.annotations.CommonApi.className != "") ? var.method.annotations.CommonApi.className : capitalize(var.method.name) : capitalize(var.method.name)
+%}{%
+ set apiPackageName = (var.method.annotations.containsKey("CommonApi")) ? (var.method.annotations.CommonApi.packageName != "") ? var.method.annotations.CommonApi.packageName : var.packageName : var.packageName
+%}{% set adaptee = var.type %}{% set packageName = (packageName == "") ? var.packageName : packageName %}{% set className = concat(api, adaptee.simpleName, "Adapter") %}
+package {{ packageName }};
+import javax.annotation.Generated;
+
+@Generated("Generated code using {{ templatePath }}")
+public final class {{ className }} implements {{ apiPackageName}}.{{ api }} {
+
+    private final {{ adaptee }} adaptee;
+
+    public {{ className }}({{ adaptee }} adaptee) {
+        this.adaptee = adaptee;
+    }
+{% if factoryMethod != "" %}
+    public static {{ className }} {{ factoryMethod }}({{ adaptee }} adaptee) {
+        return new {{ className }}(adaptee);
+    }
+{% endif %}
+{% for method in adaptee.methods %}{% if method.declaringClass.toString() != "java.lang.Object" %}
+    public {{ className }} {{ method }}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{ parameter.type }} {{ parameter }}{% endfor %}) {
+        adaptee.{{ method }}({{ join(method.parameters, ", ") }});
+        return this;
+    }
+{% endif %}{% endfor %}
+
+}

@@ -35,9 +35,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.ExecutableType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
@@ -105,6 +103,11 @@ public class ExecutableModel implements MethodModel {
     }
 
     @Override
+    public List<TypeModel> parameterTypes() {
+        return parameters().stream().map(VarModel::type).collect(Collectors.toList());
+    }
+
+    @Override
     public boolean isStatic() {
         return element.getModifiers().contains(Modifier.STATIC);
     }
@@ -128,5 +131,19 @@ public class ExecutableModel implements MethodModel {
                         e -> factory.annotationValue(e.getValue())
                 ))
         ));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExecutableModel that = (ExecutableModel) o;
+        return Objects.equals(element, that.element) &&
+                Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(element, type);
     }
 }
