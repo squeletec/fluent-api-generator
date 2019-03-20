@@ -30,7 +30,6 @@
 package fluent.api.generator.processor;
 
 import fluent.api.generator.Templates;
-import fluent.api.generator.model.ElementModel;
 import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.TemplateModel;
 
@@ -118,7 +117,7 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
         annotatedElement.getAnnotationMirrors().stream().filter(
                 mirror -> mirror.getAnnotationType().asElement().equals(annotation)
         ).forEach(mirror -> mirror.getElementValues().forEach(
-                (name, value) -> model.with(name.getSimpleName().toString(), value.getValue())
+                (name, value) -> model.with(name.getSimpleName().toString(), factory.annotationValue(value))
         ));
         for(String path : annotation.getAnnotation(Templates.class).value()) {
             String source = model.render(path);

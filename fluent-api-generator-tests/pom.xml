@@ -25,6 +25,11 @@
         </dependency>
         <dependency>
             <groupId>foundation.fluent.api</groupId>
+            <artifactId>fluent-api-end-check</artifactId>
+            <version>1.16</version>
+        </dependency>
+        <dependency>
+            <groupId>foundation.fluent.api</groupId>
             <artifactId>fluent-config-generator</artifactId>
             <version>${project.version}</version>
         </dependency>

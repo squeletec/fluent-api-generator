@@ -217,9 +217,6 @@ Return value of the builder terminal method is:
 - return type of the factory method in case of annotated factory method (it will be `void`, if the return type is `void`)
 - class owning the annotated constructor in case of constructor
 
-Terminal method is always annotated with `@End` annotation to benefit from compile time check, that it gets
-invoked. See: [Fluent API sentence end check](https://github.com/c0stra/fluent-api-end-check)
-
 There are actually two different annotations:
 - `@fluent.api.FluentParameters`: generates just a simple builder class.
 - `@fluent.api.FluentParametersApi`: generates separate interface, and it's implementation.
@@ -312,9 +309,6 @@ Return value of the builder terminal method is:
 - return type of the factory method in case of annotated factory method
 - class owning the annotated constructor in case of constructor
 
-Terminal method is always annotated with `@End` annotation to benefit from compile time check, that it gets
-invoked. See: [Fluent API sentence end check](https://github.com/c0stra/fluent-api-end-check)
-
 There are actually two different annotations:
 - `@fluent.api.FluentBuilder`: generates just a simple builder class.
 - `@fluent.api.FluentBuilderApi`: generates separate interface, and it's implementation.
@@ -355,9 +349,6 @@ The annotation `@FluentSender` has following parameters to customize the generat
 
 Return value of the builder terminal method is:
 - return type of the factory method in case of annotated factory method (it will be `void`, if the return type is `void`)
-
-Terminal method is always annotated with `@End` annotation to benefit from compile time check, that it gets
-invoked. See: [Fluent API sentence end check](https://github.com/c0stra/fluent-api-end-check)
 
 There are actually two different annotations:
 - `@fluent.api.FluentSender`: generates just a simple builder class.

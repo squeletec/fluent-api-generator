@@ -29,6 +29,7 @@
 
 package fluent.api.generator.sender;
 
+import fluent.api.End;
 import fluent.api.FluentSender;
 import fluent.api.FluentSenderApi;
 import fluent.api.generator.GenericFixture;
@@ -42,7 +43,7 @@ public interface SenderFixtureInterface {
     );
 
     void generic(
-            @FluentSender(methodName = "simpleAccept")
+            @FluentSender(methodName = "simpleAccept", methodAnnotation = fluent.api.End.class)
             @FluentSenderApi
             GenericFixture<String> genericValue
     );
