@@ -7,7 +7,6 @@
 {% set classParameters = empty(var.type.parameterVariables) ? "" : concat("<", join(var.type.parameterVariables, ", "), ">") %}
 package {{ packageName }};
 import javax.annotation.Generated;
-import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
 public class {{ className }}{% if not empty(var.type.parameterVariables) %}<{% for t in var.type.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %} {
@@ -30,8 +29,8 @@ public class {{ className }}{% if not empty(var.type.parameterVariables) %}<{% f
         return this;
     }
 {% endif %}{% endfor %}
-    @End
-    public {{ productType }} {{ methodName }}() {
+    {% for annotation in methodAnnotation %}@{{ annotation }}
+    {% endfor %}public {{ productType }} {{ methodName }}() {
         {% if productType != "void" %}return {% endif %}{%
         if method.isConstructor
             %}new {{ method.declaringClass }}{%

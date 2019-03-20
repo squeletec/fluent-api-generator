@@ -5,7 +5,6 @@
 {% set classParameters = (empty(typeParameterList)) ? "" : concat("<", join(typeParameterList, ", "), ">") %}
 package {{ packageName }};
 import javax.annotation.Generated;
-import fluent.api.End;
 
 @Generated("Generated code using {{ templatePath }}")
 public class {{ className }}{% if not empty(typeParameterList) %}<{% for t in typeParameterList %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %} {

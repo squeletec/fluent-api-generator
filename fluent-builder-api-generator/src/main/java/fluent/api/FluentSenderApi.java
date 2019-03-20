@@ -31,10 +31,7 @@ package fluent.api;
 
 import fluent.api.generator.Templates;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Annotation, that triggers code generator to create a fluent builder interface + implementation for an existing factory
@@ -80,6 +77,12 @@ public @interface FluentSenderApi {
      * @return Terminal method name.
      */
     String methodName() default "";
+
+    /**
+     * Specify annotations, that should be added to terminal method.
+     * @return Annotation for the terminal method.
+     */
+    Class<? extends Annotation>[] methodAnnotation() default {};
 
     /**
      * Specify factory method used to create instances of the fluent parameters builder instead of constructor.
