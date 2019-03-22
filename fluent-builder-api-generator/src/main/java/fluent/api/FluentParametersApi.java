@@ -84,10 +84,4 @@ public @interface FluentParametersApi {
      */
     Class<? extends Annotation>[] methodAnnotation() default {};
 
-    /**
-     * Specify factory method used to create instances of the fluent parameters builder instead of constructor.
-     * @return Name of the factory method.
-     */
-    String factoryMethod() default "";
-
 }

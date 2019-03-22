@@ -85,12 +85,6 @@ public @interface FluentSenderApi {
     Class<? extends Annotation>[] methodAnnotation() default {};
 
     /**
-     * Specify factory method used to create instances of the fluent parameters builder instead of constructor.
-     * @return Name of the factory method.
-     */
-    String factoryMethod() default "";
-
-    /**
      * Specify prefixes of setter methods.
      * @return All prefixes, by which we can identify setter method.
      */
