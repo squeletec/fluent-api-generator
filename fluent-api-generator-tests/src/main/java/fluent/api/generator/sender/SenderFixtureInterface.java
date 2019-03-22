@@ -37,20 +37,20 @@ import fluent.api.generator.GenericFixture;
 public interface SenderFixtureInterface {
 
     void accept(
-            @FluentSender(methodName = "simpleAccept")
-            @FluentSenderApi
+            @FluentSender
+            @FluentSenderApi(methodName = "simpleAccept")
             FixtureBean bean
     );
 
     void generic(
-            @FluentSender(methodName = "simpleAccept", methodAnnotation = fluent.api.End.class)
-            @FluentSenderApi
+            @FluentSender(methodAnnotation = End.class)
+            @FluentSenderApi(methodName = "simpleAccept")
             GenericFixture<String> genericValue
     );
 
     <T> void otherGeneric(
-            @FluentSender(methodName = "genericSend")
-            @FluentSenderApi
+            @FluentSender
+            @FluentSenderApi(methodName = "genericSend")
             GenericFixture<T> genericValue
     );
 

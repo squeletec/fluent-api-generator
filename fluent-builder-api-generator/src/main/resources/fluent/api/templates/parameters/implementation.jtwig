@@ -1,17 +1,22 @@
 {% set productType = (method.isConstructor) ? (method.declaringClass) : (method.type) %}
-{% set packageName = (packageName == "") ? method.declaringClass.packageName : packageName %}
-{% set methodName = (methodName == "") ? ((method.isConstructor) ? "build" : method.name) : methodName %}
-{% set classSuffix = concat(capitalize(methodName), "er") %}
-{% set className = (className == "") ? concat(method.declaringClass.simpleName, classSuffix.replaceFirst("teer", "tor").replaceFirst("eer", "er")) : className %}
+{% set detectedPackage = method.declaringClass.packageName %}
+{% set annotations = method.annotations %}
+{% set hasApi = (annotations.containsKey("FluentParametersApi")) %}
+{% set annotation = hasApi ? annotations.FluentParametersApi : annotations.FluentParameters %}
+{% set methodName = (annotation.methodName == "") ? ((method.isConstructor) ? "build" : method.name) : annotation.methodName %}
+{% set classSuffix = concat(capitalize(methodName), "er").replaceFirst("teer", "tor").replaceFirst("eer", "er") %}
+{% set apiName = (annotation.className == "") ? concat(method.declaringClass.simpleName, classSuffix) : annotation.className %}
+{% set className = (className == "") ? (hasApi ? concat(apiName, "Impl") : apiName) : className %}
+{% set apiPackageName = (annotation.packageName == "") ? detectedPackage : annotation.packageName %}
+{% set packageName = hasApi ? ((packageName == "") ? concat(apiPackageName, ".impl") : packageName) : apiPackageName %}
 {% set typeParameterList = (method.isConstructor) ? productType.parameters : ((method.isStatic) ? method.typeVariables : merge(method.declaringClass.parameters, method.typeVariables)) %}
 {% set classParameters = (empty(typeParameterList)) ? "" : concat("<", join(typeParameterList, ", "), ">") %}
-package {{ packageName }}.impl;
+package {{ packageName }};
 import javax.annotation.Generated;
-import {{ packageName }}.{{ className }};
 
 @Generated("Generated code using {{ templatePath }}")
-public class {{ className }}Impl{% if not empty(typeParameterList) %}<{% for t in typeParameterList %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %}
-    implements {{ className }}{{ classParameters }} {
+public class {{ className }}{% if not empty(typeParameterList) %}<{% for t in typeParameterList %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %}{% if hasApi %}
+    implements {{ apiPackageName }}.{{ apiName }}{{ classParameters }}{% endif %} {
 
 {% for parameter in method.parameters %}
     private {{ parameter.type }} {{ parameter.name }};
@@ -23,7 +28,7 @@ public class {{ className }}Impl{% if not empty(typeParameterList) %}<{% for t i
 {% endif %}{% else %}
     private final {{ method.declaringClass }} factory;
 
-    public {{ className }}Impl({{ method.declaringClass }} factory) {
+    public {{ className }}({{ method.declaringClass }} factory) {
         this.factory = factory;
     }
 {% if factoryMethod != "" %}
@@ -32,14 +37,14 @@ public class {{ className }}Impl{% if not empty(typeParameterList) %}<{% for t i
     }
 {% endif %}{% endif %}
 {% for parameter in method.parameters %}
-    @Override
-    public {{ className }}{{ classParameters }} {{ parameter.name }}({{ parameter.type }} value) {
+    {% if hasApi %}@Override
+    {% endif %}public {{ className }}{{ classParameters }} {{ parameter.name }}({{ parameter.type }} value) {
         this.{{ parameter.name }} = value;
         return this;
     }
 {% endfor %}
-    @Override
-    public {{ productType }} {{ methodName }}() {
+    {% if hasApi %}@Override
+    {% endif %}public {{ productType }} {{ methodName }}() {
         {% if productType != "void" %}return {% endif %}{%
         if method.isConstructor
             %}new {{ method.declaringClass }}{%

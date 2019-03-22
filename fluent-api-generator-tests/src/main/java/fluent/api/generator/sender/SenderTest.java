@@ -29,8 +29,11 @@
 
 package fluent.api.generator.sender;
 
+import fluent.api.dsl.FixtureBeanLocator;
+import fluent.api.dsl.impl.FixtureBeanLocatorImpl;
 import fluent.api.generator.TestBase;
-import fluent.api.generator.sender.impl.FixtureBeanAccepterImpl;
+import fluent.api.generator.sender.impl.FixtureBeanFullSenderImpl;
+import fluent.api.generator.sender.impl.FixtureBeanSimpleAccepterImpl;
 import org.mockito.Mock;
 import org.testng.annotations.Test;
 
@@ -53,7 +56,7 @@ public class SenderTest extends TestBase {
 
     @Test
     public void testSimpleSender() {
-        new FixtureBeanSimpleAccepter(fixtureInterface, fixtureBean).firstName("a").simpleAccept();
+        new FixtureBeanSimpleAccepterImpl(fixtureInterface, fixtureBean).firstName("a").simpleAccept();
         verify(fixtureInterface).accept(fixtureBean);
         verify(fixtureBean).setFirstName("a");
         verifyNoMoreInteractions(fixtureBean);
@@ -61,8 +64,8 @@ public class SenderTest extends TestBase {
 
     @Test
     public void testFullSender() {
-        FixtureBeanAccepter sender = new FixtureBeanAccepterImpl(fixtureInterface, fixtureBean);
-        sender.children(list).age(5).accept();
+        FixtureBeanSimpleAccepter sender = new FixtureBeanSimpleAccepterImpl(fixtureInterface, fixtureBean);
+        sender.children(list).age(5).simpleAccept();
         verify(fixtureInterface).accept(fixtureBean);
         verify(fixtureBean).setAge(5);
         verify(fixtureBean).setChildren(list);
@@ -71,7 +74,7 @@ public class SenderTest extends TestBase {
 
     @Test
     public void testConstructorSender() {
-        SenderFixtureClass fixtureClass = new FixtureBeanSender(fixtureBean).firstName("f").lastName("a").child("one").send();
+        SenderFixtureClass fixtureClass = new FixtureBeanFullSenderImpl(fixtureBean).firstName("f").lastName("a").child("one").fullSend();
         verify(fixtureBean).setFirstName("f");
         verify(fixtureBean).setLastName("a");
         verify(fixtureBean).addChild("one");
@@ -80,7 +83,7 @@ public class SenderTest extends TestBase {
 
     @Test
     public void testStaticMethodSender() {
-        FixtureBeanLocator locator = new FixtureBeanLocator("1", fixtureBean);
+        FixtureBeanLocator locator = new FixtureBeanLocatorImpl("1", fixtureBean);
         assertEquals(locator.age(5).locate(), "1");
         verify(fixtureBean).setAge(5);
         verifyNoMoreInteractions(fixtureBean);

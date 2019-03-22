@@ -41,14 +41,14 @@ public interface ConsumerFixture {
     );
 
     void accept(
-            @FluentBuilder(packageName = "fluent.api.generator.builder.simple")
-            @FluentBuilderApi(factoryMethod = "stringPojo")
+            @FluentBuilder(packageName = "fluent.api.generator.builder.simple", factoryMethod = "stringPojo")
+            @FluentBuilderApi
             GenericPojoFixture<String> genericPojoFixture
     );
 
     <T> void acceptGeneric(
-            @FluentBuilder(methodName = "create")
-            @FluentBuilderApi(factoryMethod = "genericPojo", className = "TPojoBuilder")
+            @FluentBuilder(factoryMethod = "genericPojo")
+            @FluentBuilderApi(className = "TPojoBuilder")
             GenericPojoFixture<T> genericPojoFixture
     );
 }

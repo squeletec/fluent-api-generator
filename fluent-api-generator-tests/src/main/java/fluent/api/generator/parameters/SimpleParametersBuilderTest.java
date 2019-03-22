@@ -31,6 +31,9 @@ package fluent.api.generator.parameters;
 
 import fluent.api.generator.*;
 import fluent.api.generator.impl.GenericImmutableFixtureBuilderImpl;
+import fluent.api.generator.parameters.impl.ParametersFixtureClassSimpleCaller;
+import fluent.api.generator.parameters.impl.ParametersFixtureInterfaceFullCalculatorImpl;
+import fluent.api.generator.parameters.impl.ParametersFixtureInterfaceFullCallerImpl;
 import org.mockito.Mock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -41,9 +44,9 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static fluent.api.generator.parameters.ParametersFixtureClassAndSender.createObjectWith;
-import static fluent.api.generator.parameters.ParametersFixtureInterfaceCreator.fixtureInterface;
-import static fluent.api.generator.parameters.simple.ParametersFixtureClassCreator.fixtureClass;
+import static fluent.api.generator.parameters.full.impl.ParametersFixtureInterfaceCreatorImpl.fixtureInterface;
+import static fluent.api.generator.parameters.impl.ParametersFixtureClassAndSenderImpl.createObjectWith;
+import static fluent.api.generator.parameters.simple.ParametersFixtureClassCreatorImpl.fixtureClass;
 import static java.time.LocalDateTime.now;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,14 +68,14 @@ public class SimpleParametersBuilderTest extends TestBase {
     @Test
     public void testSimpleInstanceMethodCaller() {
         LocalDateTime time = LocalDateTime.now();
-        new ParametersFixtureInterfaceCaller(parametersFixtureInterface).anInt(5).aString("value").aTime(time).aList(list).call();
+        new ParametersFixtureInterfaceFullCallerImpl(parametersFixtureInterface).anInt(5).aString("value").aTime(time).aList(list).fullCall();
         verify(parametersFixtureInterface).call(5, "value", time, list);
     }
 
     @Test
     public void testSimpleInstanceMethodCalculator() {
         when(parametersFixtureInterface.calculate(5, "value", null, null)).thenReturn(6);
-        ParametersFixtureInterfaceCalculator calculator = new ParametersFixtureInterfaceCalculator(parametersFixtureInterface);
+        ParametersFixtureInterfaceFullCalculator calculator = new ParametersFixtureInterfaceFullCalculatorImpl(parametersFixtureInterface);
         Assert.assertEquals(calculator.anInt(5).aString("value").calculate(), 6);
     }
 

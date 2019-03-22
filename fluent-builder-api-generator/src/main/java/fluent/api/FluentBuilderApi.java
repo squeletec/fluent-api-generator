@@ -48,7 +48,7 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
-@Templates({"/fluent/api/templates/builder/interface.jtwig", "/fluent/api/templates/builder/implementation.jtwig"})
+@Templates({"/fluent/api/templates/builder/interface.jtwig"})
 public @interface FluentBuilderApi {
 
     /**
@@ -82,12 +82,6 @@ public @interface FluentBuilderApi {
      * @return Annotation for the terminal method.
      */
     Class<? extends Annotation>[] methodAnnotation() default {};
-
-    /**
-     * Specify factory method used to create instances of the fluent parameters builder instead of constructor.
-     * @return Name of the factory method.
-     */
-    String factoryMethod() default "";
 
     /**
      * Specify prefixes of setter methods.

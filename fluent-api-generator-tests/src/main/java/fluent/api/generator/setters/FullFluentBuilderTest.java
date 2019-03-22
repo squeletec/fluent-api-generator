@@ -29,8 +29,9 @@
 
 package fluent.api.generator.setters;
 
+import fluent.api.generator.builder.full.PojoFixtureBuilder;
 import fluent.api.generator.builder.full.impl.PojoFixtureBuilderImpl;
-import fluent.api.generator.setters.impl.GenericPojoFixtureBuilderImpl;
+import fluent.api.generator.builder.simple.GenericPojoFixtureBuilderImpl;
 import fluent.api.generator.setters.impl.TPojoBuilderImpl;
 import org.testng.annotations.Test;
 
@@ -44,7 +45,7 @@ public class FullFluentBuilderTest {
 
     @Test
     public void testFullPojoBuilder() {
-        PojoFixtureBuilderImpl builder = new PojoFixtureBuilderImpl();
+        PojoFixtureBuilder builder = new PojoFixtureBuilderImpl();
         LocalDate now = LocalDate.now();
         List<String> list  = new LinkedList<>();
         PojoFixture pojoFixture = builder.anInt(5).aLong(6L).aString("a").aLocalDate(now).aList(list).build();

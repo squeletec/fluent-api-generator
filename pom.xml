@@ -10,7 +10,6 @@
         <module>fluent-api-generator</module>
         <module>fluent-api-generator-tests</module>
         <module>fluent-validation-generator</module>
-        <module>fluent-builder-generator</module>
         <module>fluent-builder-api-generator</module>
         <module>fluent-config-generator</module>
         <module>fluent-common-api-generator</module>

@@ -37,8 +37,8 @@ public class SenderFixtureClass {
     public final FixtureBean fixtureBean;
 
     public SenderFixtureClass(
-            @FluentSender(setterPattern = "(set|add)(.+)")
-            @FluentSenderApi(methodName = "fullSend")
+            @FluentSender
+            @FluentSenderApi(methodName = "fullSend", setterPattern = "(set|add)(.+)")
             FixtureBean bean
     ) {
         this.fixtureBean = bean;

@@ -29,14 +29,15 @@
 
 package fluent.api.generator.setters;
 
+import fluent.api.generator.builder.simple.GenericPojoFixtureBuilderImpl;
+import fluent.api.generator.setters.impl.TPojoBuilderImpl;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-import fluent.api.generator.builder.simple.GenericPojoFixtureBuilder;
 
-import static fluent.api.generator.setters.PojoFixtureBuilder.pojo;
+import static fluent.api.generator.builder.full.impl.PojoFixtureBuilderImpl.pojo;
 import static org.testng.Assert.assertEquals;
 
 public class SimpleFluentBuilderTest {
@@ -57,7 +58,7 @@ public class SimpleFluentBuilderTest {
     public void testSimpleStringPojoBuilder() {
         LocalDate now = LocalDate.now();
         List<String> list  = new LinkedList<>();
-        GenericPojoFixture<String> fixture = new GenericPojoFixtureBuilder().anInt(5).aLong(6L).aString("a").aLocalDate(now).aList(list).aT("B").build();
+        GenericPojoFixture<String> fixture = new GenericPojoFixtureBuilderImpl().anInt(5).aLong(6L).aString("a").aLocalDate(now).aList(list).aT("B").build();
         assertEquals(fixture.getAnInt(), 5);
         assertEquals(fixture.getaLong(), Long.valueOf(6L));
         assertEquals(fixture.getaString(), "a");
@@ -70,7 +71,7 @@ public class SimpleFluentBuilderTest {
     public void testSimpleGenericPojoBuilder() {
         LocalDate now = LocalDate.now();
         List<String> list  = new LinkedList<>();
-        GenericPojoFixture<Integer> fixture = new GenericPojoFixtureCreator<Integer>().anInt(5).aLong(6L).aString("a").aLocalDate(now).aList(list).aT(8).create();
+        GenericPojoFixture<Integer> fixture = TPojoBuilderImpl.<Integer>genericPojo().anInt(5).aLong(6L).aString("a").aLocalDate(now).aList(list).aT(8).build();
         assertEquals(fixture.getAnInt(), 5);
         assertEquals(fixture.getaLong(), Long.valueOf(6L));
         assertEquals(fixture.getaString(), "a");

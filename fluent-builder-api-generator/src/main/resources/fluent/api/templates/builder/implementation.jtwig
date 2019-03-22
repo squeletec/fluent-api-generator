@@ -1,49 +1,49 @@
 {% set productType = defined(var) ? var.type : type %}
-{% set packageName = (packageName == "") ? (defined(var) ? var.packageName : type.packageName) : packageName %}
-{% set classSuffix = concat(capitalize(methodName), "er").replaceFirst("teer", "tor").replaceFirst("eer", "er") %}
-{% set className = (className == "") ? concat(productType.simpleName, classSuffix) : className %}
+{% set detectedPackage = defined(var) ? var.packageName : type.packageName %}
+{% set annotations = defined(var) ? var.annotations : type.annotations %}
+{% set hasApi = (annotations.containsKey("FluentBuilderApi")) %}
+{% set annotation = hasApi ? annotations.FluentBuilderApi : annotations.FluentBuilder %}
+{% set classSuffix = concat(capitalize(annotation.methodName), "er").replaceFirst("teer", "tor").replaceFirst("eer", "er") %}
+{% set apiName = (annotation.className == "") ? concat(productType.simpleName, classSuffix) : annotation.className %}
+{% set className = (className == "") ? (hasApi ? concat(apiName, "Impl") : apiName) : className %}
+{% set apiPackageName = (annotation.packageName == "") ? detectedPackage : annotation.packageName %}
+{% set packageName = hasApi ? ((packageName == "") ? concat(apiPackageName, ".impl") : packageName) : apiPackageName %}
 {% set classParameters = empty(productType.parameterVariables) ? "" : concat("<", join(productType.parameterVariables, ", "), ">") %}
-package {{ packageName }}.impl;
+package {{ packageName }};
 import javax.annotation.Generated;
-import {{ packageName }}.{{ className }};
 
 @Generated("Generated code using {{ templatePath }}")
-public final class {{ className }}Impl{% if not empty(productType.parameterVariables) %}<{% for t in productType.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %}
-    implements {{ className }}{{ classParameters }} {
+public final class {{ className }}{% if not empty(productType.parameterVariables) %}<{%
+ for t in productType.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{%
+ endfor %}>{% endif %}{% if hasApi %} implements {{ apiPackageName }}.{{ apiName }}{{ classParameters }}{% endif %} {
 
     private final {{ productType }} object;
 
-    public {{ className }}Impl({{ productType }} object) {
+    public {{ className }}({{ productType }} object) {
         this.object = object;
     }
 {% if productType.hasDefaultConstructor %}
-    public {{ className }}Impl() {
+    public {{ className }}() {
         this(new {{ productType }}());
     }
 {% endif %}{% if factoryMethod != "" %}
     public static {% if not empty(productType.parameterVariables) %}<{% for t in productType.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %} {{ className }}{{ classParameters }} {{ factoryMethod }}({{ productType }} object) {
-        return new {{ className }}Impl{% if not empty(productType.parameterVariables) %}<>{% endif %}(object);
+        return new {{ className }}{% if not empty(productType.parameterVariables) %}<>{% endif %}(object);
     }
 {% if productType.hasDefaultConstructor %}
     public static {% if not empty(productType.parameterVariables) %}<{% for t in productType.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %} {{ className }}{{ classParameters }} {{ factoryMethod }}() {
-        return new {{ className }}Impl{% if not empty(productType.parameterVariables) %}<>{% endif %}();
+        return new {{ className }}{% if not empty(productType.parameterVariables) %}<>{% endif %}();
     }
 {% endif %}{% endif %}
-{% for setter in productType.methods %}{% if setter.name.matches(setterPattern) and setter.parameters.size == 1 %}
-    @Override
-    public {{ className }}{{ classParameters }} {{ setter.toProperty(setterPattern, setterNameGroup) }}({{ setter.parameters[0].type }} value) {
-        object.{{ setter.name }}(value);
-        return this;
-    }
-{% endif %}{% if setter.name.startsWith("add") and setter.parameters.size == 1 %}
-    @Override
-    public {{ className }}{{ classParameters }} {{ setter.propertyName }}({{ setter.parameters[0].type }} value) {
+{% for setter in productType.methods %}{% if setter.name.matches(annotation.setterPattern) and setter.parameters.size == 1 %}
+    {% if hasApi %}@Override
+    {% endif %}public {{ className }}{{ classParameters }} {{ setter.toProperty(annotation.setterPattern, annotation.setterNameGroup) }}({{ setter.parameters[0].type }} value) {
         object.{{ setter.name }}(value);
         return this;
     }
 {% endif %}{% endfor %}
-    @Override
-    public {{ productType }} {{ methodName }}() {
+    {% if hasApi %}@Override
+    {% endif %}public {{ productType }} {{ methodName }}() {
         return object;
     }
 

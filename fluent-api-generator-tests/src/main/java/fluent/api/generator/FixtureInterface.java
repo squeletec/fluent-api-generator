@@ -34,6 +34,7 @@ import fluent.api.FluentBuilderApi;
 
 public interface FixtureInterface {
 
+    @FluentBuilder
     @FluentBuilderApi(className = "FixtureBeanFullBuilder")
     FixtureBean BEAN = null;
 

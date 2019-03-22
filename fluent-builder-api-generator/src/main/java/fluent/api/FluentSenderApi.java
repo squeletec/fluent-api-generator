@@ -49,7 +49,7 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER})
-@Templates({"/fluent/api/templates/sender/interface.jtwig", "/fluent/api/templates/sender/implementation.jtwig"})
+@Templates({"/fluent/api/templates/sender/interface.jtwig"})
 public @interface FluentSenderApi {
 
     /**

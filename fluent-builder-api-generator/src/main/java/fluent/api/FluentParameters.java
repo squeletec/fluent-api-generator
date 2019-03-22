@@ -1,7 +1,7 @@
 /*
  * BSD 2-Clause License
  *
- * Copyright (c) 2018, Ondrej Fischer
+ * Copyright (c) 2019, Ondrej Fischer
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-@Templates("/fluent/api/templates/parameters.jtwig")
+@Templates("/fluent/api/templates/parameters/implementation.jtwig")
 public @interface FluentParameters {
 
     /**

@@ -164,13 +164,7 @@ class DeclaredTypeModel extends AbstractTypeModel {
 
     @Override
     public Map<String, Map<String, Object>> annotations() {
-        return element.getAnnotationMirrors().stream().collect(toMap(
-                a -> a.getAnnotationType().asElement().getSimpleName().toString(),
-                a -> a.getElementValues().entrySet().stream().collect(toMap(
-                        e -> e.getKey().getSimpleName().toString(),
-                        e -> factory.annotationValue(e.getValue())
-                ))
-        ));
+        return factory.annotations(element);
     }
 
     @Override

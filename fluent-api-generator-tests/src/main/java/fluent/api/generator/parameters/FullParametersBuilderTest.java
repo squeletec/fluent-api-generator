@@ -32,6 +32,7 @@ package fluent.api.generator.parameters;
 import fluent.api.generator.TestBase;
 import fluent.api.generator.parameters.full.impl.ParametersFixtureInterfaceCreatorImpl;
 import fluent.api.generator.parameters.impl.*;
+import fluent.api.generator.parameters.simple.ParametersFixtureClassCreatorImpl;
 import org.mockito.Mock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -82,8 +83,8 @@ public class FullParametersBuilderTest extends TestBase {
     public void testFullStaticMethodCaller() {
         ParametersFixtureClass.fixtureInterface = parametersFixtureInterface;
         LocalDateTime time = LocalDateTime.now();
-        ParametersFixtureClassCaller caller = new ParametersFixtureClassCallerImpl();
-        caller.anInt(5).aString("value").aTime(time).aList(list).call();
+        ParametersFixtureClassAndSender caller = new ParametersFixtureClassAndSenderImpl();
+        caller.anInt(5).aString("value").aTime(time).aList(list).andSend();
         verify(parametersFixtureInterface).call(5, "value", time, list);
     }
 
@@ -91,7 +92,7 @@ public class FullParametersBuilderTest extends TestBase {
     public void testFullConstructorBuilder() {
         ParametersFixtureClass.fixtureInterface = parametersFixtureInterface;
         LocalDateTime time = LocalDateTime.now();
-        ParametersFixtureClassBuilder builder = new ParametersFixtureClassBuilderImpl();
+        ParametersFixtureClassBuilder builder = new ParametersFixtureClassSimpleCaller();
         ParametersFixtureClass fixtureClass = builder.anInt(5).aString("value").aTime(time).aList(list).build();
         verify(parametersFixtureInterface).call(5, "value", time, list);
     }

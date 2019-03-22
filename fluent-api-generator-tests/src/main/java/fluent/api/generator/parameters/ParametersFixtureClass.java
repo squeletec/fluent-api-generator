@@ -54,8 +54,8 @@ public class ParametersFixtureClass {
         fixtureInterface.call(anInt, aString, aTime, aList);
     }
 
-    @FluentParameters(factoryMethod = "createObjectWith", methodName = "andSend")
-    @FluentParametersApi
+    @FluentParameters(factoryMethod = "createObjectWith")
+    @FluentParametersApi(methodName = "andSend")
     public static void call(int anInt, String aString, LocalDateTime aTime, List<Double> aList) {
         fixtureInterface.call(anInt, aString, aTime, aList);
     }

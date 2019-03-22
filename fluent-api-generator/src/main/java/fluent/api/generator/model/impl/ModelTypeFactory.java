@@ -30,15 +30,20 @@
 package fluent.api.generator.model.impl;
 
 import fluent.api.generator.model.*;
+import fluent.api.generator.processor.DefaultValueVisitor;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 public class ModelTypeFactory implements ModelFactory {
 
@@ -240,6 +245,31 @@ public class ModelTypeFactory implements ModelFactory {
                 return null;
             }
         }.visit(value);
+    }
+
+    @Override
+    public Map<String, Object> annotationValues(AnnotationMirror a) {
+        Map<String, Object> values = new HashMap<>();
+        a.getAnnotationType().asElement().getEnclosedElements().forEach(new DefaultValueVisitor(
+                method -> {
+                    if(nonNull(method.getDefaultValue())) {
+                        values.put(method.getSimpleName().toString(), annotationValue(method.getDefaultValue()));
+                    }
+                }
+        ));
+        values.putAll(a.getElementValues().entrySet().stream().collect(toMap(
+                e -> e.getKey().getSimpleName().toString(),
+                e -> annotationValue(e.getValue())
+        )));
+        return values;
+    }
+
+    @Override
+    public Map<String, Map<String, Object>> annotations(Element element) {
+        return element.getAnnotationMirrors().stream().collect(toMap(
+                a -> a.getAnnotationType().asElement().getSimpleName().toString(),
+                this::annotationValues
+        ));
     }
 
 }
