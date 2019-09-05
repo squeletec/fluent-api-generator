@@ -27,65 +27,39 @@
  *
  */
 
-package fluent.dsl;
+package fluent.dsl.test;
 
-public class Bdd<A, V> {
+import org.testng.annotations.Test;
 
-    private final A actions;
-    private final V verifications;
+import static fluent.dsl.Bdd.When;
+import static fluent.dsl.Bdd.then;
+import static fluent.dsl.test.User.newUser;
 
-    protected Bdd(A actions, V verifications) {
-        this.actions = actions;
-        this.verifications = verifications;
+public class GeneratedUserDslTest {
+
+    private final User John = newUser(new Automation());
+
+    private final String validUserName = "John Doe";
+    private final String validPassword = "$3cr3T";
+    private final String invalidPassword = "password";
+    private final String loginPage = "http://my.server.com/login";
+
+    @Test
+    public void successfulLoginScreenTest() {
+        When (John). entersUsername (validUserName). andPassword (validPassword). atUrl (loginPage);
+        then (John). mustSeeMessage ("Welcome My Name!");
     }
 
-
-
-    public static <A, V> Bdd<A, V> bdd(A actions, V verifications) {
-        return new Bdd<>(actions, verifications);
+    @Test
+    public void unsuccessfulLoginScreenTest() {
+        When (John). entersUsername (validUserName). andPassword (invalidPassword). atUrl (loginPage);
+        then (John). mustSeeMessage ("Invalid username or password!");
     }
 
-
-
-    public static <A> A When(Bdd<A, ?> actor) {
-        return actor.actions;
-    }
-
-    public static <A> A and(Bdd<A, ?> actor) {
-        return actor.actions;
-    }
-    public static <A> A Given(Bdd<A, ?> actor) {
-        return actor.actions;
-    }
-
-
-
-    public static <V> V then(Bdd<?, V> actor) {
-        return actor.verifications;
-    }
-    public static <V> V andThen(Bdd<?, V> actor) {
-        return actor.verifications;
-    }
-
-
-    public static <A> A When(A actor) {
-        return actor;
-    }
-
-    public static <A> A and(A actor) {
-        return actor;
-    }
-    public static <A> A Given(A actor) {
-        return actor;
-    }
-
-
-
-    public static <V> V then(V actor) {
-        return actor;
-    }
-    public static <V> V andThen(V actor) {
-        return actor;
+    @Test
+    public void testDirectDsl() {
+        John.entersUsername(validUserName).andPassword(validPassword).atUrl(loginPage);
+        John.mustSeeMessage("Welcome " + validUserName + "!");
     }
 
 }

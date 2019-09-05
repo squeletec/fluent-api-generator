@@ -29,6 +29,7 @@
 
 package fluent.dsl.processor;
 
+import fluent.dsl.Dsl;
 import fluent.dsl.Keyword;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -123,14 +124,18 @@ public final class NodeModel {
         );
     }
 
-    public static NodeModel classNode(Element element, String suffix) {
-        String className = element.getSimpleName().toString();
+    public static NodeModel classNode(Element element) {
+        Dsl dsl = element.getAnnotation(Dsl.class);
+        String packageName = dsl.packageName().isEmpty() ? element.getEnclosingElement().toString() : dsl.packageName();
+        String typeName = element.getSimpleName().toString();
+        String className = dsl.className().isEmpty() ? typeName + dsl.value() : dsl.className();
+        String methodName = dsl.factoryMethod().isEmpty() ? "create" : dsl.factoryMethod();
         return new NodeModel(
-                element.getEnclosingElement().toString(),
-                className + suffix,
-                className + suffix,
-                className + suffix,
+                packageName,
                 className,
+                methodName,
+                className,
+                typeName,
                 null
         );
     }
@@ -161,7 +166,7 @@ public final class NodeModel {
     }
 
     public static NodeModel createBddModel(Element element) {
-        NodeModel model = classNode(element, "Bdd");
+        NodeModel model = classNode(element);
         model.followers.put(Actions, groupModel(Actions));
         model.followers.put(Verifications, groupModel(Verifications));
         for(ExecutableElement method : methodsIn(element.getEnclosedElements())) {
@@ -175,7 +180,7 @@ public final class NodeModel {
     }
 
     public static NodeModel createDirectDslModel(Element element) {
-        NodeModel model = classNode(element, "Dsl");
+        NodeModel model = classNode(element);
         for(ExecutableElement method : methodsIn(element.getEnclosedElements())) {
             NodeModel node = model;
             for (VariableElement parameter : method.getParameters()) {

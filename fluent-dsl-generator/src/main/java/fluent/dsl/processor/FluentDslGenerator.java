@@ -102,7 +102,7 @@ public final class FluentDslGenerator {
             printWriter.println(INDENT + INDENT + "private Dsl(Actions actions, Verifications verifications) {super(actions, verifications);}");
             printWriter.println(INDENT + "}");
             printWriter.println();
-            printWriter.println(INDENT + "public static Dsl dsl(" + model.parameterType() + " impl) {");
+            printWriter.println(INDENT + "public static Dsl " + model.methodName() + "(" + model.parameterType() + " impl) {");
             printWriter.println(INDENT + INDENT + "return new Dsl(");
             printWriter.print(INDENT + INDENT + INDENT);
             generator.generateAnonymousClass(INDENT + INDENT + INDENT, model.follower(NodeModel.Actions), ",");
@@ -126,7 +126,7 @@ public final class FluentDslGenerator {
             printWriter.println();
             printWriter.println("public interface " + model.className() + " {");
             printWriter.println();
-            printWriter.println(INDENT + "public static " + model.className() + " dsl(" + model.parameterType() + " impl) {");
+            printWriter.println(INDENT + "public static " + model.className() + " " + model.methodName() + "(" + model.parameterType() + " impl) {");
             printWriter.print(INDENT + INDENT + "return ");
             generator.generateAnonymousClass(INDENT + INDENT, model, ";");
             printWriter.println(INDENT + "}");

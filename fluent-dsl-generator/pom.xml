@@ -11,6 +11,14 @@
 
     <artifactId>fluent-dsl-generator</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>foundation.fluent.api</groupId>
+            <artifactId>fluent-validation-support</artifactId>
+            <version>2.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>

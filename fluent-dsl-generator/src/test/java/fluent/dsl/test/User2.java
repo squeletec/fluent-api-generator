@@ -29,35 +29,17 @@
 
 package fluent.dsl.test;
 
-import fluent.dsl.Bdd;
 import fluent.dsl.Dsl;
-import fluent.dsl.Keyword;
-import fluent.dsl.Suffix;
 
-@Dsl
+import static fluent.dsl.Dsl.Type.Bdd;
+
+@Dsl(Bdd)
 public class User2 {
 
-    @Keyword public @interface enters {}
-    @Keyword public @interface and {}
-    @Keyword public @interface at {}
-    @Keyword public @interface mustSee {}
-    @Suffix public @interface inDatabase {}
-    @Suffix public @interface in {}
-    @Suffix public @interface database {}
-    @Keyword public @interface must {}
-    @Keyword public @interface see {}
-
-    @Bdd.Action
-    public void userLogin(@User2.enters String username, @and String password, @at String url) {
-
+    public void action(String entersUsername, String andPassword, String at) {
     }
 
-    @Bdd.Verification
-    public void verification(@must @see String message) {
-
+    public void verification(String mustSeeMessage) {
     }
-
-    //public void databaseVerification(@must @see @in @database String message) {
-    //}
 
 }

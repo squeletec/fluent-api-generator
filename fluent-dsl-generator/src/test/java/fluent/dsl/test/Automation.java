@@ -29,19 +29,40 @@
 
 package fluent.dsl.test;
 
+import fluent.dsl.Bdd;
 import fluent.dsl.Dsl;
+import fluent.dsl.Keyword;
+import fluent.dsl.Suffix;
+import fluent.validation.Check;
 
-import static fluent.dsl.Dsl.Type.BDD;
+@Dsl(className = "User", factoryMethod = "newUser")
+public class Automation {
 
-@Dsl(BDD)
-public class User {
+    @Keyword public @interface enters {}
+    @Keyword public @interface and {}
+    @Keyword public @interface at {}
+    @Keyword public @interface mustSee {}
+    @Suffix public @interface inDatabase {}
+    @Suffix public @interface in {}
+    @Suffix public @interface database {}
+    @Suffix public @interface only {}
+    @Keyword public @interface must {}
+    @Keyword public @interface see {}
+    @Keyword public @interface with {}
+    @Keyword public @interface order {}
 
-    public void action(String entersUsername, String andPassword, String at) {
-
+    public void userLogin(@Automation.enters String username, @and String password, @at String url) {
     }
 
-    public void verification(String mustSeeMessage) {
+    @in @database
+    public void verification(@must @see String message) {
+    }
+
+    @only
+    public void exactOrderVerification(@must @see @order @with String orderId, Check<Object> check) {
 
     }
+    //public void databaseVerification(@must @see @in @database String message) {
+    //}
 
 }

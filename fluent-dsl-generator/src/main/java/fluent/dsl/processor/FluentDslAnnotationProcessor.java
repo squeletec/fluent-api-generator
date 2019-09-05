@@ -55,9 +55,10 @@ public class FluentDslAnnotationProcessor extends AbstractProcessor implements C
 
     @Override
     public void accept(Element element) {
-        switch(element.getAnnotation(Dsl.class).value()) {
-            case BDD: generateBdd(processingEnv.getFiler(), createBddModel(element)); break;
-            case DIRECT: generateDirectDsl(processingEnv.getFiler(), createDirectDslModel(element)); break;
+        Dsl dsl = element.getAnnotation(Dsl.class);
+        switch(dsl.value()) {
+            case Bdd: generateBdd(processingEnv.getFiler(), createBddModel(element)); break;
+            case Dsl: generateDirectDsl(processingEnv.getFiler(), createDirectDslModel(element)); break;
         }
 
     }

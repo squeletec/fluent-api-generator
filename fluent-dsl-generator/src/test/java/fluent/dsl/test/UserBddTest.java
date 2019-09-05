@@ -33,11 +33,12 @@ import org.testng.annotations.Test;
 
 import static fluent.dsl.Bdd.When;
 import static fluent.dsl.Bdd.then;
+import static fluent.dsl.test.User.newUser;
 
 public class UserBddTest {
 
-    UserBdd.Dsl user = UserBdd.dsl(new User());
-    User2Dsl user2 = User2Dsl.dsl(new User2());
+    User2Bdd.Dsl userBdd = User2Bdd.create(new User2());
+    User user = newUser(new Automation());
 
     private final String validUserName = "John Doe";
     private final String validPassword = "$3cr3T";
@@ -46,20 +47,24 @@ public class UserBddTest {
 
     @Test
     public void successfulLoginScreenTest() {
-        When (user). entersUsername (validUserName). andPassword (validPassword). at (loginPage);
-        then (user). mustSeeMessage ("Welcome My Name!");
+        When (userBdd). entersUsername (validUserName). andPassword (validPassword). at (loginPage);
+        then (userBdd). mustSeeMessage ("Welcome My Name!");
     }
 
     @Test
     public void unsuccessfulLoginScreenTest() {
-        When (user). entersUsername (validUserName). andPassword (invalidPassword). at (loginPage);
-        then (user). mustSeeMessage ("Invalid username or password!");
+        When (userBdd). entersUsername (validUserName). andPassword (invalidPassword). at (loginPage);
+        then (userBdd). mustSeeMessage ("Invalid username or password!");
     }
 
     @Test
     public void testDirectDsl() {
-        user2.entersUsername(validUserName).andPassword(validPassword).atUrl(loginPage);
-        user2.mustSeeMessage("Welcome " + validUserName + "!");
+        user.entersUsername(validUserName).andPassword(validPassword).atUrl(loginPage);
+        user.mustSeeMessage("Welcome " + validUserName + "!");
     }
 
+    @Test
+    public void testBddOnDirectDsl() {
+        When(user).entersUsername(validUserName).andPassword(validPassword).atUrl(loginPage);
+    }
 }

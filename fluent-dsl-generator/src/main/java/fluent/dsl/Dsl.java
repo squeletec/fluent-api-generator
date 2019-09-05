@@ -34,11 +34,12 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 public @interface Dsl {
-    enum Type { BDD, DIRECT }
+    enum Type {Bdd, Dsl}
 
-    Type value() default Type.DIRECT;
+    Type value() default Type.Dsl;
 
     String packageName() default "";
     String className() default "";
+    String factoryMethod() default "";
 
 }
