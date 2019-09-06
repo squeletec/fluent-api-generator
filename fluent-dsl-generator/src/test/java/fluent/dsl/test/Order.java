@@ -1,7 +1,7 @@
 /*
  * BSD 2-Clause License
  *
- * Copyright (c) 2018, Ondrej Fischer
+ * Copyright (c) 2019, Ondrej Fischer
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,43 @@
  *
  */
 
-package fluent.api.generator.validation;
+package fluent.dsl.test;
 
-import fluent.validation.Assert;
-import fluent.validation.AssertionFailure;
-import fluent.validation.Check;
-import org.testng.annotations.Test;
+public class Order {
+    private String orderId;
+    private int quantity;
+    private String ric;
+    private Automation.Side side;
 
-import static fluent.api.generator.validation.CheckFixtureCheck.CheckFixtureWith;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-public class FluentCheckTest {
-
-    @Test
-    public void test() {
-        CheckFixture fixture = mock(CheckFixture.class);
-        when(fixture.getAnInt()).thenReturn(5);
-        when(fixture.getADouble()).thenReturn(10.0);
-        when(fixture.getAString()).thenReturn("A");
-        Assert.that(fixture, CheckFixtureWith().anInt(5).aDouble(10.0).aString("A"));
+    public int getQuantity() {
+        return quantity;
     }
 
-
-    @Test(expectedExceptions = AssertionFailure.class)
-    public void negativeTest() {
-        CheckFixture fixture = mock(CheckFixture.class);
-        when(fixture.getAnInt()).thenReturn(5);
-        when(fixture.getADouble()).thenReturn(10.0);
-        when(fixture.getAString()).thenReturn("B");
-        Assert.that(fixture, CheckFixtureWith().anInt(5).aDouble(10.0).aString("A"));
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
+    public String getRic() {
+        return ric;
+    }
+
+    public void setRic(String ric) {
+        this.ric = ric;
+    }
+
+    public Automation.Side getSide() {
+        return side;
+    }
+
+    public void setSide(Automation.Side side) {
+        this.side = side;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
 }

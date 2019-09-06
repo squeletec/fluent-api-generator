@@ -33,6 +33,8 @@ import org.testng.annotations.Test;
 
 import static fluent.dsl.Bdd.When;
 import static fluent.dsl.Bdd.then;
+import static fluent.dsl.test.Automation.Side.BUY;
+import static fluent.dsl.test.OrderCheck.with;
 import static fluent.dsl.test.User.newUser;
 
 public class GeneratedUserDslTest {
@@ -62,4 +64,9 @@ public class GeneratedUserDslTest {
         John.mustSeeMessage("Welcome " + validUserName + "!");
     }
 
+    @Test
+    public void testFluentEntity() {
+        When (John). entersOrder (new OrderBuilder().orderId("A").side(BUY).build()). atTopic ("TOPIC");
+        then (John). mustSeeOrderWithOrderId ("A"). andCriteria( with().side(BUY) );
+    }
 }

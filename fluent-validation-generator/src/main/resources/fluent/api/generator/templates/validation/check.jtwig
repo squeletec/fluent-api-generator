@@ -8,14 +8,14 @@ package {{ packageName }};
 import javax.annotation.Generated;
 import fluent.api.End;
 import fluent.validation.Check;
-import fluent.validation.CheckDsl;
+import fluent.validation.AbstractCheckDsl;
 import {{productType}};
-import static fluent.validation.Checks.equalTo;
+import static fluent.validation.BasicChecks.equalTo;
 
 
 @Generated("Generated code using {{ templatePath }}")
 public final class {{ className }}{% if not empty(productType.parameterVariables) %}<{% for t in productType.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %}
-        extends CheckDsl<{{ className }}{{ classParameters }} , {{ productType.simpleName }}> {
+        extends AbstractCheckDsl<{{ className }}{{ classParameters }} , {{ productType.simpleName }}> {
 
     protected {{ className }}(Check<? super {{ productType.simpleName }}> check) {
         super(check, {{ className }}::new);

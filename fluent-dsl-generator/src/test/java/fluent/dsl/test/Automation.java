@@ -29,14 +29,28 @@
 
 package fluent.dsl.test;
 
-import fluent.dsl.Bdd;
+import fluent.api.FluentBuilder;
+import fluent.api.generator.validation.FluentCheck;
 import fluent.dsl.Dsl;
 import fluent.dsl.Keyword;
 import fluent.dsl.Suffix;
+import fluent.validation.Assert;
 import fluent.validation.Check;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+import java.time.Duration;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+
+import static fluent.validation.CollectionChecks.blockingQueue;
+import static fluent.validation.CollectionChecks.equalTo;
+import static java.util.Collections.singletonList;
 
 @Dsl(className = "User", factoryMethod = "newUser")
 public class Automation {
+
+    public enum Side {BUY, SELL}
 
     @Keyword public @interface enters {}
     @Keyword public @interface and {}
@@ -50,6 +64,10 @@ public class Automation {
     @Keyword public @interface see {}
     @Keyword public @interface with {}
     @Keyword public @interface order {}
+    @Target(ElementType.TYPE_USE)
+    public @interface entity {}
+
+    private final BlockingQueue<Order> orders = new LinkedBlockingDeque<>();
 
     public void userLogin(@Automation.enters String username, @and String password, @at String url) {
     }
@@ -58,10 +76,15 @@ public class Automation {
     public void verification(@must @see String message) {
     }
 
-    @only
-    public void exactOrderVerification(@must @see @order @with String orderId, Check<Object> check) {
-
+    public void injectOrder(@enters @FluentBuilder @FluentCheck(factoryMethod = "with") Order order, @at String topic) {
+        orders.add(order);
     }
+
+    @only
+    public void exactOrderVerification(@must @see @order @with String orderId, @and Check<Order> criteria) {
+        Assert.that(orders, blockingQueue(equalTo(singletonList(criteria)), Duration.ofSeconds(1)));
+    }
+
     //public void databaseVerification(@must @see @in @database String message) {
     //}
 

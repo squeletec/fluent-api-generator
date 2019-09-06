@@ -20,11 +20,13 @@ public interface Automation {
     @Keyword public @interface with {}
     @Keyword public @interface order {}
 
-    public void userLogin(@User @enters String username, @and String password, @at String url);
+    void userLogin(@User @enters String username, @and String password, @at String url);
 
-    public void verifyLogonMessage(@User @must @see String message);
+    void verifyLogonMessage(@User @must @see String message);
 
-    public void exactOrderVerification(@User @must @see @order @with String orderId, Check<Object> check);
+    void injectOrder(@User @enters @FluentBuilder @FluentCheck(factoryMethod = "with") Order order, @at String destination);
+    
+    void exactOrderVerification(@User @must @see @order @with String orderId, Check<Object> check);
 
 }
 ```
@@ -57,6 +59,12 @@ public class GeneratedUserDslTest {
     public void testDirectDsl() {
         John.entersUsername(validUserName).andPassword(validPassword).atUrl(loginPage);
         John.mustSeeMessage("Welcome " + validUserName + "!");
+    }
+
+    @Test
+    public void testFluentEntity() {
+        When (John). entersOrder (new OrderBuilder().orderId("A").side(BUY).build()). atDestination ("DEST");
+        then (John). mustSeeOrderWithOrderId ("A"). andCriteria( with().side(BUY) );
     }
 
 }

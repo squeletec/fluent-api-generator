@@ -18,6 +18,24 @@
             <version>2.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>foundation.fluent.api</groupId>
+            <artifactId>fluent-validation-generator</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>foundation.fluent.api</groupId>
+            <artifactId>fluent-builder-api-generator</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>foundation.fluent.api</groupId>
+            <artifactId>fluent-api-generator</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -37,11 +55,6 @@
                             <compilerArgument>-proc:none</compilerArgument>
                         </configuration>
                     </execution>
-                    <!--execution>
-                        <id>test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals><goal>testCompile</goal></goals>
-                    </execution-->
                 </executions>
             </plugin>
         </plugins>
