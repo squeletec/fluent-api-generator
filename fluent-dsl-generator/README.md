@@ -36,7 +36,7 @@ Generated fluent interface sentence examples
 ```java
 public class GeneratedUserDslTest {
 
-    private final User John = newUser(new Automation());
+    private final User John = newUser(mock(Automation.class));
 
     private final String validUserName = "John Doe";
     private final String validPassword = "$3cr3T";
