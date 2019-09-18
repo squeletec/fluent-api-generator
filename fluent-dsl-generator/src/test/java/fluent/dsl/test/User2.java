@@ -31,9 +31,7 @@ package fluent.dsl.test;
 
 import fluent.dsl.Dsl;
 
-import static fluent.dsl.Dsl.Type.Bdd;
-
-@Dsl(Bdd)
+@Dsl
 public class User2 {
 
     public void action(String entersUsername, String andPassword, String at) {

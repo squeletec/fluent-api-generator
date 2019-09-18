@@ -48,25 +48,25 @@ public class GeneratedUserDslTest {
 
     @Test
     public void successfulLoginScreenTest() {
-        When (John). entersUsername (validUserName). andPassword (validPassword). atUrl (loginPage);
-        then (John). mustSeeMessage ("Welcome My Name!");
+        When (John).entersUsername(validUserName). andPassword (validPassword). atUrl (loginPage);
+        then (John). mustSeeMessage ("Welcome My Name!") .in().database();
     }
 
     @Test
     public void unsuccessfulLoginScreenTest() {
         When (John). entersUsername (validUserName). andPassword (invalidPassword). atUrl (loginPage);
-        then (John). mustSeeMessage ("Invalid username or password!");
+        then (John). mustSeeMessage ("Invalid username or password!") .in() .database();
     }
 
     @Test
     public void testDirectDsl() {
         John.entersUsername(validUserName).andPassword(validPassword).atUrl(loginPage);
-        John.mustSeeMessage("Welcome " + validUserName + "!");
+        John.mustSeeMessage("Welcome " + validUserName + "!").in().database();
     }
 
     @Test
     public void testFluentEntity() {
         When (John). entersOrder (new OrderBuilder().orderId("A").side(BUY).build()). atTopic ("TOPIC");
-        then (John). mustSeeOrderWithOrderId ("A"). andCriteria( with().side(BUY) );
+        then (John). must().see().order().with().orderId ("A"). andCriteria( with().side(BUY) ) .only();
     }
 }

@@ -29,8 +29,7 @@
 
 package fluent.dsl.processor;
 
-import fluent.dsl.Dsl;
-import fluent.dsl.Keyword;
+import fluent.dsl.*;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -44,26 +43,24 @@ import java.util.stream.Collectors;
 import static java.util.Objects.nonNull;
 import static javax.lang.model.util.ElementFilter.methodsIn;
 
-public final class NodeModel {
-
-    public static final String Actions = "Actions";
-    public static final String Verifications = "Verifications";
+public final class FluentDslModel {
 
     private final String packageName;
     private final String className;
     private final String methodName;
     private final String parameterName;
     private final String parameterType;
+    private final String modifiers;
     private ExecutableElement method;
-    private final Map<Object, NodeModel> followers = new LinkedHashMap<>();
+    private final Map<String, FluentDslModel> followers = new LinkedHashMap<>();
 
-    public NodeModel(String packageName, String className, String methodName, String parameterName, String parameterType, ExecutableElement method) {
+    public FluentDslModel(String packageName, String className, String methodName, String parameterName, String parameterType, String modifiers) {
         this.packageName = packageName;
         this.className = className;
         this.methodName = methodName;
         this.parameterName = parameterName;
         this.parameterType = parameterType;
-        this.method = method;
+        this.modifiers = modifiers;
     }
 
     public String fullyQualifiedClassName() {
@@ -76,7 +73,9 @@ public final class NodeModel {
     public String className() {
         return className;
     }
-
+    public String annotation() {
+        return nonTerminal() ? "@Start(\"Fluent sentence must be finished.\")" : "@End";
+    }
     public String returnType() {
         return nonTerminal() ? className : method.getReturnType().toString();
     }
@@ -90,7 +89,7 @@ public final class NodeModel {
         return parameterType;
     }
 
-    public Collection<NodeModel> followers() {
+    public Collection<FluentDslModel> followers() {
         return followers.values();
     }
 
@@ -110,89 +109,61 @@ public final class NodeModel {
         return s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
-    public static NodeModel parameterNode(VariableElement element) {
-        String variableName = element.getSimpleName().toString();
-        String capName = cap(variableName);
-        String returnType = element.asType().toString();
-        return new NodeModel(
-                "",
-                capName + returnType.substring(returnType.lastIndexOf('.') + 1) + Integer.toHexString(element.hashCode()),
-                uncap(element.getAnnotationMirrors().stream().filter(a -> nonNull(a.getAnnotationType().asElement().getAnnotation(Keyword.class))).map(a-> cap(a.getAnnotationType().asElement().getSimpleName().toString())).collect(Collectors.joining()) + capName),
-                variableName,
-                returnType,
-                null
-        );
+    public static FluentDslModel parameterNode(String className, String methodName, String returnType, String variableName) {
+        return new FluentDslModel("", className, methodName, variableName, returnType, "public");
     }
 
-    public static NodeModel classNode(Element element) {
+    public static FluentDslModel classNode(Element element) {
         Dsl dsl = element.getAnnotation(Dsl.class);
         String packageName = dsl.packageName().isEmpty() ? element.getEnclosingElement().toString() : dsl.packageName();
         String typeName = element.getSimpleName().toString();
-        String className = dsl.className().isEmpty() ? typeName + dsl.value() : dsl.className();
-        String methodName = dsl.factoryMethod().isEmpty() ? "create" : dsl.factoryMethod();
-        return new NodeModel(
-                packageName,
-                className,
-                methodName,
-                className,
-                typeName,
-                null
-        );
+        String className = dsl.className().isEmpty() ? typeName + "Dsl" : dsl.className();
+        String methodName = dsl.factoryMethod();
+        return new FluentDslModel(packageName, className, methodName, "impl", typeName, "static");
     }
 
-    public static NodeModel keywordNode(AnnotationMirror annotationMirror) {
-        Element annotation = annotationMirror.getAnnotationType().asElement();
-        Keyword keyword = annotation.getAnnotation(Keyword.class);
-        String methodName = keyword.value().length() > 0 ? keyword.value() : annotation.getSimpleName().toString();
-        return new NodeModel(
-                "",
-                methodName + Integer.toHexString(annotation.hashCode()),
-                methodName,
-                "",
-                "",
-                null
-        );
+    public static FluentDslModel keywordNode(Element annotation) {
+        String methodName = annotation.getSimpleName().toString();
+        return new FluentDslModel("", cap(methodName), methodName, "", "", "public");
     }
 
-    public static NodeModel groupModel(String group) {
-        return new NodeModel(
-                "",
-                group,
-                group,
-                group,
-                group,
-                null
-        );
+    public String modifiers() {
+        return modifiers;
     }
 
-    public static NodeModel createBddModel(Element element) {
-        NodeModel model = classNode(element);
-        model.followers.put(Actions, groupModel(Actions));
-        model.followers.put(Verifications, groupModel(Verifications));
+    public static FluentDslModel model(Element element) {
+        FluentDslModel model = classNode(element);
         for(ExecutableElement method : methodsIn(element.getEnclosedElements())) {
-            NodeModel node = model.followers.get(method.getSimpleName().toString().contains("verification") ? Verifications : Actions);
+            FluentDslModel node = model;
             for (VariableElement parameter : method.getParameters()) {
-                node = node.followers.computeIfAbsent(parameter, key -> parameterNode(parameter));
+                String returnType = parameter.asType().toString();
+                String rawType = returnType.split("<")[0];
+                String variableName = parameter.toString();
+                String methodName = variableName;
+                String className = cap(methodName) + rawType.substring(rawType.lastIndexOf('.') + 1);
+                for(AnnotationMirror annotationMirror : parameter.getAnnotationMirrors()) {
+                    Element annotation = annotationMirror.getAnnotationType().asElement();
+                    if(nonNull(annotation.getAnnotation(Keyword.class))) {
+                        node = node.followers.computeIfAbsent(annotation.getSimpleName().toString(), key -> keywordNode(annotation));
+                    }
+                    if(nonNull(annotation.getAnnotation(Prefix.class))) {
+                        methodName = annotation.getSimpleName() + cap(methodName);
+                    }
+                    if(nonNull(annotation.getAnnotation(Name.class))) {
+                        methodName = annotation.getSimpleName().toString();
+                    }
+                }
+                String finalMethodName = methodName;
+                node = node.followers.computeIfAbsent(className, key -> parameterNode(className, finalMethodName, returnType, variableName));
+            }
+            for(AnnotationMirror annotationMirror : method.getAnnotationMirrors()) {
+                Element annotation = annotationMirror.getAnnotationType().asElement();
+                if(nonNull(annotation.getAnnotation(Suffix.class))) {
+                    node = node.followers.computeIfAbsent(annotation.getSimpleName().toString(), key -> keywordNode(annotation));
+                }
             }
             node.method = method;
         }
         return model;
     }
-
-    public static NodeModel createDirectDslModel(Element element) {
-        NodeModel model = classNode(element);
-        for(ExecutableElement method : methodsIn(element.getEnclosedElements())) {
-            NodeModel node = model;
-            for (VariableElement parameter : method.getParameters()) {
-                node = node.followers.computeIfAbsent(parameter, key -> parameterNode(parameter));
-            }
-            node.method = method;
-        }
-        return model;
-    }
-
-    public NodeModel follower(String actions) {
-        return followers.get(actions);
-    }
-
 }

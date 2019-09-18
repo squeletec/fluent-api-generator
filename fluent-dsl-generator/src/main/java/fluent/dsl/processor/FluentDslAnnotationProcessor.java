@@ -34,33 +34,19 @@ import fluent.dsl.Dsl;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.util.Set;
-import java.util.function.Consumer;
 
-import static fluent.dsl.processor.FluentDslGenerator.generateBdd;
-import static fluent.dsl.processor.FluentDslGenerator.generateDirectDsl;
-import static fluent.dsl.processor.NodeModel.createBddModel;
-import static fluent.dsl.processor.NodeModel.createDirectDslModel;
+import static fluent.dsl.processor.FluentDslGenerator.generateFile;
+import static fluent.dsl.processor.FluentDslModel.model;
 
 @SupportedAnnotationTypes("fluent.dsl.Dsl")
-public class FluentDslAnnotationProcessor extends AbstractProcessor implements Consumer<Element> {
+public class FluentDslAnnotationProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        roundEnv.getElementsAnnotatedWith(Dsl.class).forEach(this);
+        roundEnv.getElementsAnnotatedWith(Dsl.class).forEach(dslElement -> generateFile(processingEnv.getFiler(), model(dslElement)));
         return true;
-    }
-
-    @Override
-    public void accept(Element element) {
-        Dsl dsl = element.getAnnotation(Dsl.class);
-        switch(dsl.value()) {
-            case Bdd: generateBdd(processingEnv.getFiler(), createBddModel(element)); break;
-            case Dsl: generateDirectDsl(processingEnv.getFiler(), createDirectDslModel(element)); break;
-        }
-
     }
 
 }

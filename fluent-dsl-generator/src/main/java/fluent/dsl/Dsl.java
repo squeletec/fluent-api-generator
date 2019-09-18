@@ -34,12 +34,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 public @interface Dsl {
-    enum Type {Bdd, Dsl}
-
-    Type value() default Type.Dsl;
-
     String packageName() default "";
     String className() default "";
-    String factoryMethod() default "";
-
+    String factoryMethod() default "create";
 }

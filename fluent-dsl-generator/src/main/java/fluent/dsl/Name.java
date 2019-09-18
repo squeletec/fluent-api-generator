@@ -27,44 +27,12 @@
  *
  */
 
-package fluent.dsl.test;
+package fluent.dsl;
 
-import org.testng.annotations.Test;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
-import static fluent.dsl.Bdd.When;
-import static fluent.dsl.Bdd.then;
-import static fluent.dsl.test.User.newUser;
-
-public class UserBddTest {
-
-    User2Bdd.Dsl userBdd = User2Bdd.create(new User2());
-    User user = newUser(new Automation());
-
-    private final String validUserName = "John Doe";
-    private final String validPassword = "$3cr3T";
-    private final String invalidPassword = "password";
-    private final String loginPage = "http://my.server.com/login";
-
-    @Test
-    public void successfulLoginScreenTest() {
-        When (userBdd). entersUsername (validUserName). andPassword (validPassword). at (loginPage);
-        then (userBdd). mustSeeMessage ("Welcome My Name!");
-    }
-
-    @Test
-    public void unsuccessfulLoginScreenTest() {
-        When (userBdd). entersUsername (validUserName). andPassword (invalidPassword). at (loginPage);
-        then (userBdd). mustSeeMessage ("Invalid username or password!");
-    }
-
-    @Test
-    public void testDirectDsl() {
-        user.entersUsername(validUserName).andPassword(validPassword).atUrl(loginPage);
-        user.mustSeeMessage("Welcome " + validUserName + "!");
-    }
-
-    @Test
-    public void testBddOnDirectDsl() {
-        When(user).entersUsername(validUserName).andPassword(validPassword).atUrl(loginPage);
-    }
+@Target(ElementType.TYPE)
+public @interface Name {
+    String value() default "";
 }

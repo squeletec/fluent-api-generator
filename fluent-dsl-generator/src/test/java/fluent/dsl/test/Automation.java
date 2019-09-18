@@ -33,6 +33,7 @@ import fluent.api.FluentBuilder;
 import fluent.api.generator.validation.FluentCheck;
 import fluent.dsl.Dsl;
 import fluent.dsl.Keyword;
+import fluent.dsl.Prefix;
 import fluent.dsl.Suffix;
 import fluent.validation.Assert;
 import fluent.validation.Check;
@@ -52,10 +53,10 @@ public class Automation {
 
     public enum Side {BUY, SELL}
 
-    @Keyword public @interface enters {}
-    @Keyword public @interface and {}
-    @Keyword public @interface at {}
-    @Keyword public @interface mustSee {}
+    @Prefix public @interface enters {}
+    @Prefix public @interface and {}
+    @Prefix public @interface at {}
+    @Prefix public @interface mustSee {}
     @Suffix public @interface inDatabase {}
     @Suffix public @interface in {}
     @Suffix public @interface database {}
@@ -69,15 +70,16 @@ public class Automation {
 
     private final BlockingQueue<Order> orders = new LinkedBlockingDeque<>();
 
-    public void userLogin(@Automation.enters String username, @and String password, @at String url) {
+    public static void userLogin(@Automation.enters String username, @and String password, @at String url) {
     }
 
     @in @database
-    public void verification(@must @see String message) {
+    public static void verification(@mustSee String message) {
     }
 
-    public void injectOrder(@enters @FluentBuilder @FluentCheck(factoryMethod = "with") Order order, @at String topic) {
+    public String injectOrder(@enters @FluentBuilder @FluentCheck(factoryMethod = "with") Order order, @at String topic) {
         orders.add(order);
+        return "A";
     }
 
     @only
