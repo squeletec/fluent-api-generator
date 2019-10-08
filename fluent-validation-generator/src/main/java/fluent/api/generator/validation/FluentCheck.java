@@ -29,6 +29,7 @@
 
 package fluent.api.generator.validation;
 
+import fluent.api.generator.TypeFilter;
 import fluent.api.generator.Templates;
 
 import java.lang.annotation.ElementType;
@@ -50,8 +51,9 @@ import java.lang.annotation.Target;
  * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
+@Target({ElementType.PARAMETER})
 @Templates({"/fluent/api/generator/templates/validation/check.jtwig"})
+@TypeFilter("fluent.validation.Check<.*>")
 public @interface FluentCheck {
 
     /**

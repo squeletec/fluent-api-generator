@@ -77,13 +77,13 @@ public class Automation {
     public static void verification(@mustSee String message) {
     }
 
-    public String injectOrder(@enters @FluentBuilder @FluentCheck(factoryMethod = "with") Order order, @at String topic) {
+    public String injectOrder(@enters @FluentBuilder Order order, @at String topic) {
         orders.add(order);
         return "A";
     }
 
     @only
-    public void exactOrderVerification(@must @see @order @with String orderId, @and Check<Order> criteria) {
+    public void exactOrderVerification(@must @see @order @with String orderId, @and @FluentCheck(factoryMethod = "with") Check<Order> criteria) {
         Assert.that(orders, blockingQueue(equalTo(singletonList(criteria)), Duration.ofSeconds(1)));
     }
 

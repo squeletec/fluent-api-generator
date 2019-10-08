@@ -1,5 +1,5 @@
-{% set productType = defined(var) ? var.type : type %}
-{% set packageName = (packageName == "") ? (defined(var) ? var.packageName : type.packageName) : packageName %}
+{% set productType = var.type.parameters[0] %}
+{% set packageName = (packageName == "") ? productType.packageName : packageName %}
 {% set classSuffix = "Check" %}
 {% set className = (className == "") ? concat(productType.simpleName, classSuffix) : className %}
 {% set factoryMethod = (factoryMethod == "") ? concat(productType.simpleName, "With") : factoryMethod %}
@@ -39,4 +39,16 @@ public final class {{ className }}{% if not empty(productType.parameterVariables
     }
 {% endif %}{% endfor %}
 
+    public static final class Factory {
+{% for getter in productType.methods %}{% if getter.name.matches(getterPattern) and getter.name != "getClass" and getter.parameters.size == 0 %}
+{% set propertyName = getter.toProperty(getterPattern, getterNameGroup) %}
+        public static {{ className }}{{ classParameters }} {{ propertyName }}(Check<? super {{ getter.type.wrapper }}> value) {
+            return {{ factoryMethod }}().{{ propertyName }}(value);
+        }
+
+        public static {{ className }}{{ classParameters }} {{ propertyName }}({{ getter.type }} value) {
+            return {{ propertyName }}(equalTo(value));
+        }
+{% endif %}{% endfor %}
+    }
 }

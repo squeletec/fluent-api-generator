@@ -1,7 +1,7 @@
 /*
  * BSD 2-Clause License
  *
- * Copyright (c) 2018, Ondrej Fischer
+ * Copyright (c) 2019, Ondrej Fischer
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,35 +27,15 @@
  *
  */
 
-package fluent.api.generator.validation;
+package fluent.api.generator;
 
-import fluent.validation.Assert;
-import fluent.validation.AssertionFailure;
-import org.testng.annotations.Test;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import static fluent.api.generator.validation.CheckFixtureCheck.Factory.anInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-public class FluentCheckTest {
-
-    @Test
-    public void test() {
-        CheckFixture fixture = mock(CheckFixture.class);
-        when(fixture.getAnInt()).thenReturn(5);
-        when(fixture.getADouble()).thenReturn(10.0);
-        when(fixture.getAString()).thenReturn("A");
-        Assert.that(fixture, anInt(5).aDouble(10.0).aString("A"));
-    }
-
-
-    @Test(expectedExceptions = AssertionFailure.class)
-    public void negativeTest() {
-        CheckFixture fixture = mock(CheckFixture.class);
-        when(fixture.getAnInt()).thenReturn(5);
-        when(fixture.getADouble()).thenReturn(10.0);
-        when(fixture.getAString()).thenReturn("B");
-        Assert.that(fixture, anInt(5).aDouble(10.0).aString("A"));
-    }
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.ANNOTATION_TYPE)
+public @interface TypeFilter {
+    String value();
 }

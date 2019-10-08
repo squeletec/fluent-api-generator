@@ -30,15 +30,20 @@
 package fluent.api.generator.processor;
 
 import com.sun.source.util.Trees;
+import fluent.api.generator.TypeFilter;
 import fluent.api.generator.Templates;
 import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.impl.ModelTypeFactory;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic;
 import java.util.Set;
+import java.util.function.Predicate;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -55,6 +60,8 @@ import static java.util.Objects.nonNull;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class GeneratingProcessor extends AbstractProcessor {
 
+    private static final Predicate<Element> defaultFilter = element -> true;
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Filer filer = processingEnv.getFiler();
@@ -65,10 +72,39 @@ public class GeneratingProcessor extends AbstractProcessor {
         for(TypeElement annotation : annotations) {
             Templates templatesAnnotation = annotation.getAnnotation(Templates.class);
             if(nonNull(templatesAnnotation)) {
-                roundEnv.getElementsAnnotatedWith(annotation).forEach(element -> element.accept(visitor, annotation));
+                Predicate<Element> predicate = filter(annotation.getAnnotation(TypeFilter.class));
+                roundEnv.getElementsAnnotatedWith(annotation).forEach(element -> {
+                    if(predicate.test(element)) {
+                        element.accept(visitor, annotation);
+                    } else {
+                        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Invalid use of annotation: " + annotation + "! It can be applied only on " + predicate, element);
+                    }
+                });
             }
         }
         return false;
+    }
+
+    private Predicate<Element> filter(TypeFilter filter) {
+        return isNull(filter) ? defaultFilter : new TypeFilterPredicate(filter.value());
+    }
+
+    private static final class TypeFilterPredicate implements Predicate<Element> {
+        private final String pattern;
+
+        private TypeFilterPredicate(String pattern) {
+            this.pattern = pattern;
+        }
+
+        @Override
+        public boolean test(Element element) {
+            return element.asType().toString().matches(pattern);
+        }
+
+        @Override
+        public String toString() {
+            return "type matching: " + pattern;
+        }
     }
 
 }

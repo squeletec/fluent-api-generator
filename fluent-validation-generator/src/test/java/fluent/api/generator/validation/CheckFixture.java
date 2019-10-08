@@ -31,7 +31,6 @@ package fluent.api.generator.validation;
 
 import java.util.List;
 
-@FluentCheck
 public interface CheckFixture {
 
     int getAnInt();
