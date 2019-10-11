@@ -26,16 +26,7 @@ public final class {{ className }}{% if not empty(productType.parameterVariables
     public {{ className }}() {
         this(new {{ productType }}());
     }
-{% endif %}{% if factoryMethod != "" %}
-    public static {% if not empty(productType.parameterVariables) %}<{% for t in productType.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %} {{ className }}{{ classParameters }} {{ factoryMethod }}({{ productType }} object) {
-        return new {{ className }}{% if not empty(productType.parameterVariables) %}<>{% endif %}(object);
-    }
-{% if productType.hasDefaultConstructor %}
-    public static {% if not empty(productType.parameterVariables) %}<{% for t in productType.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %} {{ className }}{{ classParameters }} {{ factoryMethod }}() {
-        return new {{ className }}{% if not empty(productType.parameterVariables) %}<>{% endif %}();
-    }
-{% endif %}{% endif %}
-{% for setter in productType.methods %}{% if setter.name.matches(annotation.setterPattern) and setter.parameters.size == 1 %}
+{% endif %}{% for setter in productType.methods %}{% if setter.name.matches(annotation.setterPattern) and setter.parameters.size == 1 %}
     {% if hasApi %}@Override
     {% endif %}public {{ className }}{{ classParameters }} {{ setter.toProperty(annotation.setterPattern, annotation.setterNameGroup) }}({{ setter.parameters[0].type }} value) {
         object.{{ setter.name }}(value);
@@ -46,5 +37,21 @@ public final class {{ className }}{% if not empty(productType.parameterVariables
     {% endif %}public {{ productType }} {{ methodName }}() {
         return object;
     }
+{% if factoryMethod != "" %}
+    public static {% if not empty(productType.parameterVariables) %}<{% for t in productType.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %} {{ className }}{{ classParameters }} {{ factoryMethod }}({{ productType }} object) {
+        return new {{ className }}{% if not empty(productType.parameterVariables) %}<>{% endif %}(object);
+    }
+{% if productType.hasDefaultConstructor %}
+    public static {% if not empty(productType.parameterVariables) %}<{% for t in productType.parameterVariables %}{% if loop.first %}{% else %}, {% endif %}{{ t.declaration }}{% endfor %}>{% endif %} {{ className }}{{ classParameters }} {{ factoryMethod }}() {
+        return new {{ className }}{% if not empty(productType.parameterVariables) %}<>{% endif %}();
+    }
 
+    public static class Factory {
+{% for setter in productType.methods %}{% if setter.name.matches(annotation.setterPattern) and setter.parameters.size == 1 %}
+        public {{ classParameters }} {{ className }}{{ classParameters }} {{ setter.toProperty(annotation.setterPattern, annotation.setterNameGroup) }}({{ setter.parameters[0].type }} value) {
+            return {{ className }}.{{ classParameters }}{{ factoryMethod }}().{{ setter.toProperty(annotation.setterPattern, annotation.setterNameGroup) }}(value);
+        }
+{% endif %}{% endfor %}
+    }
+{% endif %}{% endif %}
 }
