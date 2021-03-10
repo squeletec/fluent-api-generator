@@ -73,7 +73,7 @@
         <mockito.version>2.18.3</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <fluent.api.end.check.version>1.16</fluent.api.end.check.version>
-        <fluent.validation.support>2.5</fluent.validation.support>
+        <fluent.validation.support>2.6</fluent.validation.support>
     </properties>
 
     <distributionManagement>
