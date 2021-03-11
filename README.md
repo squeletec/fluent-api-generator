@@ -16,7 +16,7 @@ maven dependency:
 <dependency>
     <groupId>foundation.fluent.api</groupId>
     <artifactId>fluent-api-generator-annotations</artifactId>
-    <version>2.0</version>
+    <version>2.16</version>
 </dependency>
 ```
 
@@ -34,7 +34,7 @@ To include the dependency use following:
 <dependency>
     <groupId>foundation.fluent.api</groupId>
     <artifactId>fluent-api-generator</artifactId>
-    <version>2.0</version>
+    <version>2.16</version>
 </dependency>
 ```
 
@@ -54,7 +54,7 @@ Using maven you can achieve it this way:
                     <annotationProcessorPath>
                         <groupId>foundation.fluent.api</groupId>
                         <artifactId>fluent-api-generator</artifactId>
-                        <version>2.0</version>
+                        <version>2.16</version>
                     </annotationProcessorPath>
                 </annotationProcessorPaths>
             </configuration>
@@ -89,7 +89,7 @@ Then you can use following configuration:
                 <dependency>
                     <groupId>foundation.fluent.api</groupId>
                     <artifactId>fluent-api-generator</artifactId>
-                    <version>2.0</version>
+                    <version>2.16</version>
                 </dependency>
             </dependencies>
             <configuration>
