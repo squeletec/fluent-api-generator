@@ -14,16 +14,16 @@ public class {{ className }}{% if not empty(typeParameterList) %}<{% for t in ty
     }
 {% endfor %}
 {% if method.isConstructor or method.isStatic %}
-    public static {% for parameter in method.parameters %}{{ capitalize(parameter) }}Param<{% endfor %}{{ productType }}{% for parameter in method.parameters %}>{% endfor %} create() {
+    public static {% for parameter in method.parameters %}{{ capitalize(parameter) }}Param<{% endfor %}{{ productType }}{% for parameter in method.parameters %}>{% endfor %} {{ factoryMethod }}() {
         return {% for parameter in method.parameters %}{{ parameter }} -> {% endfor %}{%
          if method.isConstructor %} new {{ productType }}{% else %}{{ method.declaringClass }}.{{ method }}{%
           endif %}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{ parameter }}{% endfor %});
     }
     public static {% for parameter in method.parameters %}{% if loop.first %}{% else %}{{ capitalize(parameter) }}Param<{% endif %}{% endfor %}{{ productType }}{% for parameter in method.parameters %}{% if loop.first %}{% else %}>{% endif %}{% endfor %} {% for parameter in method.parameters %}{% if loop.first %}{{ parameter }}{% endif %}{% endfor %}({% for parameter in method.parameters %}{% if loop.first %}{{ parameter.type }} {{ parameter }}{% endif %}{% endfor %}) {
-        return create().{% for parameter in method.parameters %}{% if loop.first %}{{ parameter }}{% endif %}{% endfor %}({% for parameter in method.parameters %}{% if loop.first %}{{ parameter }}{% endif %}{% endfor %});
+        return {{ factoryMethod }}().{% for parameter in method.parameters %}{% if loop.first %}{{ parameter }}{% endif %}{% endfor %}({% for parameter in method.parameters %}{% if loop.first %}{{ parameter }}{% endif %}{% endfor %});
     }
 {% else %}
-    public static {% for parameter in method.parameters %}{{ capitalize(parameter) }}Param<{% endfor %}{{ productType }}{% for parameter in method.parameters %}>{% endfor %} create({{ method.declaringClass }} factory) {
+    public static {% for parameter in method.parameters %}{{ capitalize(parameter) }}Param<{% endfor %}{{ productType }}{% for parameter in method.parameters %}>{% endfor %} {{ factoryMethod }}({{ method.declaringClass }} factory) {
         return {% for parameter in method.parameters %}{{ parameter }} -> {% endfor %}factory.{{ method }}({% for parameter in method.parameters %}{% if loop.first %}{% else %}, {% endif %}{{ parameter }}{% endfor %});
     }
 {% endif %}

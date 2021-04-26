@@ -33,7 +33,7 @@ import fluent.api.NamedParameters;
 
 public class NamedParametersInstanceMethod {
 
-    @NamedParameters
+    @NamedParameters(factoryMethod = "createUsing")
     public NamedParametersConstructor method(String name, int age, NamedParametersConstructor.Gender gender) {
         return new NamedParametersConstructor(name, age, gender);
     }

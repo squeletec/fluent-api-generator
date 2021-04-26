@@ -73,4 +73,12 @@ public @interface NamedParameters {
      */
     String className() default "";
 
+    /**
+     * Factory method name defines name of the entry method of the builder.
+     * Default name is "create".
+     *
+     * @return Factory method name.
+     */
+    String factoryMethod() default "create";
+
 }

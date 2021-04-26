@@ -32,13 +32,13 @@ package fluent.api.generator.named;
 import org.testng.annotations.Test;
 
 import static fluent.api.generator.named.NamedParametersConstructor.Gender.MALE;
-import static fluent.api.generator.named.NamedParametersInstanceMethodParameters.create;
+import static fluent.api.generator.named.NamedParametersInstanceMethodParameters.createUsing;
 
 public class NamedParametersInstanceMethodTest {
 
     @Test
     public void test() {
-        NamedParametersConstructor result = create(new NamedParametersInstanceMethod()).name("B").age(76).gender(MALE);
+        NamedParametersConstructor result = createUsing(new NamedParametersInstanceMethod()).name("B").age(76).gender(MALE);
     }
 
 }
