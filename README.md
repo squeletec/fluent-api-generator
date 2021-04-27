@@ -16,9 +16,12 @@ maven dependency:
 <dependency>
     <groupId>foundation.fluent.api</groupId>
     <artifactId>fluent-api-generator-annotations</artifactId>
-    <version>2.16</version>
+    <version>2.17</version>
 </dependency>
 ```
+
+For Java 8 you also need to add dependency on JDK tools.jar.
+
 
 ### 1.1 Trigger code generator from standard class-path (not recommended)
 
@@ -354,6 +357,72 @@ There are actually two different annotations:
 - `@fluent.api.FluentSender`: generates just a simple builder class.
 - `@fluent.api.FluentSenderApi`: generates separate interface, and it's implementation.
 
+#### 2.4 Named parameters
+
+Named parameters in order of definition are in fact providing a secure way, enforcing to provide
+all paremeters already during compilation.
+
+The idea is, that each method, for providing individual parameter returns always new interface, allowing exactly to
+provide next parameter, except the last one, which returns the result.
+
+Although the chosen implementation is slightly different, you can think of it like of following approach:
+
+E.g. constructor to be called:
+````java
+public final class Person {
+    public Person(String name, int age, Gender gender) {
+        
+    }
+}
+````
+
+Fluent named parameters pattern implementation may look like this:
+```java
+public final class PersonParameters {
+    public static AgeParam name(String name) {
+        return age -> gender -> new Person(name, age, gender);
+    }
+    public interface AgeParam {
+        GenderParam age(int age);
+    }
+    public interface GenderParam {
+        Person gender(Gender gender);
+    }
+}
+```
+
+That results in possibility to create the person fluently with all parameters named:
+```java
+Person person = name("John Doe").age(42).gender(MALE);
+```
+But the code will not compile, if any of the parameters is missing, or the order is different.
+
+To generate such pattern, use the annotation `@NamedParameters`:
+```java
+public final class Person {
+    @NamedParameters
+    public Person(Stirng name, int age, Gender gender) {
+        // ...
+    }
+}
+```
+
+The annotation can be used on constructors, but also on any methods. If the method is not `static`,
+(e.g. there is a factory responsible for creation of the result), then usage look like this:
+
+```java
+Person person = create(factory).name("John Doe").age(42).gender(gender);
+```
+
+##### 2.4.1 All parameters and configuration for named parameters pattern
+The annotation `@NamedParameters` has following parameters to customize the generated code:
+
+| Parameter   | Description | Default behavior |
+| ----------- | ----------- | ---------------- |
+| packageName | Specify package name, where to generate the class | Package name of the class, containing the method with annotated parameter |
+| className   | Name of the generated class | Name of the class containing method with annotated parameter, with method name derived suffix (e.g. `build` -> `Builder`) |
+| factoryMethod | Name of the fluent interface factory method | Default value is `create`. |
+
 ### 3. Custom fluent API generator development
 
 #### 3.1 Define new annotation
@@ -394,6 +463,13 @@ public @interface GenerateParametersBuilder {
 TBD
 
 ## Release notes
+
+### Version 2.17 (released on 27th April 2021)
+- Implemented `@NamedParameters` pattern.
+
+### Version 2.16 (released on 11th March 2021)
+- Upgrade of dependency on `@End` method check.
+- Default project dependencies updated so, that they support Java 9+. For Java 8 add dependencies on tools.jar.
 
 ### Version 2.6 (released on 29th November 2018)
 - Upgrade of dependency on `@End` metod check.
