@@ -38,13 +38,21 @@ import fluent.api.generator.model.impl.ModelTypeFactory;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Stream.concat;
 
 /**
  * Template driven Java code generator, which generates code based on the annotated element.
@@ -67,19 +75,33 @@ public class GeneratingProcessor extends AbstractProcessor {
         Filer filer = processingEnv.getFiler();
         ModelFactory factory = new ModelTypeFactory(processingEnv.getTypeUtils(), processingEnv.getElementUtils(), filer);
         ParameterScanner parameterScanner = new ParameterScanner(Trees.instance(processingEnv), factory);
-        GeneratingVisitor visitor = new GeneratingVisitor(filer, factory, parameterScanner);
 
         for(TypeElement annotation : annotations) {
-            Templates templatesAnnotation = annotation.getAnnotation(Templates.class);
-            if(nonNull(templatesAnnotation)) {
-                Predicate<Element> predicate = filter(annotation.getAnnotation(TypeFilter.class));
-                roundEnv.getElementsAnnotatedWith(annotation).forEach(element -> {
-                    if(predicate.test(element)) {
-                        element.accept(visitor, annotation);
+            List<Element> templateAnnotations = concat(
+                    Stream.of(annotation),
+                    annotation.getAnnotationMirrors().stream().map(m -> m.getAnnotationType().asElement())
+            ).filter(a -> nonNull(a.getAnnotation(Templates.class))).collect(Collectors.toList());
+            if(!templateAnnotations.isEmpty()) {
+                roundEnv.getElementsAnnotatedWith(annotation).forEach(element -> templateAnnotations.forEach(templateAnnotation -> {
+                    if(element.getKind().equals(ElementKind.ANNOTATION_TYPE)) {
+                        Target templateTargets = templateAnnotation.getAnnotation(Target.class);
+                        if(templateTargets != null) {
+                            Target elementTargets = element.getAnnotation(Target.class);
+                            Set<ElementType> collect = Stream.of(templateTargets.value()).collect(toSet());
+                            if(elementTargets == null || !collect.containsAll(Stream.of(elementTargets.value()).collect(toSet()))) {
+                                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Invalid use of annotation: " + annotation + "! When applied on annotation, it must restrict usage to " + templateTargets + ". But annotation " + element + " allows " + (elementTargets == null ? "any target." : elementTargets), element);
+                            }
+                        }
                     } else {
-                        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Invalid use of annotation: " + annotation + "! It can be applied only on " + predicate, element);
+                        Predicate<Element> predicate = filter(templateAnnotation.getAnnotation(TypeFilter.class));
+                        if (predicate.test(element)) {
+                            GeneratingVisitor visitor = new GeneratingVisitor(filer, factory, parameterScanner, annotation == templateAnnotation ? element : annotation);
+                            element.accept(visitor, (TypeElement) templateAnnotation);
+                        } else {
+                            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Invalid use of annotation: " + annotation + "! It can be applied only on " + predicate, element);
+                        }
                     }
-                });
+                }));
             }
         }
         return false;

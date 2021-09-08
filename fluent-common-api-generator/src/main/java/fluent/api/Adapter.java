@@ -37,7 +37,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Templates({"/fluent/api/templates/common-api.jtwig", "/fluent/api/templates/adapter.jtwig"})
 public @interface Adapter {
 

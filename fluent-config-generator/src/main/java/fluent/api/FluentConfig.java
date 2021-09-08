@@ -50,6 +50,6 @@ import java.lang.annotation.Target;
  * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.ANNOTATION_TYPE})
 @Templates("/fluent/api/templates/config.jtwig")
 public @interface FluentConfig { }

@@ -32,6 +32,7 @@ package fluent.api.generator.processor;
 import fluent.api.generator.Templates;
 import fluent.api.generator.model.ModelFactory;
 import fluent.api.generator.model.TemplateModel;
+import org.jtwig.exceptions.ResolveValueException;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.*;
@@ -58,11 +59,13 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
     private final Set<String> generated = new HashSet<>();
     private final ModelFactory factory;
     private final ParameterScanner parametersScanner;
+    private final Element annotatedElement;
 
-    GeneratingVisitor(Filer filer, ModelFactory factory, ParameterScanner parametersScanner) {
+    GeneratingVisitor(Filer filer, ModelFactory factory, ParameterScanner parametersScanner, Element annotatedElement) {
         this.filer = filer;
         this.factory = factory;
         this.parametersScanner = parametersScanner;
+        this.annotatedElement = annotatedElement;
     }
 
     @Override
@@ -106,7 +109,7 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
     }
 
     private Void render(TemplateModel model, Element annotatedElement, TypeElement annotation) {
-        parametersScanner.scan(annotatedElement, model);
+        parametersScanner.scan(this.annotatedElement, model);
         annotation.getEnclosedElements().forEach(new DefaultValueVisitor(
                 method -> {
                     if(nonNull(method.getDefaultValue())) {
@@ -114,12 +117,12 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
                     }
                 }
         ));
-        annotatedElement.getAnnotationMirrors().stream().filter(
+        this.annotatedElement.getAnnotationMirrors().stream().filter(
                 mirror -> mirror.getAnnotationType().asElement().equals(annotation)
         ).forEach(mirror -> mirror.getElementValues().forEach(
                 (name, value) -> model.with(name.getSimpleName().toString(), factory.annotationValue(value))
         ));
-        for(String path : annotation.getAnnotation(Templates.class).value()) {
+        for(String path : annotation.getAnnotation(Templates.class).value()) try {
             String source = model.render(path);
             Matcher packageName = PACKAGE.matcher(source);
             Matcher className = CLASS.matcher(source);
@@ -133,6 +136,8 @@ class GeneratingVisitor implements ElementVisitor<Void, TypeElement> {
                     }
                 }
             }
+        } catch (ResolveValueException e) {
+            System.out.println();
         }
         return null;
     }

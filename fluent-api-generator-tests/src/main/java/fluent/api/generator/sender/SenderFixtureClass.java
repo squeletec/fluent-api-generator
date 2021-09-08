@@ -48,6 +48,7 @@ public class SenderFixtureClass {
             String id,
             @FluentSender
             @FluentSenderApi(packageName = "fluent.api.dsl")
+            @CustomSender
             FixtureBean bean
     ) {
         return id;

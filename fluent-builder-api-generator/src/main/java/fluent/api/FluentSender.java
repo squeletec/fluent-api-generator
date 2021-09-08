@@ -47,7 +47,7 @@ import java.lang.annotation.*;
  * MyClass myClass = new MyClassBuilder().a("a").b("b").c(4).d(new Object()).build();
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PARAMETER})
+@Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Templates("/fluent/api/templates/sender/implementation.jtwig")
 public @interface FluentSender {
 

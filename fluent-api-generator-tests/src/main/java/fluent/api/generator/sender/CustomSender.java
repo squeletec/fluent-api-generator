@@ -1,7 +1,7 @@
 /*
  * BSD 2-Clause License
  *
- * Copyright (c) 2019, Ondrej Fischer
+ * Copyright (c) 2021, Ondrej Fischer
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,12 +27,13 @@
  *
  */
 
-package fluent.dsl;
+package fluent.api.generator.sender;
+
+import fluent.api.FluentSender;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
-public @interface Name {
-    String value() default "";
-}
+@FluentSender(packageName = "fluent.api.custom")
+@Target(ElementType.PARAMETER)
+public @interface CustomSender { }
