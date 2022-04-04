@@ -43,6 +43,7 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -65,13 +66,18 @@ import static java.util.stream.Stream.concat;
  * builders, senders, verifiers, argument builders, etc.
  */
 @SupportedAnnotationTypes("*")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class GeneratingProcessor extends AbstractProcessor {
 
     private static final Predicate<Element> defaultFilter = element -> true;
 
     @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
+
+    @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        ProcessingEnvironment processingEnv = jbUnwrap(this.processingEnv);
         Filer filer = processingEnv.getFiler();
         ModelFactory factory = new ModelTypeFactory(processingEnv.getTypeUtils(), processingEnv.getElementUtils(), filer);
         ParameterScanner parameterScanner = new ParameterScanner(Trees.instance(processingEnv), factory);
@@ -105,6 +111,17 @@ public class GeneratingProcessor extends AbstractProcessor {
             }
         }
         return false;
+    }
+
+    private ProcessingEnvironment jbUnwrap(ProcessingEnvironment wrappedEnv) {
+        ProcessingEnvironment unwrapped = null;
+        try {
+            final Class<?> apiWrappers = wrappedEnv.getClass().getClassLoader().loadClass("org.jetbrains.jps.javac.APIWrappers");
+            final Method unwrapMethod = apiWrappers.getDeclaredMethod("unwrap", Class.class, Object.class);
+            unwrapped = (ProcessingEnvironment) unwrapMethod.invoke(null, ProcessingEnvironment.class, wrappedEnv);
+        }
+        catch (Throwable ignored) {}
+        return unwrapped != null? unwrapped : wrappedEnv;
     }
 
     private Predicate<Element> filter(TypeFilter filter) {
